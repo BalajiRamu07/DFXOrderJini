@@ -1,0 +1,245 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="row page-title-header">
+    <div class="col-12">
+        <div class="page-header">
+            <h4 class="page-title ng-binding">Orders History</h4>
+        </div>
+    </div>
+</div>
+
+<div ng-show="displayloader" aria-hidden="true" class="ng-hide">
+    <div class="loader-demo-box" style="border: none !important;">
+        <div class="dot-opacity-loader">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+    </div>
+</div>
+
+<div ng-show="!displayloader" aria-hidden="false" class="" >
+    <div class="row" style="margin-left:1px">
+        <!-- ngIf: !nav[24].activated -->
+    </div>
+    <div class="col-md-12" ng-app="MyApp2" ng-controller="MyController2">
+        <div class="page-header-toolbar mb-1" >
+            <div class="filter-wrapper mb-1" >
+                <button type="button" class="btn btn-secondary mr-1" ng-click="refreshTransactions(1);" tabindex="0">
+                    <i class="fa fa-refresh" aria-hidden="true"></i>
+                </button>
+                <button type="button" class="btn btn-secondary mr-1"> <i class="mdi mdi-download"></i>Export</button>
+                <a class="mr-1" tabindex="0" ng-click="OrderFilterBy()">
+                    <button type="button" class="btn btn-secondary" >
+                        <i class="mdi mdi-filter"></i>Filter
+                    </button>
+                </a>
+                <button type="button" class="btn btn-secondary mr-1"> <i class="mdi mdi-download"></i>Export Custom Orders</button>
+
+                      <!-- ngIf: coID != 'GLGR' -->
+                  @*    <a class="mr-1 ng-scope" ng-click="downloadCSV(1)" ng-if="coID != &#39;GLGR&#39;" tabindex="0">
+                <button type="button" class="btn btn-secondary">
+                <i class="mdi mdi-download"></i>Export</button>
+               </a><!-- end ngIf: coID != 'GLGR' -->
+                <a class="mr-1" ng-click="OrderFilterBy()" tabindex="0">
+                <button type="button" class="btn btn-secondary">
+                <i class="mdi mdi-filter"></i>Filter</button>
+                </a>
+
+                <!-- ngIf: coID == 'GLGR' -->
+
+                <!-- ngIf: nav[24].activated -->
+               <a class="mr-1 ng-scope" ng-if="nav[24].activated" href="https://beta.orderjini.com/dash/csv/reports/custom/orders/2023-01-24%2000:00:00/2023-01-31%2023:59:59/all">
+                <button type="button" class="btn btn-secondary">
+                <i class="mdi mdi-download"></i>Export Custom Orders</button>
+                </a><!-- end ngIf: nav[24].activated -->
+                </div>*@
+                <!-- ngIf: shopify.api_key -->
+
+                <div class="btn-group toolbar-item ml-auto" role="group" aria-label="Basic example" style="padding-left: 240px;">
+                    <button type="button" class="btn btn-secondary" ng-click="navPage(0)" tabindex="0"><i class="mdi mdi-chevron-left"></i></button>
+                    <button type="button" class="btn btn-secondary ng-binding">Showing 1 - 2 of 2</button>
+                    <button type="button" class="btn btn-secondary" ng-click="GetAllData()" tabindex="0"><i class="mdi mdi-chevron-right"></i></button>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-12 col-md-6 col-lg-6">
+            <div class="form-group">
+                <div class="input-group">
+                    <input type="text" ng-model="Prefix" class="form-control ng-pristine ng-untouched ng-valid" placeholder="Search" ng-model="orderSearch.filter" ng-change="clearFilterButton(orderSearch.filter)" aria-label="Username" aria-describedby="basic-addon1" tabindex="0" aria-invalid="false">
+                    <div class="input-group-prepend">
+                        <button class="btn btn-secondary " ng-click="GetAllData()" type="button" aria-haspopup="true" tabindex="0"> Search</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- ngIf: !nav[25].activated && AssignedFulfiller.length && user.role == 'Admin' -->
+        <!--<br>-->
+        <br ng-show="orderfilterFlag" aria-hidden="true" class="ng-hide">
+        <div id="order-history-filter" class="row ng-hide" ng-hide = "IsHidden" aria-hidden="true" >
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header p-3">
+                        Filter By
+                        <div class="badge badge-danger margin-5 float-right" ng-click="OrderFilterBy()" role="button" tabindex="0"> Close</div>
+                    </div>
+                    <div class="card-body" style="padding: 0.88rem 0.80.8rem;">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="form-group row">
+                                    <label class="col-sm-3 col-form-label">From</label>
+                                    <div class="col-sm-9">
+                                        <input type="text" class="form-control datepicker ng-pristine ng-untouched ng-valid ng-isolate-scope ng-valid-date" id="orderstartdate" ng-model="orderSearch.date_from" placeholder="dd/mm/yyyy" ng-init="calender[0] = false" ng-click="calender[0] = true;" uib-datepicker-popup="dd-MMM-yyyy" is-open="calender[0]" show-button-bar="false" todayhighlight="true" tabindex="0" aria-invalid="false"><!-- ngIf: isOpen -->
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group row">
+                                    <label class="col-sm-3 col-form-label">To</label>
+                                    <div class="col-sm-9">
+                                        <input type="text" class="form-control ng-pristine ng-untouched ng-valid ng-isolate-scope ng-valid-date" id="orderenddate" ng-model="orderSearch.date_to" placeholder="dd/mm/yyyy" ng-init="calender[1] = false" ng-click="calender[1] = true;" uib-datepicker-popup="dd-MMM-yyyy" is-open="calender[1]" show-button-bar="false" todayhighlight="true" tabindex="0" aria-invalid="false"><!-- ngIf: isOpen -->
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- ngIf: !nav[25].activated && user.role != 'Dealer' --><div class="col-md-4 ng-scope" ng-if="!nav[25].activated &amp;&amp; user.role != &#39;Dealer&#39;">
+                                <div class="form-group row">
+                                    <label class="col-sm-3 col-form-label">Source</label>
+                                    <div class="col-sm-9">
+                                        <select class="form-control ng-pristine ng-untouched ng-valid" ng-model="orderSearch.source" ng-options="source for source in sourceType" tabindex="0" aria-invalid="false"><option value="" selected="selected" class="">Select Source</option><option value="string:Pos" label="Pos">Pos</option><option value="string:Order" label="Order">Order</option><option value="string:App" label="App">App</option><option value="string:Shopify" label="Shopify">Shopify</option><option value="string:Old orders" label="Old orders">Old orders</option><option value="string:Superjini" label="Superjini">Superjini</option></select>
+                                    </div>
+                                </div>
+                            </div><!-- end ngIf: !nav[25].activated && user.role != 'Dealer' -->
+                        </div>
+                        <!-- ngIf: !nav[25].activated && user.role != 'Dealer' --><div class="row ng-scope" ng-if="!nav[25].activated &amp;&amp; user.role != &#39;Dealer&#39;">
+                            <div class="col-md-4">
+                                <div class="form-group row">
+                                    <label class="col-sm-3 col-form-label ng-binding">Customers</label>
+                                    <div class="col-sm-9">
+                                        <div class="input-group">
+                                            <input type="text" name="ordercontactOther" class="form-control ng-pristine ng-untouched ng-valid" placeholder="Search by Name/Phone" ng-change="dealerPhoneFilter()" ng-model="orderSearch.dealerPhone_Name" tabindex="0" aria-invalid="false">
+                                            <div class="input-group-prepend">
+                                                <button class="btn btn-secondary" ng-click="dealerPhoneFilter()" type="submit" aria-haspopup="true" tabindex="0"><span class="fa fa-search"></span></button>
+                                            </div>
+                                            <!-- ngIf: showCustomersDropdown -->
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group row">
+                                    <label class="col-sm-3 col-form-label ng-binding">Salesperson</label>
+                                    <div class="col-sm-9">
+                                        <select class="form-control ng-pristine ng-untouched ng-valid" ng-model="orderSearch.seller" ng-options="seller as seller.sellername for seller in roleSalesrep" tabindex="0" aria-invalid="false"><option value="" selected="selected" class="">Select Salesperson</option><option value="object:3161" label="VISHNU SALIM S">VISHNU SALIM S</option><option value="object:3162" label="NARENDRA KUMAR">NARENDRA KUMAR</option><option value="object:3163" label="SRINIVAS">SRINIVAS</option><option value="object:3164" label="DEBADATTA MOHANTY">DEBADATTA MOHANTY</option><option value="object:3165" label="ABDHUL WAHEED">ABDHUL WAHEED</option><option value="object:3166" label="SURESH KUMAR">SURESH KUMAR</option><option value="object:3167" label="KARTIK CONTRACTOR">KARTIK CONTRACTOR</option><option value="object:3168" label="MANISH SHARMA">MANISH SHARMA</option><option value="object:3169" label="PAVAN KUMAR">PAVAN KUMAR</option><option value="object:3170" label="NIDHIN.M">NIDHIN.M</option><option value="object:3171" label="SANTHOSH P MALALI">SANTHOSH P MALALI</option><option value="object:3172" label="VINAYAK">VINAYAK</option><option value="object:3173" label="AMIT BHARGAVA">AMIT BHARGAVA</option><option value="object:3174" label="BIJESH SANKHALA">BIJESH SANKHALA</option><option value="object:3175" label="GAURAV SHIVHARE">GAURAV SHIVHARE</option><option value="object:3176" label="JAYAN">JAYAN</option><option value="object:3177" label="KRUNAL DANKAR">KRUNAL DANKAR</option><option value="object:3178" label="MITHUN DATTA">MITHUN DATTA</option><option value="object:3179" label="PRAFULLA CHIMOTE">PRAFULLA CHIMOTE</option><option value="object:3180" label="SATHYARAJ">SATHYARAJ</option><option value="object:3181" label="VIKASH KUMAR">VIKASH KUMAR</option><option value="object:3182" label="Martin Duroflex">Martin Duroflex</option><option value="object:3183" label="Pooja Duroflex">Pooja Duroflex</option><option value="object:3184" label="Sasikala">Sasikala</option><option value="object:3185" label="KANISHKA SINGH">KANISHKA SINGH</option><option value="object:3186" label="DHARMENDRA KUSHWAHA">DHARMENDRA KUSHWAHA</option><option value="object:3187" label="OM PRAKASH NAMDEV">OM PRAKASH NAMDEV</option><option value="object:3188" label="SURYA PRATAP THAKUR">SURYA PRATAP THAKUR</option><option value="object:3189" label="ADITYA GOYAL">ADITYA GOYAL</option><option value="object:3190" label="ASHISH RANPARIYA">ASHISH RANPARIYA</option><option value="object:3191" label="Amol L">Amol L</option><option value="object:3192" label="SAURABH">SAURABH</option><option value="object:3193" label="MANEESH SHARMA">MANEESH SHARMA</option><option value="object:3194" label="Ganesan A">Ganesan A</option><option value="object:3195" label="JITENDRA">JITENDRA</option><option value="object:3196" label="NARENDRA KUMAR">NARENDRA KUMAR</option><option value="object:3197" label="Vasan Gowda">Vasan Gowda</option><option value="object:3198" label="Jyoti">Jyoti</option></select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group row">
+                                    <label class="col-sm-3 col-form-label ng-binding">Stockist</label>
+                                    <div class="col-sm-9">
+                                        <select class="form-control ng-pristine ng-untouched ng-valid" ng-model="orderSearch.filterStockist" ng-options="stockist as stockist.StockistName for  stockist in allStockistFromDealer" value="" tabindex="0" aria-invalid="false"><option value="" selected="selected" class="">Select Stockist</option></select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div><!-- end ngIf: !nav[25].activated && user.role != 'Dealer' -->
+                        <!-- ngIf: !nav[25].activated --><div class="row ng-scope" ng-if="!nav[25].activated ">
+                            <!-- ngIf: !nav[25].activated  && user.role != 'Dealer' --><div class="col-md-4 ng-scope" ng-if="!nav[25].activated  &amp;&amp; user.role != &#39;Dealer&#39;">
+                                <div class="form-group row">
+                                    <label class="col-sm-3 col-form-label">Hub</label>
+                                    <div class="col-sm-9">
+                                        <select class="form-control ng-pristine ng-untouched ng-valid" ng-model="orderSearch.warehouse" ng-options="houselocation.name as houselocation.name for houselocation in warehouseLocation" tabindex="0" aria-invalid="false"><option value="" selected="selected" class="">Select Hub</option></select>
+                                    </div>
+                                </div>
+                            </div><!-- end ngIf: !nav[25].activated  && user.role != 'Dealer' -->
+                            <div class="col-md-4">
+                                <div class="form-group row">
+                                    <label class="col-sm-3 col-form-label">Payment Status</label>
+                                    <div class="col-sm-9">
+                                        <select class="form-control ng-pristine ng-untouched ng-valid" ng-model="orderSearch.paymentStatus" ng-options="paymentStatus for paymentStatus in orderPaymentStatus" tabindex="0" aria-invalid="false"><option value="" selected="selected" class="">Select Payment Status</option><option value="string:unpaid" label="unpaid">unpaid</option><option value="string:partially paid" label="partially paid">partially paid</option><option value="string:paid" label="paid">paid</option></select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group row">
+                                    <label class="col-sm-3 col-form-label">Fulfillment Status</label>
+                                    <div class="col-sm-9">
+                                        <select class="form-control ng-pristine ng-untouched ng-valid" ng-model="orderSearch.fulfillmentStatus" ng-options="fulfillmentStatus for fulfillmentStatus in fulfillmentstatus" tabindex="0" aria-invalid="false"><option value="" selected="selected" class="">Select Fulfillment Status</option><option value="string:unfulfilled" label="unfulfilled">unfulfilled</option><option value="string:partially fulfilled" label="partially fulfilled">partially fulfilled</option><option value="string:fulfilled" label="fulfilled">fulfilled</option></select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div><!-- end ngIf: !nav[25].activated -->
+                        <!-- ngIf: !nav[25].activated && percentageDiscountFlag -->
+                        <!-- ngIf: !nav[25].activated && percentageDiscountFlag -->
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                <button type="button" class="btn btn-primary toolbar-item float-right" ng-click="orderSearchFilter()" tabindex="0">&nbsp;Apply Filter</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <br ng-show="showOrderFilter" aria-hidden="true" class="ng-hide">
+
+
+        <div class="row ng-hide" ng-show="showOrderFilter" style="padding-left:1%;" aria-hidden="true">
+            <p><strong>Filters applied :</strong></p>
+            <!-- ngIf: orderSearch.date_from --><span ng-if="orderSearch.date_from" class="font-size-14 ng-binding ng-scope">&nbsp;From date : 24-Jan-2023&nbsp;</span><!-- end ngIf: orderSearch.date_from -->
+            <!-- ngIf: orderSearch.date_to --><span ng-if="orderSearch.date_to" class="font-size-14 ng-binding ng-scope">&nbsp;To date : 31-Jan-2023&nbsp;</span><!-- end ngIf: orderSearch.date_to -->
+            <!-- ngIf: filterStatusSelect -->
+            <!-- ngIf: orderSearch.filter -->
+            <!-- ngIf: orderSearch.source -->
+            <!-- ngIf: orderSearch.seller -->
+            <!-- ngIf: orderSearch.dealer -->
+            <!-- ngIf: orderSearch.filterStockist -->
+            <!-- ngIf: orderSearch.paymentStatus -->
+            <!-- ngIf: orderSearch.fulfillmentStatus -->
+            <!-- ngIf: orderSearch.accountId -->
+            <!-- ngIf: orderSearch.orderType -->
+            <!-- ngIf: orderSearch.salesOrg -->
+            <!-- ngIf: orderSearch.employeeResponsible -->
+            &nbsp;<span class="clearFilter" ng-click="refreshTransactions()" role="button" tabindex="0">
+                <div class="badge badge-danger float-right"> Clear filter</div></span>
+        </div>
+        <hr>
+
+        <div class="row" >
+            <div class="col grid-margin stretch-card" >
+                <div class="card" >
+                    <div class="card-body" >
+                        <!-- ngIf: orders.length -->
+                        <div class="table-responsive ng-scope" style="" ng-show="IsVisible"  ng-init="GetAllData()">
+                         
+                            <table class="table" >
+                                <thead>
+                                    <tr>
+                                        <th>ORDER ID</th>
+                                        <th>ORDER DATE</th>
+                                        <th>ORDER STATUS</th>
+                                        
+                                    </tr>
+                             </thead>
+                                <tbody  >
+                                    <tr ng-repeat="ord in OrderDetails" class="ng-scope">
+                                         <td>{{$index+1}}</td>
+                                        <td>{{ ord.OrderID }}</td>
+                                        <td>{{ ord.Cust_Ref }}</td>
+                                        <td>{{ ord.SalesPerson }}</td>
+
+                                    </tr>
+                                    </tbody>
+                            </table>
+                        </div><!-- end ngIf: orders.length -->
+                        <!-- ngIf: !orders.length -->
+                    </div>
+                </div>
+            </div>
+        </div>
+       
+    </div>
+</div>

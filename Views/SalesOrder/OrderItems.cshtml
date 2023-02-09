@@ -1,0 +1,176 @@
+﻿
+@{
+    ViewData["Title"] = "New Order";
+}
+
+
+               
+                    <!-- ngView:  -->
+                    <div ng-view="" class="ng-scope" style=""><div class="wrapper ng-scope">
+    <div class="refresh" style="display: none;"></div>
+
+    <!-- ngIf: orderViewTab.tab == 1 -->
+
+    <!-- ngIf: orderViewTab.tab == 0 -->
+
+
+    <!-- ngIf: orderViewTab.tab == 0 && user.role != 'dealer' -->
+
+    <!-- ngIf: orderViewTab.tab == 1 && customer.Dealercode -->
+    <!-- ngIf: (orderViewTab.tab == 1 || user.role == 'dealer') && !customer.Dealercode -->
+
+    <!-- ngIf: orderViewTab.tab == 3 && newOrder.length --><div ng-if="orderViewTab.tab == 3 &amp;&amp; newOrder.length" class="ng-scope" style="">
+        <p ng-click="changeOrderView(1)" role="button" tabindex="0"><i class="fa fa-arrow-left pl-4" aria-hidden="true"></i> Add more items</p>
+        <div class="card">
+            <div class="card-body" style="padding: 15px">
+                <h4 class="card-title text-center ng-binding">New Order : Preview</h4>
+                <hr>
+                <div class="row p-2">
+                    <div class="col-md-9">
+                        <p class="ng-binding"><span style="color: grey;margin: 0px">Name : </span> A A BEDDING COMPANY</p>
+                        <p class="ng-binding"><span style="color: grey;margin: 0px">Billing Address : </span> New No.1/198A, Sengadu, Thottam, Sangoothipalayam, Kaniyur, Coimbatore</p>
+                        <p class="ng-binding"><span style="color: grey;margin: 0px">Shipping Address : </span> New No.1/198A, Sengadu, Thottam, Sangoothipalayam, Kaniyur, Coimbatore &nbsp;&nbsp;&nbsp;&nbsp;<span class="badge badge-primary" data-toggle="modal" data-target="#shipping_address" ng-click="changeShippingAddress()" role="button" tabindex="0">Change</span></p>
+                    </div>
+                    <!-- <div class="col-md-3"></div> -->
+                    <!-- ngIf: user.role != 'dealer' --><div class="col-md-3 ng-scope" ng-if="user.role != &#39;dealer&#39;">
+                        <label style="color: grey;margin: 0px" for="plant_code">Plant Code</label>
+                        <select id="plant_code" class="form-control ng-pristine ng-untouched ng-valid" ng-model="customer.Plant[0]" ng-change="plantChange()" tabindex="0" aria-invalid="false">
+                            <option value="">Select Plant Code</option>
+                            <!--<option ng-repeat="code in plant_codes track by $index" ng-value="code.code">{{code.code}}</option>-->
+                            <!-- ngRepeat: code in plant_codes track by $index --><option ng-repeat="code in plant_codes track by $index" ng-value="code.supplier" class="ng-binding ng-scope" value="P056">P056</option><!-- end ngRepeat: code in plant_codes track by $index --><option ng-repeat="code in plant_codes track by $index" ng-value="code.supplier" class="ng-binding ng-scope" value="P055">P055</option><!-- end ngRepeat: code in plant_codes track by $index --><option ng-repeat="code in plant_codes track by $index" ng-value="code.supplier" class="ng-binding ng-scope" value="P001">P001</option><!-- end ngRepeat: code in plant_codes track by $index --><option ng-repeat="code in plant_codes track by $index" ng-value="code.supplier" class="ng-binding ng-scope" value="P014">P014</option><!-- end ngRepeat: code in plant_codes track by $index -->
+                        </select>
+                    </div><!-- end ngIf: user.role != 'dealer' -->
+
+                    <!-- ngIf: user.role == 'dealer' -->
+                    <div class="col-md-9"></div>
+                    <!-- ngIf: nav[24].activated --><div class="col-md-3 ng-scope" ng-if="nav[24].activated">
+                        <label style="color: grey;margin: 0px" for="plant_code">Cust Ref No </label>
+                        <input type="text" class="form-control ng-pristine ng-untouched ng-valid" id="cust_ref_number" ng-model="customer.cust_order_reference_number" placeholder="Reference Number" tabindex="0" aria-invalid="false">
+                    </div><!-- end ngIf: nav[24].activated -->
+                </div>
+
+                <br>
+
+                <div class="table-responsive">
+                    <table class="table text-center">
+                        <thead>
+                            <tr>
+                               <th>Item</th>
+                               <th>Material ID</th>
+                               <th>Size</th>
+                               <th>Qty</th>
+                               <th>Pieces / KGs</th>
+                               <th>LDPE</th>
+                               <th></th>
+                               <th></th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            <!-- ngRepeat: item in newOrder track by $index --><tr ng-repeat="item in newOrder track by $index" class="ng-scope">
+                                <td class="ng-binding">028D GDF PUF SHEETS</td>
+                                <td class="ng-binding">GDFPFS72003000010028D</td>
+                                <td><!-- ngIf: item.leng --><span ng-if="item.leng" class="ng-binding ng-scope">L - 72</span><!-- end ngIf: item.leng --> <!-- ngIf: item.width --><span ng-if="item.width" class="ng-binding ng-scope">W - 30</span><!-- end ngIf: item.width --> <!-- ngIf: item.thickness --><span ng-if="item.thickness" class="ng-binding ng-scope">T - 10</span><!-- end ngIf: item.thickness --></td>
+                                <!-- <td>{{item.leng + ' - ' + item.width + ' - ' + item.thickness}}</td> -->
+                                <td class="ng-binding">5</td>
+                                <td class="ng-binding">400</td>
+                                <td class="ng-binding">Yes</td>
+                                <!-- <td>{{item.volume || 0}}</td> -->
+                                <td><button type="button" class="btn btn-danger" ng-click="removeItem($index)" tabindex="0">Remove</button> </td>
+                            </tr><!-- end ngRepeat: item in newOrder track by $index --><tr ng-repeat="item in newOrder track by $index" class="ng-scope">
+                                <td class="ng-binding">023D GLG AYUSH CUSHIONS</td>
+                                <td class="ng-binding">GLGAYC21001800125023D</td>
+                                <td><!-- ngIf: item.leng --><span ng-if="item.leng" class="ng-binding ng-scope">L - 21</span><!-- end ngIf: item.leng --> <!-- ngIf: item.width --><span ng-if="item.width" class="ng-binding ng-scope">W - 18</span><!-- end ngIf: item.width --> <!-- ngIf: item.thickness --><span ng-if="item.thickness" class="ng-binding ng-scope">T - 125</span><!-- end ngIf: item.thickness --></td>
+                                <!-- <td>{{item.leng + ' - ' + item.width + ' - ' + item.thickness}}</td> -->
+                                <td class="ng-binding">1</td>
+                                <td class="ng-binding">30</td>
+                                <td class="ng-binding">Yes</td>
+                                <!-- <td>{{item.volume || 0}}</td> -->
+                                <td><button type="button" class="btn btn-danger" ng-click="removeItem($index)" tabindex="0">Remove</button> </td>
+                            </tr><!-- end ngRepeat: item in newOrder track by $index -->
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td class="ng-binding"><span style="color: grey;margin: 0px">Total Qty</span><br>6</td>
+                                <td class="ng-binding"><span style="color: grey;margin: 0px">Total Pieces</span><br>430</td>
+                                <td></td>
+                                <!-- <td><span style="color: grey;margin: 0px">Total Volume</span><br>{{getTotals('volume')}}</td> -->
+                                <td></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <br>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <h6>Enter Comments</h6>
+                        <textarea class="form-control ng-pristine ng-untouched ng-valid" placeholder="Enter some comments (Optional)" ng-model="custOrder.comment" aria-multiline="true" tabindex="0" aria-invalid="false"></textarea>
+                    </div>
+                    <div class="col col-md-3">
+                        <div class="form-group">
+                            <label class="col-form-label">Customer Requested Date (CRD)</label>
+                            <input type="text" class="form-control ng-pristine ng-untouched ng-valid ng-isolate-scope ng-valid-date" id="crd_date" ng-model="custOrder.customer_req_date" placeholder="yyyy-mm-dd" ng-init="calender[1] = false" ng-click="calender[1] = true;" uib-datepicker-popup="" datepicker-options="config" date-disabled="disabled(date, mode)" is-open="calender[1]" show-button-bar="false" todayhighlight="true" tabindex="0" aria-invalid="false"><!-- ngIf: isOpen -->
+                        </div>
+                    </div>
+                    <div class="col-md-3 text-right">
+                        <div class="btn btn-light" type="button" ng-click="changeOrderView(0)" role="button" tabindex="0">Cancel</div>
+                        <!-- <div class="btn btn-primary" type="button">Print</div> -->
+                        <div class="btn btn-primary" type="button" ng-click="submitOrder()" role="button" tabindex="0">Confirm</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div><!-- end ngIf: orderViewTab.tab == 3 && newOrder.length -->
+    <!-- ngIf: orderViewTab.tab == 3 && !newOrder.length -->
+</div>
+
+<div class="modal fade ng-scope" id="shipping_address">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5>Change Shipping Address</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+            </div>
+            <div class="modal-body">
+                <!-- ngIf: !config.add_new_address --><div class="row full-width ng-scope" ng-if="!config.add_new_address">
+                    <!-- ngRepeat: address in shipping_addresses -->
+                    <!-- <div class="col-md-3 m-2 card grid-margin stretch-card add-new-card" ng-click="config.add_new_address = true">
+                        <div class="card-body text-center text-primary">
+                            <i class="mdi mdi-plus-circle-outline font-size-50"></i>
+                            <h3>Add Address</h3>
+                        </div>
+                    </div> -->
+                </div><!-- end ngIf: !config.add_new_address -->
+                <!-- ngIf: config.add_new_address -->
+            </div>
+        </div>
+    </div>
+</div>
+<style class="ng-scope">
+    .dropdown .dropdown-toggle:after {
+        border: none;
+        content: "\F140";
+        font-family: "Material Design Icons";
+        font-size: 20px;
+        color: black;
+        text-rendering: auto;
+        line-height: inherit;
+        vertical-align: 0;
+    }
+    .btn-secondary, .editable-container.editable-inline .editableform .control-group .editable-buttons .editable-cancel {
+        color: #212529;
+        background-color: transparent;
+        border-color: #dde4eb;
+    }
+    .btn-secondary:not(:disabled):not(.disabled):active, .editable-container.editable-inline .editableform .control-group .editable-buttons .editable-cancel:not(:disabled):not(.disabled):active, .btn-secondary:not(:disabled):not(.disabled).active, .editable-container.editable-inline .editableform .control-group .editable-buttons .editable-cancel:not(:disabled):not(.disabled).active, .show > .btn-secondary.dropdown-toggle, .editable-container.editable-inline .editableform .control-group .editable-buttons .show > .dropdown-toggle.editable-cancel {
+        color: transparent;
+        background-color: transparent;
+        border-color: transparent;
+    }
+
+</style></div>
+               
+ 
