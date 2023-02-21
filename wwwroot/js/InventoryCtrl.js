@@ -1,22 +1,15 @@
 /**
  * Created by shreyasgombi on 05/03/20.
  */
-
 angular.module('ebs.controller')
     .controller("InventoryCtrl",function ($scope, $filter, $http, Settings, $modal, $window) {
         console.log("Hello From Inventory Controller .... !!!!");
-
         $scope.inventory = {};
-
         $scope.currency = Settings.getInstanceDetails('currency');
-
         $scope.inventorySearch = {};
         $scope.inventorySearch.filter = '';
-
         $scope.inventoryTransactionHistory = {};
         $scope.inventoryTransactionHistory.filter = '';
-
-
         /*.... Needs to be reviewed ....*/
         $scope.items15 = $scope.inventory;
         $scope.viewby = 10;
@@ -25,44 +18,32 @@ angular.module('ebs.controller')
         $scope.itemsPerPage = $scope.viewby;
         $scope.maxSize = 5;
         $scope.case15Length = $scope.inventory.length;
-
-
         $scope.stocksInventory = [];
-
         $scope.inventoryDealer = [];
-
         $scope.settings = {};
-
         $scope.itemInventoryDetails = [];
         $scope.showInventoryFilter = false;
         $scope.itemInventoryFilter = {};
-
         var initialViewBy = 60;
         //New Pagination variables
         $scope.viewLength = 0;
         $scope.newViewBy = 10;
         var viewBy = {};
-
         viewBy.inventoryTransactionHistory = 10;
         viewBy.items = 12;
         var inventoryTransactionObj =  {};
         var inventorySearchBy = ['location','Product','Category','itemCode','subCategory'];
         var inventoryTransactionHistorySearchBy = ['transaction_id','date_added','type'];
-
         var itemInventoryObj = {};
         var itemInventorySearchBy = ['transaction_id','date_added','type'];
-
         $scope.inventoryTransfer = {};
         $scope.interInventoryTransfer = [];
         $scope.interInventoryArray = [];
-        
         $scope.interInventoryView = false;
         $scope.inventoryTransactionView = false;
         $scope.inventoryTransaction = [];
-
         $scope.selectedTab = 'miscellaneousReceipt';
         $scope.miscellaneousReceipt = {};
-
         $scope.receiveInventoryArray = [];
         $scope.transferInventoryArray = [];
         $scope.warehouseLocation = [];
@@ -78,28 +59,19 @@ angular.module('ebs.controller')
         $scope.salesPersonflag = true;
         var user_details  = Settings.getUserInfo();
         $scope.userRole = user_details.role ? user_details.role : '';
-
-        
-
         $('html, body').animate({scrollTop: '0px'}, 0);
-
         jQuery.noConflict();
         $('.refresh').css("display", "inline");
-
         var masterInventory = {};
-
         const startLoader = () => {
             jQuery.noConflict();
             $('.refresh').css("display", "inline");
         }
-
         const stopLoader = () => {
             jQuery.noConflict();
             $('.refresh').css("display", "none");
         }
-
         $scope.DateTimeFormat = function (date_added, when) {
-
             if (date_added) {
                 //This is to format the date in dd-mm-yy hh:mm:ss format, also padding 0's if values are <10 using above function
                 var date = new Date(date_added);
@@ -107,12 +79,10 @@ angular.module('ebs.controller')
                 else if (when == 'end') date.setHours(23, 59, 59, 999);
                 var dformat = [date.getFullYear(), (date.getMonth() + 1).padLeft(), date.getDate().padLeft()].join('-') + ' '
                     + [date.getHours().padLeft(), date.getMinutes().padLeft(), date.getSeconds().padLeft()].join(':');
-
                 return (dformat);
             } else
                 return 0;
         };
-
         const loadInventory = searchObj => {
             $http.post('/dash/inventory/view', searchObj)
                 .then(inventory => {
@@ -128,7 +98,6 @@ angular.module('ebs.controller')
                         $window.location.href = '/404';
                 });
         }
-
         const loadInventoryCount = searchObj => {
             $http.post('/dash/inventory/count', searchObj)
                 .then(inventory => {
@@ -144,7 +113,6 @@ angular.module('ebs.controller')
                         $window.location.href = '/404';
                 });
         }
-
         $scope.renderInventory = function (response){
             // console.log('Inventory Refresh',response)
             $scope.inventory = [];
@@ -155,7 +123,6 @@ angular.module('ebs.controller')
             $scope.filter.typeSelected = '';
             if(response.length < 10)
                 $scope.totalInventoryDisplayed = response.length;
-
             if($scope.settings.invoice){
                 var temp = [];
                 for(var i=0; i< response.length; i++){
@@ -175,10 +142,8 @@ angular.module('ebs.controller')
                 $scope.showInventoryFilter = false;
                 // $scope.miscellaneousReceipt.location = 'All';
                 //1s$scope.inventoryStatusSelect = 'all'
-
                 jQuery.noConflict();
                 $('.refresh').css("display", "inline");
-
                 if(user_details){
                     if(user_details.sellerObject){
                         if(user_details.sellerObject.inventoryLocation){
@@ -189,19 +154,15 @@ angular.module('ebs.controller')
                             // $scope.fetchInventory(user_details.sellerObject.inventoryLocation);
                             $scope.salesPersonflag = false;
                             // $scope.fetchInventory(user_details.sellerObject.inventoryLocation);
-
                         }
                     }
                 }
-
                 $http.post('/dash/inventory/view',inventoryObj).success(function(res){
                     // console.log(res.length)
                     $scope.inventory = res;
                 }).catch(function(err){
                     console.log(err)
                 })
-
-
                 $http.post('/dash/inventory/count',inventoryObj)
                     .success(function(response){
                         //console.log(response)
@@ -216,7 +177,6 @@ angular.module('ebs.controller')
                 $scope.maxSize = 5;
                 $scope.case15Length = $scope.inventory.length;
                 $scope.filterInventoryByLocation();
-
             }
             masterInventory = response;
             //$scope.loaded(13);
@@ -229,7 +189,6 @@ angular.module('ebs.controller')
                 $('.refresh').css("display", "none");
             }, 1000);
         };
-
         $scope.trial26 = function (val, i) {
             //$scope.fetchInventory();
             if(val == 'Not Available' || !val)val = '';
@@ -242,9 +201,7 @@ angular.module('ebs.controller')
             $scope.itemsPerPage = $scope.viewby;
             $scope.maxSize = 5;
             $scope.case15Length = $scope.inventory.length;
-
         }
-
         $scope.trial27 = function (i) {
             // alert()
             $scope.inventory = $scope.items15;
@@ -256,7 +213,6 @@ angular.module('ebs.controller')
             $scope.maxSize = 5;
             $scope.case15Length = $scope.inventory.length;
         }
-
         $scope.getWarehouseLocation = function(){
             $http.get("/dash/settings/inventory/locations").success(function(res){
                 if(res.length){
@@ -266,37 +222,31 @@ angular.module('ebs.controller')
                 console.log(err);
             })
         };
-
         // Function to switch between Inventory Transfer and Miscellaneous Receipt tabs......
         $scope.changeReceiveInventoryTab = function(tab){
             $scope.selectedTab = tab;
             $scope.inventoryTransfer = {};
             $scope.interInventoryTransfer = [];
         }
-
         // Clearing Miscellaneous
         $scope.clearMiscellaneousReceiptForm = function(){
             $scope.miscellaneousReceipt = {};
             $scope.interInventoryTransfer = [];
         }
-
         // Clearing Miscellaneous asset
         $scope.clearMiscellaneousAssetReceiptForm = function(){
             $scope.miscellaneousReceiptAsset = {};
             $scope.interAssetTransfer = [];
             $scope.asset = {};
         }
-
         // Remove item from the receiving inventory table.......
         $scope.removeMiscellaneousItem =function(data){
             $scope.receiveInventoryArray.splice($scope.receiveInventoryArray.indexOf(data), 1);
         };
-
         // Remove item from the transfering inventory table.......
         $scope.removeItemFromTransfer =function(data){
             $scope.transferInventoryArray.splice($scope.transferInventoryArray.indexOf(data), 1);
         };
-
         $scope.searchInterInventory = function (item) {
             $scope.interInventoryTransfer = [];
             var location ;
@@ -307,21 +257,17 @@ angular.module('ebs.controller')
                     }
                 }
             }
-
             if (item) {
                 $http.get('/dash/inventory/search/' + item + "/" + location).success(function (res) {
                     $scope.interInventoryArray = res;
-
                     console.log('res',res);
                     if (res.length > 0 && res[0].inventory.length > 0) {
                         if(res.length == 1) {
-
                             if (!res[0].trackInventory && res[0].trackInventory !== false) {
                                 res[0].trackInventory = true;
                             } else {
                                 res[0].trackInventory = res[0].trackInventory;
                             }
-
                             $scope.interInventoryTransfer = res[0].inventory;
                             if ($scope.interInventoryTransfer.length) {
                                 if (location) {
@@ -329,8 +275,6 @@ angular.module('ebs.controller')
                                 }
                             }
                             $scope.interInventoryView = false;
-
-
                             for (var i = 0; i < res.length; i++) {
                                 if (!res[i].trackInventory && res[i].trackInventory !== false) {
                                     res[i].trackInventory = true;
@@ -341,9 +285,6 @@ angular.module('ebs.controller')
                         }else{
                             $scope.interInventoryTransfer = [];
                         }
-
-
-
                     } else {
                         if(user_details){
                             if(user_details.sellerObject){
@@ -363,7 +304,6 @@ angular.module('ebs.controller')
                     console.log(err)
                 })
             } else {
-
                 $scope.interInventoryTransfer = [];
                 $scope.inventoryTransfer = {};
                 if(user_details){
@@ -376,7 +316,6 @@ angular.module('ebs.controller')
                 }
             }
         };
-
         // Function to search by item name and item code from catalog collection................
         $scope.searchItemcodeInCatalog = function(search,type){
             $scope.searchArray = [];
@@ -386,13 +325,11 @@ angular.module('ebs.controller')
                     // console.log(res)
                     if(res.length>0){
                         if(res.length == 1){
-
                             if( !res[0].trackInventory && res[0].trackInventory !== false){
                                 res[0].trackInventory = true;
                             }else{
                                 res[0].trackInventory = res[0].trackInventory;
                             }
-
                             if(res[0].trackInventory){
                                 $scope.miscellaneousReceipt.Product = res[0].Product;
                                 $scope.miscellaneousReceipt.itemCode = res[0].itemCode;
@@ -407,10 +344,7 @@ angular.module('ebs.controller')
                                 Settings.alertPopup("Alert", "Inventory tracking is turned off for "+res[0].Product);
                                 $scope.inventoryTransfer.inventoryTansferItemCode = '';
                             }
-
-
                         }else{
-
                             $scope.searchArray = res;
                         }
                         $scope.searchInterInventory(search);
@@ -420,23 +354,19 @@ angular.module('ebs.controller')
                         $scope.miscellaneousReceipt.itemCode = '';
                         $scope.interInventoryTransfer = [];
                     }
-
                 }).catch(function(error){
                     console.log(error)
                 })
             }else if(type == 'itemCode' && search){
-
                 $http.get("/dash/item/search/"+search).success(function(res){
                     if(res.length> 0){
                         console.log('res',res)
                         if(res.length ==1){
-
                         if( !res[0].trackInventory && res[0].trackInventory !== false){
                             res[0].trackInventory = true;
                         }else{
                             res[0].trackInventory = res[0].trackInventory;
                         }
-
                         $scope.miscellaneousReceipt.Product = res[0].Product;
                         $scope.miscellaneousReceipt.Category = res[0].Manufacturer ? res[0].Manufacturer : '';
                         $scope.miscellaneousReceipt.subCategory = res[0].subCategory ? res[0].subCategory : '';
@@ -449,8 +379,6 @@ angular.module('ebs.controller')
                         }else{
                             $scope.miscellaneousReceipt.Product = '';
                         }
-
-
                     }else{
                         $scope.miscellaneousReceipt.Product = '';
                         $scope.miscellaneousReceipt.quantity = '';
@@ -458,9 +386,7 @@ angular.module('ebs.controller')
                         $scope.interInventoryTransfer = [];
                     }
                     $scope.searchInterInventory(search);
-
                     $scope.miscellaneousReceipt.itemName = '';
-
                 }).catch(function(error){
                     console.log(error)
                 })
@@ -470,10 +396,7 @@ angular.module('ebs.controller')
                 $scope.itemExistsInCatalog = true;
                 $scope.interInventoryTransfer = [];
             }
-
         };
-
-
         $scope.changeInventoryButton = function (flag) {
             if (flag == 0) {
                 $scope.inventoryRecievePage = false ;
@@ -499,7 +422,6 @@ angular.module('ebs.controller')
                 $scope.inventoryTransferPage = true ;
                 $scope.interInventoryTransfer = [];
                 $scope.inventoryTransfer = {};
-
                 if(user_details){
                     if(user_details.sellerObject){
                         if(user_details.sellerObject.inventoryLocation){
@@ -508,7 +430,6 @@ angular.module('ebs.controller')
                         }
                     }
                 }
-
                 $('html, body').animate({scrollTop: '0px'}, 0);
             }
             else if (flag == 3){
@@ -528,7 +449,6 @@ angular.module('ebs.controller')
                 $('html, body').animate({scrollTop: '0px'}, 0);
             }
         };
-
         $scope.receiveInventoryTypeahead = function(item){
             if( !item.trackInventory && item.trackInventory !== false){
                 item.trackInventory = true;
@@ -538,7 +458,6 @@ angular.module('ebs.controller')
             if(!item.trackInventory){
                 $scope.miscellaneousReceipt = {};
                 Settings.alertPopup("Alert", "Inventory tracking is turned off for "+item.Product);
-
             }else{
                 $scope.miscellaneousReceipt.Product = item.Product;
                 $scope.miscellaneousReceipt.itemCode = item.itemCode;
@@ -553,39 +472,28 @@ angular.module('ebs.controller')
                 }
                 $scope.searchInterInventory(item.itemCode);
             }
-
-
-
         };
-
         var a = 0;
         $scope.navPage = (tab, direction) => {
             if(tab == 42){
                 var viewLength = $scope.viewLength;
                 var viewBy = $scope.newViewBy;
-
                 // console.log(viewLength," ",viewBy);
                 if(direction){
                     // console.log("NEXT");
-
-
                     if(viewLength + viewBy >= $scope.inventoryTransaction.length){
                         if(viewLength + viewBy < $scope.inventoryTransactionHistory_count){
                             viewLength += viewBy;
                             inventoryTransactionObj.viewLength = viewLength;
                             inventoryTransactionObj.viewBy = initialViewBy;
-
-
                             jQuery.noConflict();
                             $('.refresh').css("display", "inline");
                             $http.post("/dash/inventory/transactions",inventoryTransactionObj)
                                 .success(function(response){
                                     console.log(response);
-
                                     for(var i=0; i<response.length; i++){
                                         $scope.inventoryTransaction.push(response[i]);
                                     }
-
                                     if(viewLength + viewBy > $scope.inventoryTransactionHistory_count){
                                         a = viewLength + viewBy - $scope.inventoryTransactionHistory_count;
                                         viewBy -= a;
@@ -602,10 +510,8 @@ angular.module('ebs.controller')
                                 else
                                     $window.location.href = '/404';
                             });
-
                             jQuery.noConflict();
                             $('.refresh').css("display", "none");
-
                         }
                         else{
                             //console.log("Out of data")
@@ -619,7 +525,6 @@ angular.module('ebs.controller')
                     else{
                         // console.log("Minus viewby")
                         viewLength += viewBy;
-
                         if(viewLength + viewBy > $scope.inventoryTransactionHistory_count){
                             a = viewLength + viewBy - $scope.inventoryTransactionHistory_count;
                             viewBy -= a;
@@ -638,9 +543,7 @@ angular.module('ebs.controller')
                             viewBy += a;
                             a = 0;
                         }
-
                         viewLength -= viewBy;
-
                         $scope.viewLength = viewLength;
                         $scope.newViewBy = viewBy;
                     }
@@ -648,19 +551,16 @@ angular.module('ebs.controller')
             }else if(tab == 43){
                 var viewLength = $scope.viewLength;
                 var viewBy = $scope.newViewBy;
-
                 var inventoryObj = {};
                 if(direction){
                     // console.log("NEXT");
                     if(viewLength + viewBy >= $scope.inventory.length){
                         if(viewLength + viewBy < $scope.inventory_count){
-
                             console.log(viewLength + viewBy, ' ',$scope.inventory.length,' ',$scope.inventory_count)
                             viewLength += viewBy;
                             // console.log("Fetch more")
                             inventoryObj.viewLength = viewLength;
                             inventoryObj.viewBy = initialViewBy;
-
                             jQuery.noConflict();
                             $('.refresh').css("display", "inline");
                             $http.post("/dash/inventory/view",inventoryObj)
@@ -668,7 +568,6 @@ angular.module('ebs.controller')
                                     for(var i=0; i<response.length; i++){
                                         $scope.inventory.push(response[i]);
                                     }
-
                                     if(viewLength + viewBy > $scope.inventory_count){
                                         a = viewLength + viewBy - $scope.inventory_count;
                                         viewBy -= a;
@@ -687,8 +586,6 @@ angular.module('ebs.controller')
                                 else
                                     $window.location.href = '/404';
                             });
-
-
                         }
                         else{
                             // console.log("Out of data")
@@ -702,7 +599,6 @@ angular.module('ebs.controller')
                     else{
                         // console.log("Minus viewby")
                         viewLength += viewBy;
-
                         if(viewLength + viewBy > $scope.inventory_count){
                             a = viewLength + viewBy - $scope.inventory_count;
                             viewBy -= a;
@@ -721,9 +617,7 @@ angular.module('ebs.controller')
                             viewBy += a;
                             a = 0;
                         }
-
                         viewLength -= viewBy;
-
                         $scope.viewLength = viewLength;
                         $scope.newViewBy = viewBy;
                     }
@@ -732,7 +626,6 @@ angular.module('ebs.controller')
             else if(tab == 44){
                 var viewLength = $scope.viewLength;
                 var viewBy = $scope.newViewBy;
-
                 var inventoryObj = {};
                 if(direction){
                     // console.log("NEXT");
@@ -742,13 +635,11 @@ angular.module('ebs.controller')
                             console.log("Fetch more")
                             inventoryObj.viewLength = viewLength;
                             inventoryObj.viewBy = initialViewBy;
-
                             $http.post("/dash/inventory/rental",inventoryObj)
                                 .success(function(response){
                                     for(var i=0; i<response.length; i++){
                                         $scope.inventory.push(response[i]);
                                     }
-
                                     if(viewLength + viewBy > $scope.inventory_rentalCount){
                                         a = viewLength + viewBy - $scope.inventory_rentalCount;
                                         viewBy -= a;
@@ -756,7 +647,6 @@ angular.module('ebs.controller')
                                     }
                                     $scope.viewLength = viewLength;
                                 })
-
                         }
                         else{
                             // console.log("Out of data")
@@ -770,7 +660,6 @@ angular.module('ebs.controller')
                     else{
                         // console.log("Minus viewby")
                         viewLength += viewBy;
-
                         if(viewLength + viewBy > $scope.inventory_rentalCount){
                             a = viewLength + viewBy - $scope.inventory_rentalCount;
                             viewBy -= a;
@@ -789,9 +678,7 @@ angular.module('ebs.controller')
                             viewBy += a;
                             a = 0;
                         }
-
                         viewLength -= viewBy;
-
                         $scope.viewLength = viewLength;
                         $scope.newViewBy = viewBy;
                     }
@@ -800,7 +687,6 @@ angular.module('ebs.controller')
             else if(tab == 45){
                 var viewLength = $scope.viewLength;
                 var viewBy = $scope.newViewBy;
-
                 var inventoryObj = {};
                 if(direction){
                     // console.log("NEXT");
@@ -810,7 +696,6 @@ angular.module('ebs.controller')
                             console.log("Fetch more")
                             itemInventoryObj.viewLength = viewLength;
                             itemInventoryObj.viewBy = initialViewBy;
-
                             jQuery.noConflict();
                             $('.refresh').css("display", "inline");
                             $http.post("/dash/inventory/item", itemInventoryObj)
@@ -818,7 +703,6 @@ angular.module('ebs.controller')
                                     for(var i=0; i<response.length; i++){
                                         $scope.inventory.push(response[i]);
                                     }
-
                                     if(viewLength + viewBy > $scope.itemInventoryDetails_count){
                                         a = viewLength + viewBy - $scope.itemInventoryDetails_count;
                                         viewBy -= a;
@@ -835,7 +719,6 @@ angular.module('ebs.controller')
                                 else
                                     $window.location.href = '/404';
                             });
-
                             jQuery.noConflict();
                             $('.refresh').css("display", "none");
                         }
@@ -851,7 +734,6 @@ angular.module('ebs.controller')
                     else{
                         // console.log("Minus viewby")
                         viewLength += viewBy;
-
                         if(viewLength + viewBy > $scope.itemInventoryDetails_count){
                             a = viewLength + viewBy - $scope.itemInventoryDetails_count;
                             viewBy -= a;
@@ -870,9 +752,7 @@ angular.module('ebs.controller')
                             viewBy += a;
                             a = 0;
                         }
-
                         viewLength -= viewBy;
-
                         $scope.viewLength = viewLength;
                         $scope.newViewBy = viewBy;
                     }
@@ -880,9 +760,7 @@ angular.module('ebs.controller')
             }
         }
         var inventoryObj = {};
-
         $scope.refreshTransactions = function(tab){
-
             if(tab == 3){
                 jQuery.noConflict();
                 $('.refresh').css("display", "inline");
@@ -895,7 +773,6 @@ angular.module('ebs.controller')
                 $scope.inventorySearch.filter = '';
                 $scope.miscellaneousReceipt.location = 'All';
                 $scope.showInventoryFilter = false;
-
                 if(user_details){
                     if(user_details.sellerObject){
                         if(user_details.sellerObject.inventoryLocation){
@@ -906,11 +783,9 @@ angular.module('ebs.controller')
                             // $scope.fetchInventory(user_details.sellerObject.inventoryLocation);
                             // $scope.salesPersonflag = false;
                             // $scope.fetchInventory(user_details.sellerObject.inventoryLocation);
-
                         }
                     }
                 }
-
                 //1s$scope.inventoryStatusSelect = 'all'
                 $http.post('/dash/inventory/view',inventoryObj).success(function(res){
                     // console.log(res.length)
@@ -918,14 +793,11 @@ angular.module('ebs.controller')
                 }).catch(function(err){
                     console.log(err)
                 })
-
                 $http.post('/dash/inventory/count',inventoryObj)
                     .success(function(response){
                         //console.log(response)
                         $scope.transactionCount(response,37)
                     });
-
-
                 setTimeout(function () {
                     $('.refresh').css("display", "none");
                 }, 1000);
@@ -934,34 +806,26 @@ angular.module('ebs.controller')
                 jQuery.noConflict();
                 $('.refresh').css("display", "inline");
                 $scope.inventoryTransaction=[];
-
                 inventoryTransactionObj.viewLength = 0;
                 inventoryTransactionObj.viewBy =  initialViewBy;
                 inventoryTransactionObj.searchFor = '';
                 inventoryTransactionObj.searchBy = [];
                 inventoryTransactionObj.filter = '';
                 $scope.inventoryStatusSelect = 'all';
-
                 if(user_details){
                     if(user_details.sellerObject){
                         if(user_details.sellerObject.inventoryLocation){
                             $scope.inventorySearch.filter = '';
                             inventoryTransactionObj.location = user_details.sellerObject.inventoryLocation+'';
-
                         }
                     }
                 }
-
-
-
                 $http.post('/dash/inventory/transactions', inventoryTransactionObj).success(function(res){
                     // console.log(res)
                     $scope.inventoryTransaction = res;
                 }).catch(function(err){
                     console.log(err)
                 })
-
-
                 $http.post('/dash/inventory/transactions/count', inventoryTransactionObj)
                     .success(function(response){
                         // console.log(response)
@@ -971,7 +835,6 @@ angular.module('ebs.controller')
                     $('.refresh').css("display", "none");
                 }, 1000);
             }else if(tab == 38){
-
                 jQuery.noConflict();
                 $('.refresh').css("display", "inline");
                 $scope.inventory=[];
@@ -983,7 +846,6 @@ angular.module('ebs.controller')
                 $scope.inventorySearch.filter = '';
                 $scope.miscellaneousReceipt.location = 'All';
                 $scope.showInventoryFilter = false;
-
                 if(user_details){
                     if(user_details.sellerObject){
                         if(user_details.sellerObject.inventoryLocation){
@@ -994,11 +856,9 @@ angular.module('ebs.controller')
                             // $scope.fetchInventory(user_details.sellerObject.inventoryLocation);
                             // $scope.salesPersonflag = false;
                             // $scope.fetchInventory(user_details.sellerObject.inventoryLocation);
-
                         }
                     }
                 }
-
                 //1s$scope.inventoryStatusSelect = 'all'
                 $http.post('/dash/inventory/view',inventoryObj).success(function(res){
                     // console.log(res.length)
@@ -1006,14 +866,11 @@ angular.module('ebs.controller')
                 }).catch(function(err){
                     console.log(err)
                 })
-
                 $http.post('/dash/inventory/count',inventoryObj)
                     .success(function(response){
                         //console.log(response)
                         $scope.transactionCount(response,37)
                     });
-
-
                 setTimeout(function () {
                     $('.refresh').css("display", "none");
                 }, 1000);
@@ -1027,21 +884,17 @@ angular.module('ebs.controller')
                 inventoryObj.searchBy = [];
                 inventoryObj.filter = '';
                 $scope.inventorySearch.filter = '';
-
                 if($scope.customerSelected){
                     inventoryObj.dealercode = $scope.customerSelected;
                 }
-
                 if($scope.itemsSelected){
                     inventoryObj.itemCode = $scope.itemsSelected;
                 }
-
                 $http.post('/dash/inventory/rental',inventoryObj).success(function(res){
                     $scope.inventory = res;
                 }).catch(function(err){
                     console.log(err)
                 })
-
                 $http.post("/dash/inventory/rental/count",inventoryObj)
                     .success(function(res){
                         if(res){
@@ -1060,21 +913,17 @@ angular.module('ebs.controller')
                 inventoryObj.searchBy = [];
                 inventoryObj.filter = '';
                 $scope.inventorySearch.filter = '';
-
                 if($scope.customerSelected){
                     inventoryObj.dealercode = $scope.customerSelected;
                 }
-
                 if($scope.itemsSelected){
                     inventoryObj.itemCode = $scope.itemsSelected;
                 }
-
                 $http.post('/dash/inventory/rental',inventoryObj).success(function(res){
                     $scope.inventory = res;
                 }).catch(function(err){
                     console.log(err)
                 })
-
                 $http.post("/dash/inventory/rental/count",inventoryObj)
                     .success(function(res){
                         if(res){
@@ -1088,7 +937,6 @@ angular.module('ebs.controller')
                 $('.refresh').css("display", "none");
             }, 1000);
         };
-
         $scope.formatDate = function(date){
             if(date==undefined || date == '')
                 return ('');
@@ -1101,7 +949,6 @@ angular.module('ebs.controller')
             var dateOut = dt+" - "+monthNames[d.getMonth()]+" - "+(d.getFullYear());
             return dateOut;
         };
-
         $scope.fetchTransactionDetails = function(item,flag){
             if(flag){
                 var orderId = item+"";
@@ -1115,7 +962,6 @@ angular.module('ebs.controller')
                         console.log('......Order Id Not Found.......')
                     }
                 })
-
             }else{
                 $scope.transactionDetails = item;
                 if(item.orderId[0]){
@@ -1127,7 +973,6 @@ angular.module('ebs.controller')
                 }
             }
         };
-
         // Submit Miscellaneous Receipt Form.........
         $scope.submitMiscellaneousReceiptForm = function(){
             console.log('$scope.miscellaneousReceipt',$scope.miscellaneousReceipt)
@@ -1143,7 +988,6 @@ angular.module('ebs.controller')
                                         message : 'Please add item to the Catalog',
                                         className : 'text-center'
                                     })*/
-
                                 }else{
                                     if($scope.receiveInventoryArray.length){
                                         var dupicates = true ;
@@ -1152,7 +996,6 @@ angular.module('ebs.controller')
                                                 if(($scope.receiveInventoryArray[i].location == $scope.miscellaneousReceipt.location)||(!$scope.receiveInventoryArray[i].location && !$scope.miscellaneousReceipt.location)){
                                                     $scope.receiveInventoryArray[i].quantity += $scope.miscellaneousReceipt.quantity ;
                                                     dupicates = false ;
-
                                                     if(user_details){
                                                         if(user_details.sellerObject){
                                                             if(user_details.sellerObject.inventoryLocation){
@@ -1161,19 +1004,15 @@ angular.module('ebs.controller')
                                                         }
                                                     }
                                                     break;
-
                                                 }
                                             }
-
                                         }
                                         if(dupicates)
                                             $scope.receiveInventoryArray.push($scope.miscellaneousReceipt);
-
                                         $scope.interInventoryTransfer = [];
                                         $scope.miscellaneousReceipt = {}
                                     }
                                     else{
-
                                         $scope.receiveInventoryArray.push($scope.miscellaneousReceipt);
                                         $scope.interInventoryTransfer = [];
                                         $scope.miscellaneousReceipt = {}
@@ -1185,7 +1024,6 @@ angular.module('ebs.controller')
                                             }
                                         }
                                     }
-
                                 }
                             }else{
                                 Settings.fail_toast('Error', 'Please Enter a valid Quantity');
@@ -1203,10 +1041,7 @@ angular.module('ebs.controller')
                 Settings.alertPopup('Alert', "Inventory tracking is turned off for "+$scope.miscellaneousReceipt.Product);
                 $scope.miscellaneousReceipt = {};
             }
-
-
         };
-
         $scope.submitMiscellaneoustransferForm = function(){
                 if($scope.inventoryTransfer.inventoryTansferItemCode) {
                         if ($scope.inventoryTransfer.from || $scope.inventoryTransfer.to || $scope.inventoryTransfer.from == 'DEFAULT LOCATION' || $scope.inventoryTransfer.to == 'DEFAULT LOCATION') {
@@ -1235,7 +1070,6 @@ angular.module('ebs.controller')
                                                                     message : 'Please add item to the Catalog',
                                                                     className : 'text-center'
                                                                 })*/
-
                                                             } else {
                                                                 if ($scope.transferInventoryArray.length) {
                                                                         $scope.inventoryTransfer.Product = $scope.interInventoryTransfer[0].Product;
@@ -1246,11 +1080,9 @@ angular.module('ebs.controller')
                                                                         $scope.inventoryTransfer.trackInventory = $scope.interInventoryArray[0].trackInventory;
                                                                     }
                                                                     $scope.transferInventoryArray.push($scope.inventoryTransfer);
-
                                                                     $scope.interInventoryTransfer = [];
                                                                     $scope.inventoryTransfer = {};
                                                                     $scope.interInventoryMultipletransfer = '';
-
                                                                 } else {
                                                                     $scope.inventoryTransfer.Product = $scope.interInventoryTransfer[0].Product;
                                                                     if ($scope.interInventoryMultipletransfer) {
@@ -1271,7 +1103,6 @@ angular.module('ebs.controller')
                                                                         }
                                                                     }
                                                                 }
-
                                                             }
                                                         } else{
                                                             Settings.alertPopup('ERROR', 'From and To location cannot be same');
@@ -1296,11 +1127,8 @@ angular.module('ebs.controller')
                     {
                         Settings.fail_toast('Error', 'Please enter a Item Code');
                     }
-
         };
-
         $scope.transferInventory = function(){
-
             var date = new Date();
             var components = [
                 date.getFullYear() - 1900,
@@ -1312,12 +1140,9 @@ angular.module('ebs.controller')
                 (date.getMilliseconds() < 10)? '00' + date.getMilliseconds() : (date.getMilliseconds() < 100)? '0' + date.getMilliseconds() : date.getMilliseconds()
             ];
             var date_ = components.join("");
-
-
             var date1 = new Date();
             var dformat = [date1.getFullYear(),(date1.getMonth()+1).padLeft(), date1.getDate().padLeft() ].join('-') + ' '
                 + [date1.getHours().padLeft(), date1.getMinutes().padLeft(), date1.getSeconds().padLeft()].join (':');
-
                 if($scope.transferInventoryArray.length) {
                     for (var i = 0; i < $scope.transferInventoryArray.length; i++) {
                         var obj = {
@@ -1330,7 +1155,6 @@ angular.module('ebs.controller')
                             transaction: [],
                             transaction: $scope.transferInventoryArray
                         }
-
                         obj.transaction[i].Product = $scope.transferInventoryArray[i].Product;
                         obj.transaction[i].itemCode = $scope.transferInventoryArray[i].inventoryTansferItemCode;
                         obj.transaction[i].quantity = Number($scope.transferInventoryArray[i].quantity.toFixed(3));
@@ -1351,7 +1175,6 @@ angular.module('ebs.controller')
                                                 console.log(err)
                                             })
         };
-
         $scope.transactionCount = function(response, tab){
             // console.log("Count -> " + response, tab);
             if(tab == 36){
@@ -1454,9 +1277,7 @@ angular.module('ebs.controller')
                     $scope.viewLength = -1;
                 }
             }
-
         };
-
         // Function To Switch Receive Inventory Module and Transaction History Component.....
         // $scope.changeInventoryView = function(tab){
         //     $scope.receiveInventoryView = tab;
@@ -1485,7 +1306,6 @@ angular.module('ebs.controller')
         //         }
         //     }
         // };
-
         $scope.receiveInterInventoryTypeahead = function(item){
             if( !item.trackInventory && item.trackInventory !== false){
                 item.trackInventory = true;
@@ -1514,37 +1334,28 @@ angular.module('ebs.controller')
                 Settings.alertPopup("Alert", "Inventory tracking is turned off for "+item.Product);
                 $scope.inventoryTransfer.inventoryTansferItemCode = '';
             }
-
         };
-
         $scope.inventoryTransactionHistoryFilter = function(){
-
             $scope.inventoryTransaction = [];
-
             jQuery.noConflict();
             $('.refresh').css("display", "inline");
             if($scope.inventoryTransactionHistory.filter){
                 inventoryTransactionObj.searchFor = $scope.inventoryTransactionHistory.filter;
                 inventoryTransactionObj.searchBy = inventoryTransactionHistorySearchBy;
             }
-
             if(user_details){
                 if(user_details.sellerObject){
                     if(user_details.sellerObject.inventoryLocation){
                         $scope.inventorySearch.filter = '';
                         inventoryTransactionObj.location = user_details.sellerObject.inventoryLocation+'';
-
                     }
                 }
             }
-
             $http.post('/dash/inventory/transactions',inventoryTransactionObj).success(function(res){
                 $scope.inventoryTransaction = res;
             }).catch(function(err){
                 console.log(err)
             })
-
-
             $http.post('/dash/inventory/transactions/count', inventoryTransactionObj)
                 .success(function(response){
                     $scope.transactionCount(response,36)
@@ -1553,9 +1364,7 @@ angular.module('ebs.controller')
                 $('.refresh').css("display", "none");
             }, 1000);
         };
-
         $scope.getInventoryTransactionHistory = function(){
-
             var inventoryTransactionObj = {};
             inventoryTransactionObj.viewLength = 0;
             inventoryTransactionObj.viewBy =  initialViewBy;
@@ -1563,9 +1372,7 @@ angular.module('ebs.controller')
             inventoryTransactionObj.searchBy = [];
             $scope.inventoryStatusSelect = 'all';
             inventoryTransactionObj.filter = '';
-
             $scope.viewLength = 0;
-
             if(user_details){
                 if(user_details.sellerObject){
                     if(user_details.sellerObject.inventoryLocation){
@@ -1573,20 +1380,16 @@ angular.module('ebs.controller')
                     }
                 }
             }
-
             $http.post('/dash/inventory/transactions',inventoryTransactionObj).success(function(res){
                 $scope.inventoryTransaction = res;
             }).catch(function(err){
                 console.log(err)
             })
-
-
             $http.post('/dash/inventory/transactions/count', inventoryTransactionObj)
                 .success(function(response){
                     $scope.transactionCount(response,36)
                 });
         }
-
         $scope.clearTransferInventory = function(){
             $scope.inventoryTransfer = {};
             $scope.interInventoryTransfer = [];
@@ -1599,19 +1402,14 @@ angular.module('ebs.controller')
                 }
             }
         }
-
-
-
         $scope.receiveMiscellaneousItem = function(){
             var obj = {};
             obj.transaction_id = Settings.generateId();
             obj.date_added = Settings.newDate();
             obj.receicedBy = $scope.user.username ? $scope.user.username : 'Admin';
             obj.seller = $scope.user.sellerphone ? $scope.user.sellerphone : 'Admin';
-            
             obj.transaction = [];
             obj.transaction = $scope.receiveInventoryArray;
-
             if($scope.receiveInventoryArray.length){
                 if($scope.receiveInventoryArray.length == 1){
                     obj.transaction[0].Manufacturer = $scope.receiveInventoryArray[0].Manufacturer ? $scope.receiveInventoryArray[0].Manufacturer : $scope.receiveInventoryArray[0].Category;
@@ -1620,7 +1418,6 @@ angular.module('ebs.controller')
                     obj.transaction[0].quantity = Number($scope.receiveInventoryArray[0].quantity.toFixed(3));
                     obj.transaction[0].cloudinaryURL = $scope.receiveInventoryArray[0].cloudinaryURL ? $scope.receiveInventoryArray[0].cloudinaryURL : '';
                 }else if($scope.receiveInventoryArray.length > 1){
-
                     for(var i=0; i< $scope.receiveInventoryArray.length; i++){
                         obj.transaction[i].Manufacturer = $scope.receiveInventoryArray[i].Manufacturer ? $scope.receiveInventoryArray[i].Manufacturer : $scope.receiveInventoryArray[0].Category;
                         obj.transaction[i].subCategory = $scope.receiveInventoryArray[i].subCategory ? $scope.receiveInventoryArray[i].subCategory : '';
@@ -1630,53 +1427,42 @@ angular.module('ebs.controller')
                     }
                 }
             }
-
             jQuery.noConflict();
             $('.refresh').css("display", "inline");
-
             $http.post("/dash/inventory/receive", obj).success(function(res){
                 Settings.success_toast("Success", 'Inventory received successfully');
                 $scope.receiveInventoryArray = [];
                 // $scope.refreshTransactions(3);
                 $scope.refreshTransactions(37);
                 $scope.changeInventoryButton(3);
-
                 // $scope.changeInventoryView('receive_inventory');
                 // $scope.changeInventoryView('inventory_transaction');
                 $scope.interInventoryTransfer =[];
             }).catch(function(err){
                 console.log(err)
             })
-
         }
-
         $scope.filterInventoryByLocation = function(){
             $scope.inventoryLocationUnique = [];
             $http.get('dash/inventory/location/filter').success(function(res){
-
                 if(res.length){
                     $scope.inventoryLocationUnique = res;
                     $scope.inventoryLocationUnique = $scope.inventoryLocationUnique.filter(Boolean) ;
                     $scope.inventoryLocationUnique = $scope.inventoryLocationUnique.map(function(x){return (x + "").toUpperCase()}) ;
-
                 }
                 for(var i=0; i< $scope.warehouseLocation.length; i++){
                     $scope.inventoryLocationUnique.push($scope.warehouseLocation[i].name);
                 }
-
                 $scope.inventoryLocationUnique = Array.from(new Set($scope.inventoryLocationUnique));
-
                 for(var i=0;i< $scope.inventoryLocationUnique.length; i++){
                     if($scope.inventoryLocationUnique[i] == ''){
                         $scope.inventoryLocationUnique.splice(i, 1);
                     }
                 }
-
             }).catch(function(err){
                 console.log(err)
             })
         };
-
          $scope.fetchInventory = function(searchFor,flag){
              // console.log(searchFor)
              // console.log(flag)
@@ -1691,13 +1477,11 @@ angular.module('ebs.controller')
              $scope.inventory = [];
              jQuery.noConflict();
              $('.refresh').css("display", "inline");
-
              if(!$scope.showInventoryFilter){
                  if(flag)
                      $scope.inventorySearch.filter = flag;
              }
              $scope.showInventoryFilter = true;
-
              if($scope.inventorySearch.filter){
                  inventoryFetch.searchFor = $scope.inventorySearch.filter + '';
                  inventoryFetch.searchBy = inventorySearchBy;
@@ -1714,20 +1498,15 @@ angular.module('ebs.controller')
                  inventoryFetch.location = '';
                  $scope.miscellaneousReceipt.location = ""
              }
-
              if(user_details){
                  if(user_details.sellerObject){
                      if(user_details.sellerObject.inventoryLocation){
                          // $scope.inventorySearch.filter = '';
                          inventoryFetch.location = user_details.sellerObject.inventoryLocation+'';
                          $scope.miscellaneousReceipt.location = user_details.sellerObject.inventoryLocation;
-
                      }
                  }
              }
-
-
-
              // if($scope.inventorySearch.filter && !searchFor && searchFor != ''){
              //    inventoryFetch.searchFor = $scope.inventorySearch.filter + '';
              //    inventoryFetch.searchBy = inventorySearchBy;
@@ -1747,29 +1526,22 @@ angular.module('ebs.controller')
              //     inventoryFetch.searchBy = ['location'];
              //     $scope.miscellaneousReceipt.location = searchFor;
              // }
-
              // console.log(inventoryFetch)
-
-
-
              $http.post('/dash/inventory/view/search',inventoryFetch).success(function(res){
                  // console.log("inventory data -- ", res);
                  $scope.inventory = res;
              }).catch(function(err){
                 console.log(err)
              })
-
              $http.post('/dash/inventory/view/search/count', inventoryFetch)
                  .success(function(response){
                      console.log(response);
                      $scope.transactionCount(response,37)
                  });
-
              setTimeout(function(){
                  $('.refresh').css("display", "none");
              }, 1000);
          }
-
         //Get customer name - For inventory :: BB Foamwork
         $scope.getCustomerNameFromInventory = function(code){
             for(var i = 0; i < $scope.inventoryDealer.length; i++){
@@ -1787,50 +1559,38 @@ angular.module('ebs.controller')
                     if(i == $scope.inventoryDealer.length - 1)
                         return code;
                 }
-
             }
         }
-
         $scope.inventorySearchFilter = function(filter){
-
             var temp = '';
-
             if(filter == 'Receive')temp = 'receive_inventory';
             if(filter == 'Shipment')temp = 'inventory_shipment';
             if(filter == 'Transfer')temp = 'inventory_transfer';
             if(!filter)temp = '';
-
             $scope.inventoryTransaction = [];
             $scope.viewLength = 0;
             inventoryTransactionObj.filter = temp;
             inventoryTransactionObj.viewLength = 0;
             inventoryTransactionObj.viewBy =  initialViewBy;
             inventoryTransactionObj.searchBy = [];
-
             if (filter && filter != 'all') {
                 $scope.inventoryStatusSelect = filter;
             }else{
                 $scope.inventoryStatusSelect = '';
             }
-
             if(user_details){
                 if(user_details.sellerObject){
                     if(user_details.sellerObject.inventoryLocation){
                         $scope.inventorySearch.filter = '';
                         inventoryTransactionObj.location = user_details.sellerObject.inventoryLocation+'';
-
                     }
                 }
             }
-
-
             $http.post('/dash/inventory/transactions',inventoryTransactionObj).success(function(res){
                 $scope.inventoryTransaction = res;
             }).catch(function(err){
                 console.log(err)
             })
-
-
             $http.post('/dash/inventory/transactions/count', inventoryTransactionObj)
                 .success(function(response){
                     $scope.transactionCount(response,36)
@@ -1838,12 +1598,10 @@ angular.module('ebs.controller')
                 console.log(err)
             });
         }
-
         $scope.clearFilter = function(tab){
              $scope.showInventoryFilter = false;
              $scope.clearFilterButton(37);
          };
-
         $scope.clearFilterButton = function (search,tab){
             if(!search){
                 jQuery.noConflict();
@@ -1853,17 +1611,13 @@ angular.module('ebs.controller')
                     inventoryTransactionObj.viewBy = initialViewBy;
                     inventoryTransactionObj.searchFor = '';
                     inventoryTransactionObj.searchBy = [];
-
-
                     $scope.viewLength = 0;
                     $scope.newViewBy = $scope.inventoryTransactionHistory;
-
                     if(user_details){
                         if(user_details.sellerObject){
                             if(user_details.sellerObject.inventoryLocation){
                                 $scope.inventorySearch.filter = '';
                                 inventoryTransactionObj.location = user_details.sellerObject.inventoryLocation+'';
-
                             }
                         }
                     }
@@ -1872,8 +1626,6 @@ angular.module('ebs.controller')
                     }).catch(function(err){
                         console.log(err)
                     })
-
-
                     $http.post('/dash/inventory/transactions/count', inventoryTransactionObj)
                         .success(function(response){
                             $scope.transactionCount(response,36)
@@ -1888,7 +1640,6 @@ angular.module('ebs.controller')
                     $scope.miscellaneousReceipt.location = 'All';
                     $scope.inventorySearch.filter = '';
                     $scope.inventory = [];
-
                     if(user_details){
                         if(user_details.sellerObject){
                             if(user_details.sellerObject.inventoryLocation){
@@ -1899,37 +1650,28 @@ angular.module('ebs.controller')
                                 // $scope.fetchInventory(user_details.sellerObject.inventoryLocation);
                                 // $scope.salesPersonflag = false;
                                 // $scope.fetchInventory(user_details.sellerObject.inventoryLocation);
-
                             }
                         }
                     }
-
-
                     $scope.viewLength = 0;
                     $http.post('/dash/inventory/view',inventoryObj).success(function(res){
                         $scope.inventory = res;
                     }).catch(function(err){
                         console.log(err)
                     })
-
                     $http.post('/dash/inventory/count', inventoryObj)
                         .success(function(response){
                             $scope.transactionCount(response,37)
                         });
                 }
-
                 setTimeout(function(){
                     $('.refresh').css("display", "none");
                 }, 1000);
-
             }
         };
-
         $scope.goToStocks = function(id){
             $window.location.href = '#/stocks/' +id;
         }
-
-
         $scope.refreshInventory = function(){
             if(!$scope.settings.invoice){
                 $http.get("/dash/inventory/stocks")
@@ -1939,19 +1681,16 @@ angular.module('ebs.controller')
                                 res.location.splice(i, 1);
                             }
                         }
-
                         res.locationQty = 0;
                         res.locationAmount = 0;
                         res.dealerQty = 0;
                         res.dealerAmount = 0;
                         // console.log('res is',res.location.length)
-
                         if(res.location.length){
                             for(var i=0; i<res.location.length;i++){
                                 res.locationQty += res.location[i].totalQty;
                                 res.locationAmount += res.location[i].totalAmount;
                             }
-
                             for(var j=0; j<res.Dealer.length; j++){
                                 res.dealerQty += res.Dealer[j].totalQty;
                                 res.dealerAmount += res.Dealer[j].totalAmount;
@@ -1959,42 +1698,32 @@ angular.module('ebs.controller')
                         }
                         $scope.stocksInventory = res;
                     })
-
                 $scope.refreshTransactions(3);
                 $scope.getWarehouseLocation();
                 $scope.filterInventoryByLocation();
             }
-
-
             if($scope.settings.invoice){
                 $http.get("/dash/stores")
                     .success(function (res) {
                         $scope.inventoryDealer = res;
                         // console.log($scope.inventoryDealer)
                     })
-
                 // $http.get("/dash/inventory")
                 //     .success($scope.renderInventory);
-
                 if(!$scope.items.length)
                     $scope.clearFilter(2);
             }
-
             // $scope.changeInventoryView(0);
         }
-
         $scope.refreshInventory();
-
         $scope.getItemInventory = function(type,itemCode,filter){
             console.log(type)
-
             if(type == 'details'){
                 $scope.changeInventoryButton(4);
                 $scope.itemInventoryDetails = [];
                 $scope.selectedItemInventory = itemCode ;
                 if(typeof(itemCode) == 'object')
                     $scope.selectedItemInventory = itemCode.itemCode ;
-
                 var itemInventoryObj = {};
                 itemInventoryObj.viewLength = 0;
                 itemInventoryObj.viewBy =  initialViewBy;
@@ -2015,37 +1744,30 @@ angular.module('ebs.controller')
                             // $scope.fetchInventory(user_details.sellerObject.inventoryLocation);
                             $scope.salesPersonflag = false;
                             // $scope.fetchInventory(user_details.sellerObject.inventoryLocation);
-
                         }
                     }
                 }
-
                 // itemInventoryObj.location = filter.location||'';
                 $scope.viewLength = 0;
                 // console.log(itemInventoryObj)
-
                 $http.post('/dash/inventory/item', itemInventoryObj).success(function(res){
                     // console.log(res)
                     $scope.itemInventoryDetails = res ;
                 }).catch(function(err){
                     console.log(err)
                 })
-
                 $http.post('/dash/inventory/item/count', itemInventoryObj)
                     .success(function(response){
                         $scope.transactionCount(response,39)
                     });
-
             }else if(type == 'filter'){
                 if($scope.itemInventoryFilter.startDate && $scope.itemInventoryFilter.endDate){
                     if (($scope.itemInventoryFilter.startDate - $scope.itemInventoryFilter.endDate) > 0){
                         Settings.alertPopup("WARNING", "Start date cannot be greater than End date.");
                         $scope.itemInventoryFilter.startDate = 0;
                         $scope.itemInventoryFilter.endDate = 0;
-
                     }
                 }
-
                 var itemInventoryObj = {};
                 itemInventoryObj.viewLength = 0;
                 itemInventoryObj.viewBy =  initialViewBy;
@@ -2070,20 +1792,16 @@ angular.module('ebs.controller')
                     }
                 }
                 $scope.viewLength = 0;
-
                 $http.post('/dash/inventory/item', itemInventoryObj).success(function(res){
                     // console.log(res)
                     $scope.itemInventoryDetails = res ;
                 }).catch(function(err){
                     console.log(err)
                 })
-
-
                 $http.post('/dash/inventory/item/count', itemInventoryObj)
                     .success(function(response){
                         $scope.transactionCount(response,39)
                     });
-
             }
         }
     })

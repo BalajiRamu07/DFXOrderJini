@@ -1,12 +1,9 @@
 /**
  * Created by shreyasgombi on 05/03/20.
  */
-
 angular.module('ebs.controller')
-
     .controller("OldSettingsCtrl", function($scope, $routeParams, $rootScope, $http, toastr, $window, Settings){
         console.log("Hello From Settings Controller .... !!!!");
-
         //for display in settings page
         // $scope.shopify_flag = JSON.parse($routeParams.flag);
         var el;
@@ -73,40 +70,29 @@ angular.module('ebs.controller')
         $scope.neworderType={};
         $scope.newUOM={};
         $scope.dealerAsCustomerFlag = false;
-
         $scope.quickbooksArray = [];
         $scope.applicationType='';
-
         //....Atmosphere....
             $scope.newEvaluationType = {};
                 $scope.settingsEvaluation = [];
                 $scope.settingsDepartment = [];
                 $scope.editEvaluationType = [];
                 $scope.editDepartmentSetup = [];
-
-
         //...... FTP Tenants....
         $scope.tenants = [];
         $scope.tenant = {type  : 'FTP', format : 'Standard'};
-
         const startLoader = () => {
             jQuery.noConflict();
             $('.refresh').css("display", "inline");
         };
-
         const stopLoader = () => {
             jQuery.noConflict();
             $('.refresh').css("display", "none");
         }
-
         //Atmosphere....Functions for settings --->Author shradha
-
             $scope.addEvaluationType = function(type,days){
-
                 var length = $scope.settingsEvaluation.length-1
-
                 if(type != '' && type != undefined && days != '' && days != undefined){
-
                     var typeCaps = type.charAt(0).toUpperCase();
                     $scope.settingsEvaluation[length+1] = {
                         'name' : typeCaps+type.slice(1),
@@ -117,19 +103,15 @@ angular.module('ebs.controller')
                     // $scope.settingsEvaluation[length+1] = type
                     console.log( $scope.settingsEvaluation);
 //                    console.log("Inside....");
-
                     $http.put("/dash/settings/update/evaluationType",  $scope.settingsEvaluation)
                         .success(function(res){
                             console.log(res);
                         })
-
                 }
-
             }
                 $scope.editEvaluationTypeFromSettings = function(roles, index){
                     if(roles == undefined){
                     Settings.popupAlert("Please enter some text!")
-
                     }
                     else{
                         var rolesObj = [];
@@ -138,23 +120,18 @@ angular.module('ebs.controller')
                             name : $scope.settingsEvaluation[index].name,
                             days : roles
                         };
-
                         console.log(rolesObj)
-
                         $http.put("/dash/settings/update/evaluationType",  $scope.settingsEvaluation)
                             .success(function(res){
                                 console.log(res);
                                 if(res)
                                 {
                                  Settings.popupAlert("Evaluation type successfully updated")
-
                                 }
                                 else{
                                      Settings.popupAlert("Error while updating evaluation type")
-
                                 }
                             })
-
                     }
                 };
                     $scope.removeEvaluationType = function(roles){
@@ -164,70 +141,54 @@ angular.module('ebs.controller')
                             console.log(index);
                             $scope.settingsEvaluation.splice(index, 1);
                             console.log($scope.settingsEvaluation)
-
                             $http.put("/dash/settings/update/evaluationType", $scope.settingsEvaluation)
                                 .success(function(res){
                                     //console.log(res);
                                     // $scope.userRole = res;
                                 })
-
                         }
                         else{
                                         Settings.popupAlert("A minimum of one type has to be present.")
-
 //                            bootbox.alert({
 //                                title : 'ERROR',
 //                                message : 'A minimum of one type has to be present.',
 //                                className : 'text-center'
 //                            })
                         }
-
                     }
-
                         $scope.addDepartment = function(name){
                             var length = $scope.settingsDepartment.length-1
-
                             if(name != '' && name != undefined){
-
                                 var typeCaps = name.charAt(0).toUpperCase();
                                 $scope.settingsDepartment[length+1] = {
                                     'name' : typeCaps+name.slice(1)
                                 };
                                 $scope.newEvaluationType.dept = ''
                                 // $scope.settingsEvaluation[length+1] = type
-
                                 $http.put("/dash/settings/update/department",  $scope.settingsDepartment)
                                     .success(function(res){
                                         console.log(res);
                                     })
-
                             }
                             else{
                                   Settings.popupAlert("Please enter both the fields.")
-
                             }
                         }
-
                             $scope.removeDepartmentFormSetup = function(roles){
                                 var index = $scope.settingsDepartment.map(function(o) { return o.name; }).indexOf(roles);
                                 if(index != -1 && ($scope.settingsDepartment.length > 1)){
                                     $scope.settingsDepartment.splice(index, 1);
                                     //console.log($scope.settingsDepartment)
-
                                     $http.put("/dash/settings/update/department", $scope.settingsDepartment)
                                         .success(function(res){
                                             console.log(res);
                                             // $scope.settingsDepartment = res;
                                         })
-
                                 }
                                 else{
                                     Settings.popupAlert("A minimum of one type has to be present.")
-
                                 }
-
                             }
-
                                 $scope.editDepartmentFromSettings = function(roles, index){
                                     if(roles == undefined){
                                         Settings.popupAlert("Please enter some text")
@@ -245,16 +206,13 @@ angular.module('ebs.controller')
                                         rolesObj[index] = {
                                             name : typeCaps+roles.slice(1)
                                         };
-
                                         //console.log(rolesObj)
-
                                         $http.put("/dash/settings/update/department",  rolesObj)
                                             .success(function(res){
                                                 console.log(res);
                                                 if(res)
                                                 {
                                                    Settings.popupAlert("Department successfully updated")
-
                                                 }
                                                 else{
                                                        Settings.popupAlert("Error while updating department")
@@ -268,11 +226,9 @@ angular.module('ebs.controller')
                                             })
                                     }
                                 };
-
                                     $scope.addGoalsConfiguration = function(evaluation)
                                     {
                                         if(evaluation != '' && evaluation != undefined){
-
                                             $scope.goalsConfigArray= {
                                                 'holiday' : evaluation.holiday,
                                                 'week_start' : evaluation.week_start,
@@ -281,17 +237,12 @@ angular.module('ebs.controller')
                                                 $http.put("/dash/settings/update/goalsConfig",  $scope.goalsConfigArray)
                                                     .success(function(res){
                                                      Settings.popupAlert("Goals configuration successfully updated")
-
-
                                                     })
                                         }
                                         else{
                                                Settings.popupAlert("Please enter text.")
-
                                         }
                                     }
-
-
             // Select the application type in the instance
             $scope.changeApplicationType = function (type) {
                 $http.put("/dash/settings/application/" + type)
@@ -302,13 +253,11 @@ angular.module('ebs.controller')
                         }
                     })
             }
-
         $scope.getShipInvoiceTermsAndConditions = function(){
             $http.get('/dash/settings/shipment/terms/conditions').success(function (result) {
                 $scope.shipInvoiceTC = result;
             })
         }
-
         $scope.renderSettingsData = function() {
             startLoader();
             $http.get("/dash/instanceDetails")
@@ -363,7 +312,6 @@ angular.module('ebs.controller')
                     $scope.companyDetails.minOrderAmount = response.minOrderAmount;
                     $scope.companyDetails.phone = response.phone;
                     $scope.companyDetails.domain = (window.location.hostname == 'localhost'? ('http://' + window.location.host) : ('https://' + window.location.host));
-
                     $scope.superjini = response.superjini || false;
                     $scope.settings.invoice = response.invoice;
                     $scope.smsCount = response.smsCount;
@@ -389,8 +337,6 @@ angular.module('ebs.controller')
                     $scope.mpg=response.mpg || [];
                     $scope.orderType=response.orderType || [];
                     $scope.salesUOM=response.salesUOM || [];
-
-
                     $scope.subscription = response.subscription || {};
                     $scope.customNames = response.customNames || [];
                     $scope.dealerNotificationFlag = response.dealerNotificationFlag || false;
@@ -398,10 +344,7 @@ angular.module('ebs.controller')
                     $scope.dealerAsUserFlag = response.dealerAsUserFlag || false;
                     $scope.dealerAsCustomerFlag = response.dealerAsCustomerFlag || false;
                     $scope.goalsConfigArray = response.goalsConfig ? response.goalsConfig : {};
-
-
                     $scope.percentageDiscount = response.percentageDiscount || false
-
                     $http.get("/dash/settings/invoice/recent/id")
                         .success(function(response){
                             // console.log('response',response)
@@ -409,7 +352,6 @@ angular.module('ebs.controller')
                             if(!response){
                                 $scope.invoiceID.num = zeroPad(1,5)
                             }else{
-
                                 $scope.invoiceID.num = zeroPad(response.invoiceID,5);
                                 // console.log($scope.invoiceID.num)
                             }
@@ -421,20 +363,15 @@ angular.module('ebs.controller')
                             }
                         }
                     }
-
                     $scope.otherTaxDefalt = response.other
                     $scope.taxObj = response.taxObj ? response.taxObj : [];
-
                     if($scope.taxObj){
-
                         if($scope.taxObj.setupType == 'india'){
                             $scope.taxSetups.indiaSetup = 'india';
-
                         }else if($scope.taxObj.setupType == 'other'){
                             $scope.taxSetups.otherSetup = 'other';
                         }
                     }
-
                     for(var i=0; i< $scope.tax.length;i++){
                         if($scope.tax[i].default)
                             defaultTaxObj = $scope.tax[i];
@@ -446,16 +383,13 @@ angular.module('ebs.controller')
                         $scope.leaveEnabled[response.leave.leaveType[i].type] = {'name' :response.leave.leaveType[i].name, 'enable' : response.leave.leaveType[i].enable};
                     }
                     $scope.orderEditForStatus = response.orderEdit ? response.orderEdit : [];
-
                     if(!response.orderEdit){
                         var obj = {};
                         obj.type = 'orderEdit';
                         obj.obj = [];
-
                         for (var i = 0; i < $scope.nav[1].status.length; i++) {
                             obj.obj.push({'status': $scope.nav[1].status[i], 'editable': false});
                         }
-
                         $http.put("/dash/settings/update/order/edit/access", obj.obj)
                             .success(function (res) {
                                 //console.log(res);
@@ -466,11 +400,9 @@ angular.module('ebs.controller')
                             var obj = {};
                             obj.type = 'orderEdit';
                             obj.obj = [];
-
                             for (var i = 0; i < $scope.nav[1].status.length; i++) {
                                 obj.obj.push({'status': $scope.nav[1].status[i], 'editable': false});
                             }
-
                             $http.put("/dash/settings/update/order/edit/access", obj.obj)
                                 .success(function (res) {
                                     //console.log(res);
@@ -484,108 +416,83 @@ angular.module('ebs.controller')
                     $scope.freight = response.freight ? response.freight :[] ;
                     $scope.freightChargeType = response.freightChargeType ? response.freightChargeType :[];
                     $scope.mopMargin = response.mopMargin ? response.mopMargin : 0 ;
-
                     //order DeliveryDate
-
                     $scope.deliveryDate = response.deliveryDate;
                     if(response.deliveryDate){
                         $scope.delivery_date_Enable = $scope.deliveryDate.delivery_date_Enable;
                         $scope.deliveryOrderDate = $scope.deliveryDate.orderDeliveryDate ? $scope.deliveryDate.orderDeliveryDate : '0';
                     }
-
-
                     var itemUpdateDate = new Date(response.items_update);
                     var inventoryUpdateDate = new Date(response.inventory_update);
                     var storesUpdateDate = new Date(response.stores_update);
-
                     var itemsUpdate = moment(itemUpdateDate);
                     var inventoryUpdate = moment(inventoryUpdateDate);
                     var storesUpdate = moment(storesUpdateDate);
-
                     var now = moment(new Date());
-
                     var itemUpdate2 = moment.duration(now.diff(itemsUpdate));
                     var inventoryUpdate2 = moment.duration(now.diff(inventoryUpdate));
                     var storesUpdate2 = moment.duration(now.diff(storesUpdate));
-
-
                     $scope.itemUpdateTime = itemUpdate2.asDays();
                     $scope.inventoryUpdateTime = inventoryUpdate2.asDays();
                     $scope.storesUpdateTime = storesUpdate2.asDays();
-
                     //.... We can enable to add new items from the mobile app, by setting true / false...
                     if(response.token != undefined)
                         $scope.token = response.token;
                     else
                         $scope.token = false;
-
                     //.... We can enable to add new items from the mobile app, by setting true / false...
                     if(response.addItems != undefined)
                         $scope.addItems = response.addItems;
                     else $scope.addItems = false;
-
                     if(response.attendance != undefined)
                         $scope.attendance = response.attendance;
                     else
                         $scope.attendance = false;
-
                     if(response.enableStocks != undefined)
                         $scope.enableStocks = response.enableStocks;
                     else
                         $scope.enableStocks = false;
-
                     if(response.enableFulfiller != undefined)
                         $scope.enableFulfiller = response.enableFulfiller;
                     else
                         $scope.enableFulfiller = false;
-
                     if(response.enableQuotations != undefined)
                         $scope.enableQuotations = response.enableQuotations;
                     else
                         $scope.enableQuotations = false;
-
                     if(response.enableOrdersEmail != undefined)
                         $scope.enableOrdersEmail = response.enableOrdersEmail;
                     else
                         $scope.enableOrdersEmail = false;
-
                     if(response.enableQuotationsEmail != undefined)
                         $scope.enableQuotationsEmail = response.enableQuotationsEmail;
                     else
                         $scope.enableQuotationsEmail = false;
-
                     if(response.discount){
                         $scope.discountList = response.discount;
                     }else{
                         $scope.discountList = [];
                     }
-
                     // if(response.UOM)
                     //     $scope.UOM = response.UOM;
                     // else
                     //     $scope.UOM = '';
-
-
                     if(response.stepQuantity) {
                         $scope.stepQuantity = response.stepQuantity;
                     }
                     else {
                         $scope.stepQuantity = 1;
                     }
-
-
                     //..... We can parameterize / customize / enable, disable the status changing on the portal..
                     //... By default we set to true (i.e. enabled)..
                     if(response.statusChange)
                         $scope.settings.statusChange = response.statusChange;
                     else $scope.settings.statusChange = false;
-
                     //..... We can parameterize / customize / enable, disable the status changing on the portal..
                     //... By default we set to true (i.e. enabled)..
                     if(response.lineStatusChange)
                         $scope.settings.lineStatusChange = response.lineStatusChange;
                     else $scope.settings.lineStatusChange = false;
-
                     if(response.editItemPrice)
                         $scope.settings.editItemPrice = response.editItemPrice;
                     else $scope.settings.editItemPrice = false;
@@ -615,13 +522,11 @@ angular.module('ebs.controller')
                     if (response.shopifyProperties) {
                         $scope.shopifyArray = response.shopifyProperties;
                     }
-
                     if (response.QuickBooksProperties) {
                         console.log()
                         $scope.quickbooksArray = response.QuickBooksProperties;
                     }
                 });
-
             // $http.get("/dash/memberDetail").success(function(response){
             //     $scope.memberdetails = response;
             // })
@@ -630,14 +535,12 @@ angular.module('ebs.controller')
                 if(matrixData.length){
                     $scope.deliveryData = matrixData[0].matrix;
                 }
-
             });
             Settings.getNav(true, function(nav){
                 $scope.nav = nav;
                 // console.log($scope.nav);
                 $scope.reportTab = $scope.nav[8].cols;
             })
-
             var temp = false;
             for(var i=0;i<$scope.nav.length;i++){
                 if(!$scope.nav[i].hasOwnProperty('flag')){
@@ -647,7 +550,6 @@ angular.module('ebs.controller')
                 if($scope.nav[i].flag == true){
                     $scope.newNav.push($scope.nav[i]);
                 }
-
                 if(i == $scope.nav.length - 1 && temp){
                     $http.put('/dash/nav/update', $scope.nav)
                         .success(function(res){
@@ -656,7 +558,6 @@ angular.module('ebs.controller')
                         });
                 }
             }
-
             //Roles from nav
             if($scope.nav[4]){
                 if($scope.nav[4].roles){
@@ -680,7 +581,6 @@ angular.module('ebs.controller')
                             });
                     }
                     else{
-
                         $scope.userRole=[
                             {
                                 name:"Admin",
@@ -731,7 +631,6 @@ angular.module('ebs.controller')
                         }
                     }
                 }else{
-
                     $scope.userRole=[
                         {
                             name:"Admin",
@@ -783,11 +682,9 @@ angular.module('ebs.controller')
                     $scope.nav[4].roles = $scope.userRole;
                 }
             }
-
             $http.get("/country/countryCode").success(function (res) {
                 $scope.countryCode = res;
             })
-
             $http.get("/dash/settings/fetch/other/tabs")
                 .success(function (tabs) {
                     $scope.otherTabs = [];
@@ -812,7 +709,6 @@ angular.module('ebs.controller')
                                 'enable': false
                             }
                         ];
-
                         if ($scope.otherTabs) {
                             $http.put("/dash/settings/other/tabs", $scope.otherTabs)
                                 .success(function (res) {
@@ -821,7 +717,6 @@ angular.module('ebs.controller')
                         }
                     }
                 })
-
             $http.get("/dash/settings/customer/edit")
                 .success(function(dealerEditRole){
                     $scope.dealerEditRoles = [];
@@ -876,29 +771,24 @@ angular.module('ebs.controller')
                                 "enable" : false
                             }
                         ]}];
-
                         $http.put("/dash/settings/update/customer/edit/access", $scope.dealerEditRoles)
                             .success(function(res){
                                 //console.log(res);
                             })
                     }
                 });
-
             $scope.customNames = [];
             $http.get("/dash/settings/customize/names")
                 .success(function(customNames){
                     if(customNames.length && customNames[0].obj.length){
                         $scope.customNames = customNames[0].obj;
                         Settings.setInstanceDetails('customNames', $scope.customNames)
-
                     }else{
                         var customObj = {
                             "name" : "Delivery Date",
                             "displayName" : "Delivery Date"
                         };
-
                         $scope.customNames[0] = customObj;
-
                         $http.put("/dash/settings/update/custom/name", $scope.customNames)
                             .success(function(res){
                                 Settings.setInstanceDetails('customNames', $scope.customNames)
@@ -906,8 +796,6 @@ angular.module('ebs.controller')
                             })
                     }
                 });
-
-
             $http.get("/dash/settings/details/DealerTabs")
                 .then(pincode => {
                     if(pincode.data){
@@ -932,28 +820,24 @@ angular.module('ebs.controller')
                     else
                         $window.location.href = '/404';
                 });
-
             $http.get('/dash/enforce/credit/fetch')
                 .success(function (response) {
                     if (response.length) {
                         $scope.enforceCredit = response[0].enforceCredit;
                     }
                 })
-
             $http.get('/dash/enforce/orderInventory/fetch')
                 .success(function (response){
                     if(response.length){
                         $scope.enforceInventoryOrder = response[0].enforceInventoryOrder;
                     }
                 })
-
             $http.get('/dash/settings/standard/fulfilment')
                 .success(function (response){
                     if(response.length){
                         $scope.standardOrderFulfilFlag = response[0].standardOrderFulfilFlag;
                     }
                 })
-
             $http.get("/dash/shopify/creds/fetch")
                 .success(function (response) {
                     console.log("Shopify credentials Fetched")
@@ -963,29 +847,24 @@ angular.module('ebs.controller')
                         $scope.shopify.host = response[0].shopify_host;
                         $scope.shopify.store_name = response[0].shopify_store_name;
                         //$scope.dataSource.selected = 'shopify'; //this will put shopify screen in settings
-
                         $scope.cloudinary.api = response[0].cloudinary_api;
                         $scope.cloudinary.cloud = response[0].cloudinary_cloud;
                         $scope.cloudinary.secretapi = response[0].cloudinary_secretapi;
                         if(response[0].cloudinary_api) $scope.cloudinary.upload_limit = 75000;
                         else $scope.cloudinary.upload_limit = 300;
-
                     }
                 })
                 .error(function (error){
                     console.log(error)
                 })
-
             $http.get('/dash/userTabs/showUserTabs')
                 .success(function (result){
                     if(result.length)
                         $scope.UserTabsActive = result[0].UserTab;
                 })
-
             $scope.getWarehouseLocation();
             $scope.getShipInvoiceTermsAndConditions();
         };
-
         // Fetch warehouse locations from setting location ........
         $scope.getWarehouseLocation = function(){
             $http.get("/dash/settings/inventory/locations").success(function(res){
@@ -996,22 +875,17 @@ angular.module('ebs.controller')
                 console.log(err);
             })
         }
-
         $scope.renderSettingsData();
-
         $scope.addShipInvoiceTermsCondition = function(shipInvoiceTC){
             var body = {};
             body.shipInvoice = shipInvoiceTC;
-    
             $http.post('/dash/settings/terms/conditions', body).success(function (res) {
                 if(res){
                     toastr.success("Terms and condition Added Successfully")
                 }
                 $scope.getShipInvoiceTermsAndConditions();
-    
             })
         }
-
         $scope.removeShipInvoiceTerms = function(type, terms, index){
             var body = {};
             body.type = type;
@@ -1028,7 +902,6 @@ angular.module('ebs.controller')
                     cancel : {
                         label : 'Cancel',
                         className : 'btn-success'
-    
                     }
                 },
                 callback : function(result){
@@ -1041,9 +914,7 @@ angular.module('ebs.controller')
                     }
                 }
             })
-    
         }
-
         $scope.formatDate = function(date){
             if(date==undefined || date == '')
                 return ('');
@@ -1056,17 +927,14 @@ angular.module('ebs.controller')
             var dateOut = dt+" - "+monthNames[d.getMonth()]+" - "+(d.getFullYear());
             return dateOut;
         }
-
          /*
             Discount value
         */
         $scope.discountObj = {};
-
         $scope.addDiscount = function(status){
             if(status != '' && status != undefined && Number(status)>0){
                 var found = $scope.discountList.some(el => el.value === status);
                 console.log('found',found)
-    
                 if(!found){
                     $scope.discountList[$scope.discountList.length] = {'value' : status}
                     $http.put("/dash/settings/discount", $scope.discountList)
@@ -1091,7 +959,6 @@ angular.module('ebs.controller')
                 })
             }
         }
-    
         $scope.removeDiscount = function(value,index){
             $scope.discountList.splice(index, 1);
             $http.put("/dash/settings/discount", $scope.discountList)
@@ -1100,12 +967,9 @@ angular.module('ebs.controller')
                     $scope.discountObj.newDiscountValue = '';
                     $scope.discountList = res;
                 })
-    
         }
-
         //Prompt if user wants to access nav change view. Password is 'pass4superadmin'
         $scope.checkIfSuperAdmin = function(){
-
             Settings.inputPrompt("Enter Password","password",function (result) {
                     if(result){
                         var temp = {};
@@ -1141,7 +1005,6 @@ angular.module('ebs.controller')
                                                                  name : $scope.allDepartments[k]
                                                                  })
                                                                  }*/
-
                                                                 $http.put("/dash/settings/update/department",   $scope.allDepartments)
                                                                     .success(function(res){
                                                                         $http.get("/dash/settings/get/department")
@@ -1170,8 +1033,6 @@ angular.module('ebs.controller')
                     }
             });
         }
-
-
         $scope.getExpense = function(expense){
             $http.get('/dash/expense').success(function (result) {
                 if(result && result[0]){
@@ -1179,7 +1040,6 @@ angular.module('ebs.controller')
                     for(var i = 0; i < $scope.expense_Type.category.length;i++){
                         if($scope.expense_Type.category[i].name == expense){
                             $scope.subExpenseShow = $scope.expense_Type.category[i].subexpense;
-
                             if($scope.expense_Type && $scope.expense_Type.category.length)
                                 $scope.selectExpenses($scope.expense_Type.category[i].name);
                         }
@@ -1188,8 +1048,6 @@ angular.module('ebs.controller')
                 $scope.expense.name = '';
             })
         }
-
-
         //........ Update the Company's email ID for setting up to receive orders via email...
         $scope.setOrdersEmailID = function (email) {
             $scope.companyEmail = email;
@@ -1211,24 +1069,18 @@ angular.module('ebs.controller')
                 Settings.popupAlert("Please enter a valid email ID!")
             }
         }
-
         $scope.newAddCompanyAddress = function() {
             input = document.getElementById('newCompany_address');
-
             if(input && google.maps){
                 var companyAddress_autocomplete = new google.maps.places.Autocomplete(input);
-
                 companyAddress_autocomplete.addListener('place_changed', function () {
                     var newplace = companyAddress_autocomplete.getPlace();
-    
                     var lat=newplace.geometry.location.lat();
                     var long = newplace.geometry.location.lng();
-    
                     //.... We save the full address, lat and long....
                     $scope.companyDetails.companyAddress = newplace.formatted_address;
                     /*  $scope.companyDetails.latitude = newplace.geometry.location.lat();
                      $scope.companyDetails.longitude = newplace.geometry.location.lng();*/
-    
                     //.... For tax calculations, we save the State and Country, etc.....
                     for (var i = 0; i < newplace.address_components.length; i++) {
                         console.log(newplace.address_components[i]);
@@ -1240,32 +1092,24 @@ angular.module('ebs.controller')
                         }
                         if(newplace.address_components[i].types[0]=="locality")
                             $scope.companyDetails.companyCity = newplace.address_components[i].long_name;
-    
                         if(newplace.address_components[i].types[0] == "postal_code")
                             $scope.companyDetails.companyPostalCode = newplace.address_components[i].long_name;
                     }
-    
                     $scope.companyDetails.companyLatitude = lat;
                     $scope.companyDetails.companyLongitude = long;
-    
                 })
             }
         }
-
         $scope.addCompanyAddress = function() {
             var input = document.getElementById('company_address');
-
             if(input && google.maps){
                 var companyAddress_autocomplete = new google.maps.places.Autocomplete(input);
-
                 companyAddress_autocomplete.addListener('place_changed', function () {
                     var newplace = companyAddress_autocomplete.getPlace();
-
                     //.... We save the full address, lat and long....
                     $scope.companyDetails.companyAddress = newplace.formatted_address;
                 /*  $scope.companyDetails.latitude = newplace.geometry.location.lat();
                     $scope.companyDetails.longitude = newplace.geometry.location.lng();*/
-
                     //.... For tax calculations, we save the State and Country, etc.....
                     for (var i = 0; i < newplace.address_components.length; i++) {
                         console.log(newplace.address_components[i]);
@@ -1277,28 +1121,22 @@ angular.module('ebs.controller')
                         }
                         if(newplace.address_components[i].types[0]=="locality")
                             $scope.companyDetails.companyCity = newplace.address_components[i].long_name;
-
                         if(newplace.address_components[i].types[0] == "postal_code")
                             $scope.companyDetails.companyPostalCode = newplace.address_components[i].long_name;
                     }
                 })
             }
         }
-
         $scope.addStoreAddress = function() {
             var input = document.getElementById('store_address');
-
             if(input && google.maps){
                 var companyAddress_autocomplete = new google.maps.places.Autocomplete(input);
-
                 companyAddress_autocomplete.addListener('place_changed', function () {
                     var newplace = companyAddress_autocomplete.getPlace();
-    
                     //.... We save the full address, lat and long....
                     $scope.companyDetails.storeAddress = newplace.formatted_address;
                     $scope.companyDetails.storeLatitude = newplace.geometry.location.lat();
                     $scope.companyDetails.storeLongitude = newplace.geometry.location.lng();
-    
                     //.... For tax calculations, we save the State and Country, etc.....
                     for (var i = 0; i < newplace.address_components.length; i++) {
                         console.log(newplace.address_components[i]);
@@ -1310,21 +1148,18 @@ angular.module('ebs.controller')
                         }
                         if(newplace.address_components[i].types[0]=="locality")
                             $scope.companyDetails.storeCity = newplace.address_components[i].long_name;
-    
                         if(newplace.address_components[i].types[0] == "postal_code")
                             $scope.companyDetails.storePostalCode = newplace.address_components[i].long_name;
                     }
                 })
             }
         }
-
         //........
         //
         //             GET APPLICATION STATISTICS (EG : NUMBER OF USERS PER CUSTOMER) FOR MOBIJINI SUPERADMIN
         //
         //..........
         $scope.getAppStats = function (flag) {
-
             if (flag) {
                 console.log("Getting application statistics")
                 $scope.showMobijiniAdminStatus = true;
@@ -1332,7 +1167,6 @@ angular.module('ebs.controller')
                     .success(function (response) {
                         //console.log(response);
                         $scope.usersByCoid = response;
-
                         $scope.totalUsersInInstance = 0;
                         for (var i = 0; i < response.length; i++) {
                             $scope.totalUsersInInstance += response[i].count;
@@ -1344,12 +1178,9 @@ angular.module('ebs.controller')
                 $scope.showMobijiniAdminStatus = false;
             }
         }
-
-
         //........ Update the Company's email ID for setting up to receive Quotations via email...
         $scope.setQuotationsEmailID = function (companyQtnEmail) {
             $scope.companyQtnEmail = companyQtnEmail;
-
             if ($scope.companyEmail) {
                 $http.put("/dash/settings/quotation/email", {companyQtnEmail: $scope.companyQtnEmail})
                     .success(function (response) {
@@ -1367,9 +1198,7 @@ angular.module('ebs.controller')
                 alert("Please enter a valid email ID");
             }
         }
-
         //........ Update the Company's Logo URL.....
-
         $scope.setCompany_logo_url = function (company_logo_url) {
             $scope.company_logo_url = company_logo_url;
             if ($scope.company_logo_url) {
@@ -1384,7 +1213,6 @@ angular.module('ebs.controller')
                                 } else {
                                     $scope.company_Logo_Url = company_logo_url;
                                 }
-
                             })
                     }
                     else {
@@ -1392,9 +1220,7 @@ angular.module('ebs.controller')
                     }
                 });
             }
-
         }
-        
         $scope.setCompanyID = function (coID) {
             $scope.coID = coID.toUpperCase();
             if (coID.length != 4) {
@@ -1416,9 +1242,7 @@ angular.module('ebs.controller')
                     });
             }
         }
-
         //.....Api to set company description.......
-
         $scope.setcompanyDescription = function (company_description) {
             $scope.company_description = company_description;
             if ($scope.company_description) {
@@ -1440,11 +1264,8 @@ angular.module('ebs.controller')
                     }
                 });
             }
-
         }
-
         //.....Api to set company website url.......
-
         $scope.setcompanyWebsiteUrl = function (company_website_url) {
             console.log(company_website_url)
             $scope.company_website_url = company_website_url;
@@ -1469,9 +1290,7 @@ angular.module('ebs.controller')
                 });
             }
         }
-
         //Invoice Document Header
-
         $scope.setInvoiceHeader = function (Idc) {
             $scope.companyIdc = Idc;
             console.log("Update Invoice header : " + $scope.companyIdc);
@@ -1493,9 +1312,7 @@ angular.module('ebs.controller')
                 alert("Please enter a valid header");
             }
         }
-
         //Terms and conditions
-
         $scope.setInvoiceTmc = function (Tmc) {
             $scope.companyTmc = Tmc;
             console.log("Update Terns and Conditions: " + $scope.companyTmc);
@@ -1517,7 +1334,6 @@ angular.module('ebs.controller')
                 alert("Please enter a valid header");
             }
         }
-
         /*Enable/ disable quotations via email*/
         $scope.quotationsEmail = function (enable) {
             $http.put("/dash/settings/enable/quotations/email", {enableQuotationsEmail: enable})
@@ -1531,7 +1347,6 @@ angular.module('ebs.controller')
                     }
                 })
         }
-
         //.... Enable/disable to receive email orders...
         $scope.ordersEmail = function (enable) {
             $http.put("/dash/settings/enable/orders/email", {enableOrdersEmail: enable})
@@ -1546,7 +1361,6 @@ angular.module('ebs.controller')
                     }
                 })
         }
-
         $scope.setCompanyDetails = function() {
             $http.put("/dash/settings/update/company/details", $scope.companyDetails)
                 .success(function (response) {
@@ -1557,7 +1371,6 @@ angular.module('ebs.controller')
                     }
                 })
         }
-
         $scope.setStoreDetails = () => {
             $http.put("/dash/settings/ecomm/details", $scope.companyDetails)
                 .then(response => {
@@ -1568,8 +1381,6 @@ angular.module('ebs.controller')
                     }
                 })
         }
-
-
         $scope.clearCompanyDetails = function() {
             $scope.companyDetails.companyEmail = '';
             $scope.companyDetails.companyName = '';
@@ -1579,8 +1390,6 @@ angular.module('ebs.controller')
             $scope.companyDetails.companyIdc = '';
             $scope.companyDetails.companyTmc = '';
         }
-
-
         //.... Enable/disable to receive email orders...
         $scope.ordersEmail = function (enable) {
             $http.put("/dash/settings/enable/orders/email", {enableOrdersEmail: enable})
@@ -1599,8 +1408,6 @@ angular.module('ebs.controller')
                     }
                 })
         }
-
-
         //Invoice company address
         $scope.setInvoiceAddress = function (address) {
             $scope.companyAddress = address;
@@ -1624,8 +1431,6 @@ angular.module('ebs.controller')
                 Settings.popupAlert("Please enter a valid address");
             }
         }
-
-
         //Invoice Document Header
         $scope.setInvoiceHeader = function (Idc) {
             // $scope.companyIdc = Idc;
@@ -1649,8 +1454,6 @@ angular.module('ebs.controller')
                 Settings.popupAlert("Please enter a valid header");
             }
         }
-
-
         //Terms and conditions
         $scope.setInvoiceTmc = function (Tmc) {
             // $scope.companyTmc = Tmc;
@@ -1674,17 +1477,13 @@ angular.module('ebs.controller')
                 Settings.popupAlert("Please enter a valid header");
             }
         }
-
-
         //upload company logo
         $scope.uploadLogo = function(){
             var image = document.getElementById('logo-input_upload').files;
-
             var reader = new FileReader();
             reader.onloadend = function() {
                 var tempObj = {};
                 tempObj.image = reader.result;
-
                 $http.post("/dash/upload/logo", tempObj)
                     .success(function(err, logo){
                         console.log(logo);
@@ -1695,21 +1494,16 @@ angular.module('ebs.controller')
                             Settings.failurePopup('ERROR','Failed to upload. Please try after sometime.');
                         }
                     })
-
             }
             reader.readAsDataURL(image[0]);
         }
-
-
         //upload company docs
         $scope.uploadDocuments = function(){
             var image = document.getElementById('doc-input_upload').files;
-
             var reader = new FileReader();
             reader.onloadend = function() {
                 var tempObj = {};
                 tempObj.image = reader.result;
-
                 $http.post("/dash/upload/documents", tempObj)
                     .success(function(err, docs){
                         console.log(docs);
@@ -1720,20 +1514,16 @@ angular.module('ebs.controller')
                             Settings.failurePopup('ERROR','Failed to upload. Please try after sometime.');
                         }
                     })
-
             }
             reader.readAsDataURL(image[0]);
         }
-
         //upload company logo
         $scope.newUploadLogo = function(){
             var image = document.getElementById('logo-input_upload').files;
-
             var reader = new FileReader();
             reader.onloadend = function() {
                 var tempObj = {};
                 tempObj.image = reader.result;
-
                 $http.post("/dash/upload/logo", tempObj)
                     .success(function(err, logo){
                         console.log(logo);
@@ -1744,21 +1534,16 @@ angular.module('ebs.controller')
                             Settings.failurePopup('ERROR','Failed to upload. Please try after sometime.');
                         }
                     })
-
             }
             reader.readAsDataURL(image[0]);
         }
-
-
         //upload company docs
         $scope.newUploadDocuments = function(){
             var image = document.getElementById('newdoc-input_upload').files;
-
             var reader = new FileReader();
             reader.onloadend = function() {
                 var tempObj = {};
                 tempObj.image = reader.result;
-
                 $http.post("/dash/upload/documents", tempObj)
                     .success(function(err, docs){
                         console.log(docs);
@@ -1769,11 +1554,9 @@ angular.module('ebs.controller')
                             Settings.failurePopup('ERROR','Failed to upload. Please try after sometime.');
                         }
                     })
-
             }
             reader.readAsDataURL(image[0]);
         }
-
         //set no. of devices
         $scope.setNoOfDevices = function (noOfDevices) {
             // console.log('devices',noOfDevices);
@@ -1783,11 +1566,9 @@ angular.module('ebs.controller')
                     if(res == 'success'){
                         Settings.setInstanceDetails('noOfDevices', $scope.noOfDevices)
                         Settings.success_toast('SUCCESS', "No. of devices updated!")
-
                     }
                 })
         };
-
         $http.get("/dash/settings/devices/count")
             .success((devices) => {
                 $scope.noOfDevices = 1;
@@ -1802,13 +1583,8 @@ angular.module('ebs.controller')
                         })
                 }
             })
-
         // ........... Data Integration Functions ............
-
         /* Shopify Integration */
-
-
-
         $scope.updateShopifyCreds = function(){
             //console.log($scope.shopify)
             if($scope.shopify.api_key!='' && $scope.shopify.password !='' && $scope.shopify.host !=''){
@@ -1823,8 +1599,6 @@ angular.module('ebs.controller')
                 Settings.popupAlert("Enter all the shopify credentials")
             }
         };
-
-
         $scope.deleteShopifyCreds = function(){
             //console.log($scope.shopify)
             if($scope.shopify.api_key!='' && $scope.shopify.password !='' && $scope.shopify.host !=''){
@@ -1845,31 +1619,24 @@ angular.module('ebs.controller')
                 Settings.popupAlert("Enter all the shopify credentials")
             }
         };
-
         // for posting products in shopify
         $scope.postShopifyCatalog = function(){
             // jQuery.noConflict();
             // $('.refresh').css("display", "inline");
             $http.post("/dash/sendshopifyCatalog")
                 .success(function(response){
-
                     // setTimeout(function(){
                     //     $('.refresh').css("display", "none");
                     // }, 10000);
-
                     Settings.success_toast('SUCCESS', "Products exported to shopify")
                 })
                 .error(function (error){
-
                     // setTimeout(function(){
                     //     $('.refresh').css("display", "none");
                     // }, 10000);
-
                     Settings.failurePopup('ERROR', "Error exporting products");
                 })
         }
-
-
         $scope.getShopifyCatalog = function(){
             jQuery.noConflict();
             $('.refresh').css("display", "inline");
@@ -1884,10 +1651,8 @@ angular.module('ebs.controller')
                         Settings.success_toast('SUCCESS', "Shopify Products will be synced in the background!")
                     }
                     else{
-
                         Settings.failurePopup('ERROR', "Products importing failed, Check the credentials and try again");
                     }
-
                     // $http.post("/dash/items", itemSearchObj)
                     //     .success($scope.renderItems);
                 })
@@ -1896,12 +1661,9 @@ angular.module('ebs.controller')
                         $('.refresh').css("display", "none");
                     }, 2000);
                     console.log(error)
-
                     Settings.failurePopup('ERROR',"Products importing failed");
                 })
         }
-
-
         $scope.getShopifyStores = function(){
             jQuery.noConflict();
             $('.refresh').css("display", "inline");
@@ -1909,13 +1671,10 @@ angular.module('ebs.controller')
                 .success(function (response) {
                     console.log("Shopify Stores Updation initiated")
                     console.log(response);
-
                     setTimeout(function(){
                         $('.refresh').css("display", "none");
                     }, 2000);
-
                     if(response == true){
-
                         Settings.success_toast('SUCCESS',"Shopify Stores will be synced in the background");
                     }
                     else{
@@ -1930,8 +1689,6 @@ angular.module('ebs.controller')
                     Settings.failurePopup('ERROR',"Stores importing failed");
                 })
         }
-
-
         $scope.getShopifyOrders = function(){
             jQuery.noConflict();
             $('.refresh').css("display", "inline");
@@ -1939,19 +1696,15 @@ angular.module('ebs.controller')
                 .success(function (response) {
                     console.log("Shopify Orders Updation initiated");
                     console.log(response);
-
                     setTimeout(function(){
                         $('.refresh').css("display", "none");
                     }, 2000);
-
                     if(response == true){
-
                         Settings.success_toast('SUCCESS',"Shopify Orders will be synced in the background");
                     }
                     else{
                         Settings.failurePopup('ERROR', "Orders importing failed, Check the credentials and try again");
                     }
-
                 })
                 .error(function (error){
                     setTimeout(function(){
@@ -1961,26 +1714,16 @@ angular.module('ebs.controller')
                     Settings.failurePopup('ERROR',"Orders importing failed");
                 })
         }
-
-
         $scope.shopifySchedularUpdate = function(boolean,type,category){
-
             $scope.shopifyArray[category][type] = boolean;
-
             $http.put("/dash/shopify/settings/update/properties", $scope.shopifyArray)
                 .success(function (response) {
                     Settings.setInstanceDetails('shopifyArray', $scope.shopifyArray)
-
                 });
         }
-
-
         //----------------------------------//
-
         //***** Quickbooks Integration ****//
-
         //---------------------------------//
-
         $scope.QBCredentials = () => {
             $http.get("/dash/quickbooks/creds/fetch")
                 .then((creds) => {
@@ -1991,7 +1734,6 @@ angular.module('ebs.controller')
                                     if(creds.data.lastConnectedTime){
                                         $scope.qbConnectTime = creds.data.lastConnectedTime;
                                     }
-
                                     if(creds.data.qbCompany){
                                         $scope.qbCompany = creds.data.qbCompany;
                                     }
@@ -2022,9 +1764,7 @@ angular.module('ebs.controller')
                 })
         }
         $scope.QBCredentials();
-
         var qbInterval = '';
-
         $scope.launchPopup = function(path) {
             var startTime = new Date().getTime();
             qbInterval = setInterval(function(){
@@ -2034,13 +1774,10 @@ angular.module('ebs.controller')
                 }
                 $scope.checkQbflag();
             }, 5000);
-
             $scope.showLoader = true;
-
             $http.get("/dash/quickbooks/creds/fetch")
                 .then((credentials) => {
                     if(credentials && credentials.data && credentials.data.quickbooks_refToken) {
-
                         $http.get("/dash/quickbooks/request/token").then(function (response) {
                             if (response.data) {
                                 $scope.showLoader = false;
@@ -2058,19 +1795,15 @@ angular.module('ebs.controller')
                     else{
                         $scope.showLoader = false;
                         console.log("QuickBooks : Launch Pop-up ----");
-
                         var win;
                         var checkConnect;
                         var parameters = "location=1,width=800,height=650";
                         parameters += ",left=" + (screen.width - 800) / 2 + ",top=" + (screen.height - 650) / 2;
-
                         // Launch Popup
                         win = window.open(path, 'connectPopup', parameters);
                     }
             })
         }
-
-
         $scope.checkQbflag = function(){
             $http.get("/dash/quickbooks/flag/check")
                 .success(function(response){
@@ -2082,7 +1815,6 @@ angular.module('ebs.controller')
                     }
                 })
         }
-
         $scope.deleteQuickbooksTokens =function(){
             Settings.confirmPopup("Confirm","Are you sure you want to disconnect?",function (result) {
                 if (result) {
@@ -2090,13 +1822,11 @@ angular.module('ebs.controller')
                     $http.get("/dash/quickbooks/revoke")
                         .success(function (response) {
                             if (response) {
-
                                 $scope.showLoader = false;
                                 console.log("Tokens revoked from quickbooks **");
                                 console.log(response)
                                 $scope.qbConnect = false;
                                 Settings.success_toast('SUCCESS', "QuickBooks disconnected");
-
                             }
                             else {
                                 console.log("Error From Revoke Api....");
@@ -2104,26 +1834,19 @@ angular.module('ebs.controller')
                                 $scope.showLoader = false;
                                 $scope.qbConnect = true;
                             }
-
                         })
                 }
             })
         }
-
-
         $scope.quickbooksSchedularUpdate = function(boolean,index){
-
             $scope.quickbooksArray[index]['sync'] = boolean;
-
             $http.put("/dash/quickbooks/update/properties", $scope.quickbooksArray)
                 .success(function(response){
                     if(response){
                         console.log("Quickbooks scheduler updated****");
                     }
                 })
-
         }
-
         $scope.downloadStorecsv = function(){
             $http.get("/dash/stores/ftp/refresh")
                 .success(function(){
@@ -2131,8 +1854,6 @@ angular.module('ebs.controller')
                     Settings.popupAlert("Download Complete! Please refresh with F5.");
                 });
         }
-
-
         $scope.downloadcsv = function(){
             //$http.get("/dash/items/download")
             $http.get("/dash/items/refresh")
@@ -2141,8 +1862,6 @@ angular.module('ebs.controller')
                     Settings.popupAlert("Download Complete! Please refresh with F5.");
                 });
         }
-
-
         $scope.downloadSellerscsv = function(){
             //$http.get("/dash/items/download")
             $http.get("/dash/sellersrefresh")
@@ -2151,14 +1870,10 @@ angular.module('ebs.controller')
                     Settings.popupAlert("Download Complete! Please refresh with F5.");
                 });
         }
-
-
         /*............................................
                 FTP Tenant Management
         ........................................... */
-
         //Stores - serviceClient is store
-
         //.... Fetch all FTP tenants....
         $scope.fetchFTPTenants = () => {
             $http.get("/dash/tenants")
@@ -2167,21 +1882,17 @@ angular.module('ebs.controller')
                     $scope.tenants = response;
                 });
         };
-
         //.... Create a new tenant....
         $scope.createTenant = function(){
             console.log("Tenant Details --> ", $scope.tenant);
-
             if ($scope.tenant && $scope.tenant._id)
                 $scope.tenant._id = null;
-
             $http.post("/dash/tenants", $scope.tenant)
                 .success(function (response) {
                     console.log("Create -->" + response);
                     $scope.fetchFTPTenants();
                 });
         };
-
         //.... Remove a tenant.....
         $scope.removeTenant = function(id) {
             $http.delete("/dash/tenants/" + id)
@@ -2190,7 +1901,6 @@ angular.module('ebs.controller')
                     $scope.fetchFTPTenants();
                 });
         };
-
         //..... Choose a tenant....
         $scope.selectTenant = function(id) {
             $http.get("/dash/tenants/" + id)
@@ -2199,7 +1909,6 @@ angular.module('ebs.controller')
                     $scope.tenant = response;
                 });
         };
-
         //..... Update the tenant information.....
         $scope.updateTenant = function() {
             $http.put("/dash/tenants/" + $scope.tenant._id, $scope.tenant)
@@ -2209,13 +1918,9 @@ angular.module('ebs.controller')
                     $scope.fetchFTPTenants();
                 });
         };
-
-
         /*............................................
                     Cloudianry Integration
          ........................................... */
-
-        
         $scope.updateCloudinary = function(){
             //console.log($scope.cloudinary)
             if($scope.cloudinary.api!='' && $scope.cloudinary.cloud !='' && $scope.cloudinary.secretapi !=''){
@@ -2230,14 +1935,11 @@ angular.module('ebs.controller')
                 Settings.popupAlert("Enter all the cloudainary credentials")
             }
         };
-
-
         $scope.deleteCloudinaryCreds = function(){
             Settings.confirmPopup("Confirm","Are you sure you want to drop credentials?",function (result) {
                 if (result) {
                     $http.delete("/dash/settings/cloudinary/creds/delete", $scope.shopify)
                         .success(function (response) {
-
                             Settings.successPopup('SUCCESS', "Cloudinary Credentials Dropped!");
                             $scope.cloudinary.api = '';
                             $scope.cloudinary.cloud = '';
@@ -2249,8 +1951,6 @@ angular.module('ebs.controller')
                 }
             })
         };
-
-
         $scope.getItemsCategories = function(type) {
             $http.get("/dash/items/categories/"+type)
                 .success(function (response) {
@@ -2276,20 +1976,14 @@ angular.module('ebs.controller')
                     Settings.failurePopup('ERROR', "Could not fetch categories");
                 })
         };
-
-
         $scope.openCategoryImageModal = function (cat) {
             $scope.categoryDetails = cat;
             jQuery.noConflict();
             $('#uploadCategoryImage').modal('show');
         };
-
-
         //Api to insert or update the firebase credentials
         $scope.updateFirebase = function(){
-
             if($scope.firebase.api_key!='' && $scope.firebase.database_url!='' && $scope.firebase.auth_domain!='' && $scope.firebase.project_id!='' && $scope.firebase_storage_bucket_id!='' && $scope.firebase_messaging_sender_id!='') {
-
                 $http.put("/dash/firebase/setup", $scope.firebase)
                     .success(function (response) {
                         Settings.successPopup('SUCCESS',"Firebase credentials Updated!")
@@ -2301,8 +1995,6 @@ angular.module('ebs.controller')
                 Settings.popupAlert("Enter all the Firebase credentials")
             }
         }
-
-
         // Api to drop the firebase credentials from Database
         $scope.clearFirebase = function() {
             Settings.confirmPopup("Confirm","Are you sure you want to drop credentials?",function (result) {
@@ -2323,14 +2015,8 @@ angular.module('ebs.controller')
                 }
             })
         }
-
-
-
         <!-- ............ NAV PAGE FUNCTIONS .............. -->
-
         //............ MENU SETUP ...................
-
-
         $scope.UserTabsSelect = function (data){
             var body = {};
             body.type = 'UserTabs'
@@ -2345,19 +2031,15 @@ angular.module('ebs.controller')
                     });
             }
         }
-
-
         $scope.saveNavChange = function(newNav, nav){
             if(newNav != ''){
                 Settings.confirmPopup("Confirm","Renaming "+nav.tab+" to "+newNav+". Are you sure?",function (result) {
                         if(result){
                             nav.tab = newNav;
                             nav.task = 'name';
-
                             $http.post("/dash/update/navTab", nav)
                                 .success(function(res){
                                     //console.log(res);
-
                                     if(res){
                                         Settings.getNav(true, function(nav){
                                             $scope.nav = nav;
@@ -2373,10 +2055,7 @@ angular.module('ebs.controller')
             else{
                 Settings.popupAlert("Enter a name for the tab");
             }
-
         }
-
-
         $scope.toggleNavTab = function(nav, flag,value){
             console.log(nav, flag, value)
             if(nav.tab === "Walk-in Sale" && flag === false){
@@ -2400,10 +2079,7 @@ angular.module('ebs.controller')
                         console.log("Nav not updated")
                     }
                 })
-
         }
-
-
         $scope.DealerPinCodeMadatory = function (enable) {
             $http.put("/dash/settings/customer/pincode/mandatory", {"type" : "DealerTabs", "PinCodeMadatory" : enable})
                 .then(response => {
@@ -2429,19 +2105,15 @@ angular.module('ebs.controller')
                         $window.location.href = '/404';
                 });
         }
-
-
         $scope.saveNavReportChange = function(newNav, nav){
             if(newNav != ''){
                 Settings.confirmPopup("Confirm","Renaming "+nav.tabName+" to "+newNav+"",function (result) {
                         if(result){
                             nav.tab = newNav;
                             nav.task = 'report';
-
                             $http.post("/dash/update/navTab", nav)
                                 .success(function(res){
                                     //console.log(res);
-
                                     if(res){
                                         Settings.getNav(true, function(nav){
                                             $scope.nav = nav;
@@ -2458,7 +2130,6 @@ angular.module('ebs.controller')
                 Settings.popupAlert("Enter a name for the tab")
             }
         }
-
         //Report tab toggle
         $scope.toggleReportTab = function(report){
             report.task = 'reportToggle';
@@ -2474,17 +2145,13 @@ angular.module('ebs.controller')
                     }
                 })
         }
-
-
         //Leave type toggle
         $scope.toggleLeaveType = function(leave){
-
             $http.post("/dash/leave/update/type", leave)
                 .success(function(res){
                     if(res){
                         // $http.get("/dash/instanceDetails")
                         //     .success($scope.renderInstanceDetails);
-
                         // bootbox.alert({
                         //     title : 'SUCCESS',
                         //     message : 'Successfully updated',
@@ -2496,25 +2163,19 @@ angular.module('ebs.controller')
                     }
                 })
         }
-
-
         $scope.otherTabSetup = function(tab, index, flag){
             var body = {
                 'tab' : tab,
                 'tabIndex' : index+1,
                 'enable': flag
             }
-
             $http.put("/dash/update/otherTabs", body)
                 .success(function(res){
                     console.log(res);
                     // $scope.taxSetup = flag
                 })
         }
-
-
         //............ SYSTEM SETUP ...................
-
         $scope.tokenAccess = function () {
             $scope.token = !$scope.token;
             console.log("Token Access --> " + $scope.token);
@@ -2526,8 +2187,6 @@ angular.module('ebs.controller')
                     }
                 })
         }
-
-
         //..... Update the line status change setting, to enable users to change line status of order lines, etc 'on-portal'...
         $scope.lineStatusEnable = function () {
             $http.put("/dash/settings/enable/status/lineStatus", {status: $scope.settings.lineStatusChange})
@@ -2538,8 +2197,6 @@ angular.module('ebs.controller')
                     }
                 })
         };
-
-
         $scope.addNewItems = function () {
             $scope.addItems = !$scope.addItems;
             console.log("Add Items Access --> " + $scope.addItems);
@@ -2551,8 +2208,6 @@ angular.module('ebs.controller')
                     }
                 })
         }
-
-
         $scope.enforceCreditUpdate = function(credit){
             var body = {};
             body.type = 'enforceCredit';
@@ -2567,13 +2222,10 @@ angular.module('ebs.controller')
                     });
             }
         }
-
-
         //..... Update the invoice module setting, to enable users to create invoice for orders, etc 'on-portal'...
         //... Currently designed for B&B Formork customer....
         $scope.invoicingType = function () {
             console.log($scope.settings.invoice);
-
             $http.put("/dash/settings/invoice", {invoice: $scope.settings.invoice})
                 .success(function (response) {
                     if (!response) {
@@ -2582,8 +2234,6 @@ angular.module('ebs.controller')
                     }
                 })
         };
-
-
         // Select the inventory type in the instance
         $scope.changeInventoryType = function(type){
             $http.put("/dash/settings/inventory/mode/"+type)
@@ -2594,8 +2244,6 @@ angular.module('ebs.controller')
                     }
                 })
         }
-
-
         $scope.attendanceEnable = function () {
             $scope.attendance = !$scope.attendance;
             console.log("Enable/Disable attendance Access --> " + $scope.attendance);
@@ -2607,8 +2255,6 @@ angular.module('ebs.controller')
                     }
                 })
         }
-
-
         //.....Toggle edit item price ....//
         $scope.toggleEditItemPrice = function(){
             $http.put("/dash/settings/edit/price",{ editItemPrice : $scope.settings.editItemPrice})
@@ -2619,8 +2265,6 @@ angular.module('ebs.controller')
                     Settings.setInstanceDetails('editItemPrice', $scope.settings.editItemPrice)
                 })
         }
-
-
         //..... Update the status change setting, to enable users to change status of orders, etc 'on-portal'...
         $scope.statusChangeEnable = function () {
             console.log($scope.settings.statusChange);
@@ -2633,19 +2277,15 @@ angular.module('ebs.controller')
                     }
                 })
         };
-
-
         /*
          Discount value
          */
         $scope.discountObj = {};
-
         $scope.addDiscount = function(status){
             console.log('statusk',status);
             if(status != '' && status != undefined && Number(status)>0){
                 var found = $scope.discountList.some(el => el.value === status);
                 console.log('found',found)
-
                 if(!found){
                     $scope.discountList[$scope.discountList.length] = {'value' : status}
                     $http.put("/dash/settings/discount", $scope.discountList)
@@ -2670,7 +2310,6 @@ angular.module('ebs.controller')
                 })
             }
         }
-
         $scope.removeDiscount = function(value,index){
             $scope.discountList.splice(index, 1);
             $http.put("/dash/settings/discount", $scope.discountList)
@@ -2679,27 +2318,20 @@ angular.module('ebs.controller')
                     $scope.discountObj.newDiscountValue = '';
                     $scope.discountList = res;
                 })
-
         }
-
         $scope.selectSubExpenses = function (expense){
             $scope.subCatExpenseShow = [];
             $scope.subCatExpenseType = {};
             $scope.selectSubExpense = expense;
-
             if($scope.subExpenseShow.length){
                 for(var i = 0; i < $scope.subExpenseShow.length;i++){
-
                     if($scope.subExpenseShow[i].subName == expense){
-
                         $scope.subCatExpenseShow = $scope.subExpenseShow[i].subExp;
                         return;
                     }
                 }
-
             }
         }
-
         $scope.addSubCatExpenseType = function(expense, subExpense) {
             console.log('addSubCatExpenseType',expense, subExpense);
             if (subExpense && $scope.selectSubExpense && $scope.selectExpense) {
@@ -2708,8 +2340,6 @@ angular.module('ebs.controller')
                     if(expense){
                         expense.push(subExpense);
                         body.expensetype = expense;
-
-
                     }
                     else{
                         expense = [];
@@ -2737,15 +2367,11 @@ angular.module('ebs.controller')
                 console.log("All values not there")
             }
         }
-
         // for bbc app inventory //
         $scope.restrictInventory = function(boolean){
-
             var body = {'lockvalue':boolean};
-
             $http.post("/dash/shopify/bbc/update/invLock", body)
                 .success(function(response){
-
                     if(response == true){
                         Settings.setInstanceDetails('lockOrderInventory', $scope.lockOrderInventory)
                         // Settings.successPopup('SUCCESS',"Inventory Lock Updated!")
@@ -2755,8 +2381,6 @@ angular.module('ebs.controller')
                     }
                 })
         }
-
-
         // $scope.activateOrangeMantra = function(boolean){
         //
         //     console.log('activateOrangeMantra', boolean);
@@ -2788,9 +2412,6 @@ angular.module('ebs.controller')
         //             }
         //         })
         // }
-
-
-
         //******************* inventory check for order ********************
         $scope.inventoryCheckForOrder = function(credit){
             console.log(credit)
@@ -2809,7 +2430,6 @@ angular.module('ebs.controller')
             }
             Settings.setInventoryOrderConfig($scope.enforceInventoryOrder)
         }
-
         //******************* inventory check for order ********************
         $scope.standredOrderFulfilment = function(credit){
             console.log(credit)
@@ -2820,13 +2440,11 @@ angular.module('ebs.controller')
             if(credit) {
                 $http.put("/dash/settings/update/standard/order/fulfilment", body)
                     .success(function (res) {
-
                         var status = ["New", "Approved", "Packing","Ready for Delivery","Out for Delivery","Delivered","Closed","Cancelled"]
                         var OrderStatus = [];
                         for (var i=0;i<status.length;i++){
                             var obj = {};
                             obj.status = status[i];
-
                             if(i==0){
                                 obj.editable = true;
                             }else{
@@ -2834,13 +2452,9 @@ angular.module('ebs.controller')
                             }
                             OrderStatus.push(obj);
                         }
-
-
-
                         $http.put("/dash/nav/order/status", status)
                             .success(function(res){
                                 $scope.nav[1].status = status
-
                                 $http.put("/dash/settings/update/order/edit/access", OrderStatus)
                                     .success(function(res){
                                         //console.log(res);
@@ -2848,7 +2462,6 @@ angular.module('ebs.controller')
                                         Settings.setInstanceDetails('orderEditForStatus', $scope.orderEditForStatus)
                                     })
                             })
-
                     });
             }else{
                 $http.put("/dash/settings/update/standard/order/fulfilment", body)
@@ -2857,13 +2470,11 @@ angular.module('ebs.controller')
             }
             Settings.setStandredOrderFulfilmentConfig($scope.standredOrderFulfilFlag)
         }
-
         const loadScript = (key, type, charset) => {
             if(!google || !google.maps){
                 console.log("No google SDK found, loading a new one - " + key);
                 let url = 'https://maps.google.com/maps/api/js?key=' + key + '&libraries=geometry,places';
                 let heads = document.getElementsByTagName("head");
-
                 if (heads && heads.length) {
                     let head = heads[0];
                     if (head) {
@@ -2877,9 +2488,7 @@ angular.module('ebs.controller')
             }else
                 console.log("Voila! Google is already loaded on your browser ---> ");
         };
-
         loadScript(Settings.getInstanceDetails('gMapAPI'), 'text/javascript', 'utf-8');
-
         $scope.recordPayment = function () {
             $scope.recordPaymentFlag = !$scope.recordPaymentFlag;
             // $scope.recordPaymentFlag = !$scope.recordPaymentFlag;
@@ -2897,7 +2506,6 @@ angular.module('ebs.controller')
                     }
                 })
         }
-
         $scope.newDealerAsCustomer = function () {
             $scope.dealerAsCustomerFlag = !$scope.dealerAsCustomerFlag;
             var body = {};
@@ -2913,7 +2521,6 @@ angular.module('ebs.controller')
                     }
                 })
         }
-
         $scope.dealerNotification = function (status) {
             // $scope.dealerNotificationFlag = !$scope.dealerNotificationFlag;
             $scope.dealerNotificationFlag = status;
@@ -2938,7 +2545,6 @@ angular.module('ebs.controller')
                     $window.location.href = '/404';
             });
         }
-
         $scope.enforceStockist = function (status) {
             $scope.enforceStockistFlag = status;
             var body = {};
@@ -2962,8 +2568,6 @@ angular.module('ebs.controller')
                         $window.location.href = '/404';
                 });
         }
-
-
         $scope.newDealerAsUser = function (status) {
             $scope.dealerAsUserFlag = status;
             var body = {};
@@ -2988,7 +2592,6 @@ angular.module('ebs.controller')
                         $window.location.href = '/404';
                 });
         }
-
         $scope.stepQty = function (stepQuantity) {
             $scope.stepQuantity = stepQuantity;
             if ($scope.stepQuantity) $scope.stepQuantity = stepQuantity;
@@ -2999,11 +2602,9 @@ angular.module('ebs.controller')
                         //console.log(response);
                         if (!response) $scope.stepQuantity = 1;
                         Settings.setInstanceDetails('stepQuantity', $scope.stepQuantity)
-
                     })
             }
         }
-
         $scope.setCountry = function (country) {
             console.log("Setting set country --> " + country);
             var dial_code = '';
@@ -3020,7 +2621,6 @@ angular.module('ebs.controller')
                     }
                 }
             }
-
             $http.post("/dash/settings/country", {country: country, dial_code: dial_code})
                 .success(function (response) {
                     if(response.nModified > 0){
@@ -3034,8 +2634,6 @@ angular.module('ebs.controller')
                     Settings.setInstanceDetails('country', $scope.tempCountryName)
                 });
         }
-
-
         $scope.setCurrency = function (currency) {
             console.log("Setting Currency --> " + currency);
             $http.post("/dash/settings/currency", {currency: currency})
@@ -3044,10 +2642,7 @@ angular.module('ebs.controller')
                     $scope.currency = currency;
                     Settings.setInstanceDetails('currency', $scope.currency)
                 });
-
         }
-
-
         // $scope.setUOM = function (UOM) {
         //     $scope.UOM = UOM;
         //     if ($scope.UOM) {
@@ -3059,8 +2654,6 @@ angular.module('ebs.controller')
         //             })
         //     }
         // }
-
-
         //To setup a new MVAAYOO SMS credentails to send SMS
         $scope.smsSetup = function(sms){
             console.log(sms)
@@ -3083,14 +2676,11 @@ angular.module('ebs.controller')
                 Settings.failurePopup('ERROR',"Enter all the 3 fields");
             }
         }
-
-
         $scope.vanSalesEnable = false;
         $scope.enableVanSalesToggle = function(value){
             // console.log('vansales', value);
             var body = {};
             body.value = value;
-
             console.log('enableVanSalesToggle', value, body);
             $http.put("/dash/settings/van/sales", body)
                 .success(function(response){
@@ -3102,7 +2692,6 @@ angular.module('ebs.controller')
                     }
                 })
         }
-
         $scope.quotationsEnable = function () {
             $scope.enableQuotations = !$scope.enableQuotations;
             console.log("enableQuotations Access --> " + $scope.enableQuotations);
@@ -3113,7 +2702,6 @@ angular.module('ebs.controller')
                     }
                 })
         }
-
         $scope.fulfillerEnable = function () {
             $scope.enableFulfiller = !$scope.enableFulfiller;
             console.log("enableFulfiller Access --> " + $scope.enableFulfiller);
@@ -3124,7 +2712,6 @@ angular.module('ebs.controller')
                     }
                 })
         }
-    
         $scope.recordPayment = function () {
             $scope.recordPaymentFlag = !$scope.recordPaymentFlag;
             console.log("Add Items Access --> " + $scope.recordPaymentFlag);
@@ -3138,7 +2725,6 @@ angular.module('ebs.controller')
                     }
                 })
         }
-
         //force update app toggle
         $scope.updateNotificationEnable = true;
         $scope.forceUpdateEnable = false;
@@ -3152,10 +2738,8 @@ angular.module('ebs.controller')
             var body = {};
             body.type = type;
             body.value = value;
-
             $http.post("/dash/settings/app/update", body)
                 .success(function(response){
-
                     if(response == true){
                         console.log('App update toggle updated');
                         $http.get('/dash/settings/app/update/status')
@@ -3171,13 +2755,10 @@ angular.module('ebs.controller')
                     }
                 })
         }
-
-
         $scope.deliveryDateStatus = function(boolean){
             var body = {'delivery_date_Enable':boolean};
             $http.post("/dash/settings/delivery/date/update", body)
                 .success(function(response){
-
                     if(response == true){
                         Settings.successPopup('SUCCESS',"Delivery Date Status Updated!");
                         Settings.setInstanceDetails('delivery_date_Enable', $scope.delivery_date_Enable)
@@ -3195,8 +2776,6 @@ angular.module('ebs.controller')
             var body = {'customerDiscount' : boolean};
             $http.put("/dash/settings/update/percentage/discount", body)
                 .success(function(response){
-
-
                     if(response){
                         Settings.successPopup('SUCCESS',"Percentage Discount Updated!");
                         Settings.setInstanceDetails('customerDiscount', $scope.customerDiscount)
@@ -3208,13 +2787,10 @@ angular.module('ebs.controller')
                     }
                 })
         }
-
-
         $scope.orderDeliveryDateSet = function (orderDeliveryDate) {
             if(orderDeliveryDate){
                 $scope.orderDeliveryDate = orderDeliveryDate;
                 var body = {'orderDeliveryDate': orderDeliveryDate};
-
                 $http.post("/dash/settings/delivery/date/update", body)
                     .success(function(response){
                         if(response == true){
@@ -3229,7 +2805,6 @@ angular.module('ebs.controller')
                     })
             }
         }
-
         $scope.toggleEditDealer = function(role){
             if(role){
                 for(var i=0; i< $scope.dealerEditRoles[0].Roles.length; i++){
@@ -3238,13 +2813,11 @@ angular.module('ebs.controller')
                     }
                 }
             }
-
             $http.put("/dash/settings/update/customer/edit/access", $scope.dealerEditRoles)
                 .success(function(res){
                     //console.log(res);
                 })
         }
-
         // Edit and update warehouse location.......
         $scope.editWarehouseLocationFromSettings = function(location,index){
             if(location) {
@@ -3262,8 +2835,6 @@ angular.module('ebs.controller')
                 console.log('Please enter the location....')
             }
         }
-
-
         // Remove warehouse location from settings collection.....
         $scope.removeWarehouseLocation = function(location){
             $http.put("/dash/settings/update/inventory/locations",{location:location,type:'remove'})
@@ -3277,29 +2848,21 @@ angular.module('ebs.controller')
                 console.log(error)
             })
         }
-
-
         // Adding warehouse location to settings collection.....
         $scope.addWarehouseLocation = function(location){
             // console.log(location)
-
             if(location.name){
                 var duplicate = false;
-
                 var temp = {} ;
                 temp.name = location.name.toUpperCase();
                 if(location.type)
                     temp.type = location.type ;
                 else
                     temp.type = '' ;
-
                 if(location.latitude && location.longitude){
                     temp.latitude = Number(location.latitude) ;
                     temp.longitude = Number(location.longitude) ;
                 }
-
-
-
                 if($scope.warehouseLocation.length){
                     for(var i=0;i< $scope.warehouseLocation.length;i++){
                         if($scope.warehouseLocation[i].name.toUpperCase() == temp.name.toUpperCase() && $scope.warehouseLocation[i].type == temp.type){
@@ -3307,7 +2870,6 @@ angular.module('ebs.controller')
                         }
                     }
                 }
-
                 if(duplicate){
                     Settings.failurePopup('Error',"Location name Already exist");
                 }
@@ -3320,25 +2882,18 @@ angular.module('ebs.controller')
                                 $scope.location.type = '';
                                 $scope.location.latitude = '';
                                 $scope.location.longitude = '';
-
                                 Settings.success_toast("Success", "Location Added Successfully");
-
                             }
                         }).catch(function(error){
                         console.log(error)
                     })
                 }
-
-
                 // console.log(temp)
-
             }
             else{
                 Settings.failurePopup('ERROR',"Please enter text");
             }
         }
-
-
         //Function to update ORDER STATUS from SETTINGS PAGE. Only by Admin
         $scope.editOrderStatusFromSettings = function(status, index){
             console.log(status);
@@ -3349,7 +2904,6 @@ angular.module('ebs.controller')
                 var statusObj = [];
                 statusObj = $scope.nav[1].status;
                 statusObj[index] = status;
-
                 $http.put("/dash/nav/order/status", statusObj)
                     .success(function(res){
                         if(res){
@@ -3357,14 +2911,12 @@ angular.module('ebs.controller')
                             $scope.nav[1].status = statusObj;
                             Settings.setNav($scope.nav);
                             $scope.orderEditForStatus[index].status = status;
-
                             $http.put("/dash/settings/update/order/edit/access", $scope.orderEditForStatus)
                                 .success(function(res){
                                     //console.log(res);
                                     $scope.orderEditForStatus = res;
                                     Settings.setInstanceDetails('orderEditForStatus', $scope.orderEditForStatus)
                                 })
-
                         }
                         else{
                             Settings.failurePopup('ERROR',"Could not update order status!");
@@ -3372,52 +2924,40 @@ angular.module('ebs.controller')
                     })
             }
         }
-
-
         /*..........
             Remove order status from settings page
          .........*/
         $scope.removeOrderStatus = function(status){
             var index = $scope.nav[1].status.indexOf(status);
-
             if(index != -1 && ($scope.nav[1].status.length > 1)){
                 $scope.nav[1].status.splice(index, 1);
-
                 $scope.orderEditForStatus.splice(index, 1);
-
                 $http.put("/dash/nav/order/status", $scope.nav[1].status)
                     .success(function(res){
                         console.log(res);
-
                         $http.put("/dash/settings/update/order/edit/access", $scope.orderEditForStatus)
                             .success(function(res){
                                 //console.log(res);
                                 $scope.orderEditForStatus = res;
                                 Settings.setInstanceDetails('orderEditForStatus', $scope.orderEditForStatus)
                             })
-
                     })
             }
             else{
                 Settings.failurePopup('ERROR',"A minimum of one status has to be present!");
             }
         }
-
-
         $scope.reorderOrderStatus = function(dir, value){
             if(dir == 'up'){
                 var temp = $scope.nav[1].status[value];
                 $scope.nav[1].status[value] = $scope.nav[1].status[value - 1];
                 $scope.nav[1].status[value - 1] = temp;
-
                 var temp1 = $scope.orderEditForStatus[value];
                 $scope.orderEditForStatus[value] = $scope.orderEditForStatus[value - 1];
                 $scope.orderEditForStatus[value - 1] = temp1;
-
                 $http.put("/dash/nav/order/status", $scope.nav[1].status)
                     .success(function(res){
                         //console.log(res);
-
                         $http.put("/dash/settings/update/order/edit/access", $scope.orderEditForStatus)
                             .success(function(res){
                                 //console.log(res);
@@ -3425,21 +2965,17 @@ angular.module('ebs.controller')
                                 Settings.setInstanceDetails('orderEditForStatus', $scope.orderEditForStatus)
                             })
                     })
-
             }
             else if(dir == 'down'){
                 var temp = $scope.nav[1].status[value];
                 $scope.nav[1].status[value] = $scope.nav[1].status[value + 1];
                 $scope.nav[1].status[value + 1] = temp;
-
                 var temp1 = $scope.orderEditForStatus[value];
                 $scope.orderEditForStatus[value] = $scope.orderEditForStatus[value + 1];
                 $scope.orderEditForStatus[value + 1] = temp1;
-
                 $http.put("/dash/nav/order/status", $scope.nav[1].status)
                     .success(function(res){
                         //console.log(res);
-
                         $http.put("/dash/settings/update/order/edit/access", $scope.orderEditForStatus)
                             .success(function(res){
                                 //console.log(res);
@@ -3449,18 +2985,12 @@ angular.module('ebs.controller')
                     })
             }
         }
-
-
         $scope.addOrderStatus = function(status){
-
             if(status != '' && status != undefined){
                 $scope.nav[1].status[$scope.nav[1].status.length] = status;
-
                 $scope.orderEditForStatus[$scope.orderEditForStatus.length] = {'status' : status, 'editable' : false};
-
                 $http.put("/dash/nav/order/status", $scope.nav[1].status)
                     .success(function(res){
-
                         $http.put("/dash/settings/update/order/edit/access", $scope.orderEditForStatus)
                             .success(function(res){
                                 //console.log(res);
@@ -3473,8 +3003,6 @@ angular.module('ebs.controller')
                 Settings.failurePopup('ERROR',"Please enter text!");
             }
         }
-
-
         $scope.toggleEditOrderStatus = function(status){
             console.log(status)
             for(var i=0; i< $scope.orderEditForStatus.length; i++){
@@ -3489,17 +3017,13 @@ angular.module('ebs.controller')
                     Settings.setInstanceDetails('orderEditForStatus', $scope.orderEditForStatus)
                 })
         }
-
-
         /*..........
          Remove  payment status from settings page
          .........*/
         $scope.removePaymentOrderStatus = function(status){
             var index = $scope.nav[1].paymentstatus.indexOf(status);
-
             if(index != -1 && ($scope.nav[1].paymentstatus.length > 1)){
                 $scope.nav[1].paymentstatus.splice(index, 1);
-
                 $http.put("/dash/nav/order/payment/status", $scope.nav[1].paymentstatus)
                     .success(function(res){
                         if(res){
@@ -3508,15 +3032,12 @@ angular.module('ebs.controller')
                         }else{
                             Settings.failurePopup('ERROR',"Could not update! Try again Later");
                         }
-
                     })
             }
             else{
                 Settings.failurePopup('ERROR',"A minimum of one status has to be present!");
             }
         };
-
-
         $scope.editPaymentOrderStatusFromSettings = function(status, index){
             if(!status){
                 Settings.failurePopup('ERROR',"Please enter text!");
@@ -3525,7 +3046,6 @@ angular.module('ebs.controller')
                 var statusObj = [];
                 statusObj = $scope.nav[1].paymentstatus;
                 statusObj[index] = status;
-
                 $http.put("/dash/nav/order/payment/status", statusObj)
                     .success(function(res){
                         if(res){
@@ -3537,14 +3057,10 @@ angular.module('ebs.controller')
                     })
             }
         }
-
-
         $scope.addPaymentOrderStatus = function(status){
-
             if(status != '' && status != undefined){
                 $scope.nav[1].paymentstatus[$scope.nav[1].paymentstatus.length] = $scope.nav[1].paymentstatus[$scope.nav[1].paymentstatus.length-1] ;
                 $scope.nav[1].paymentstatus[$scope.nav[1].paymentstatus.length-2] = status ;
-
                 $http.put("/dash/nav/order/payment/status", $scope.nav[1].paymentstatus)
                     .success(function(res){
                         if(res){
@@ -3560,14 +3076,10 @@ angular.module('ebs.controller')
                 Settings.failurePopup('ERROR',"Please enter text");
             }
         }
-
         /* google map API setup started */
-
         $scope.addgMapAPI = function(gMapKey){
-
             $scope.gMapAPI = {
                 api_key : gMapKey
-
             }
           //  console.log("gmapkey", $scope.gMapAPI);
             if(gMapKey != '' && gMapKey != undefined){
@@ -3578,35 +3090,27 @@ angular.module('ebs.controller')
                             Settings.success_toast('SUCCESS',"gMapAPI successfully added!");
                             Settings.setInstanceDetails('gMapAPI', $scope.gMapAPI)
                         })
-
-
             }
             else{
                 Settings.failurePopup('ERROR',"Please enter CORRECT API KEY!");
             }
         }
-
         $scope.editGmap = function(){
             $scope.newEditGMapAPI = $scope.gMapAPI;
         }
-
         //Function to update GMAP API KEY from SETTINGS PAGE. Only by Admin
         $scope.editGMAPAPIFromSettings = function(gMapKey, index,type){
-
             if(gMapKey == undefined){
                 Settings.failurePopup('ERROR',"Please enter API Key");
             }
             else{
                 $scope.gMapAPI = {
                     api_key : gMapKey
-
                 }
-
                     $http.post("/dash/settings/google/maps", $scope.gMapAPI)
                         .success(function(res){
                             if(res){
                                 Settings.success_toast('SUCCESS',"API Key  successfully updated!");
-
                                 $scope.newEditGMapAPI = $scope.gMapAPI.api_key;
                                 Settings.setInstanceDetails('gMapAPI', $scope.gMapAPI.api_key)
                             }
@@ -3614,22 +3118,13 @@ angular.module('ebs.controller')
                                 Settings.failurePopup('ERROR',"Could not update API Key!");
                             }
                         })
-
             }
         }
-
-
         /* google map API setup ended  */
-
-
-
         /*..........
          lead status setup
          .........*/
-
-
         $scope.addLeadStatus = function(status){
-
             if(status != '' && status != undefined){
                 if($scope.leadStatus.length){
                     if($scope.leadStatus.indexOf(status.toLowerCase()) == -1){
@@ -3642,11 +3137,9 @@ angular.module('ebs.controller')
                 else{
                     leadFunc ();
                 }
-
                 function leadFunc (){
                     var temp = $scope.leadStatus;
                     temp.push(status.toLowerCase())
-
                     $http.post("/dash/settings/leadstatus", temp)
                         .success(function(res){
                             $scope.leadStatus = temp;
@@ -3654,18 +3147,14 @@ angular.module('ebs.controller')
                             Settings.success_toast('SUCCESS',"Lead status successfully added!");
                             Settings.setInstanceDetails('leadStatus', $scope.leadStatus)
                         })
-
                 }
-
             }
             else{
                 Settings.failurePopup('ERROR',"Please enter text!");
             }
         }
-
         //Function to update lead STATUS from SETTINGS PAGE. Only by Admin
         $scope.editLeadStatusFromSettings = function(status, index,type){
-
             if(status == undefined){
                 Settings.failurePopup('ERROR',"Please enter text");
             }
@@ -3678,17 +3167,14 @@ angular.module('ebs.controller')
                         Settings.failurePopup('ERROR',"Status name already exist");
                     }
                 }
-
                 function editLeadFunc(){
                     var statusObj = [];
                     statusObj = $scope.leadStatus;
                     statusObj[index] = status.toLowerCase();
-
                     $http.post("/dash/settings/leadstatus", statusObj)
                         .success(function(res){
                             if(res){
                                 Settings.success_toast('SUCCESS',"Lead status successfully updated!");
-
                                 $scope.leadStatus[index] = status.toLowerCase();
                                 Settings.setInstanceDetails('leadStatus', $scope.leadStatus)
                             }
@@ -3696,14 +3182,9 @@ angular.module('ebs.controller')
                                 Settings.failurePopup('ERROR',"Could not update lead status!");
                             }
                         })
-
                 }
-
-
-
             }
         }
-
         /*..........
          Remove  lead status from settings page
          .........*/
@@ -3723,11 +3204,8 @@ angular.module('ebs.controller')
                     }
                 })
         };
-
-        
         // Add MPG to settings
         $scope.addMPG = function(source){
-
             if(source != '' && source != undefined){
                 if($scope.mpg.length){
                     if($scope.mpg.indexOf(source.toLowerCase()) == -1){
@@ -3740,11 +3218,9 @@ angular.module('ebs.controller')
                 else{
                     mpgSourceFunc ();
                 }
-
                 function mpgSourceFunc (){
                     var temp = $scope.mpg;
                     temp.push(source)
-
                     $http.post("/dash/settings/mpg", temp)
                         .success(function(res){
                             $scope.mpg = temp;
@@ -3752,9 +3228,7 @@ angular.module('ebs.controller')
                             Settings.success_toast('SUCCESS',"MPG successfully added!");
                             Settings.setInstanceDetails('mpg', $scope.mpg)
                         })
-
                 }
-
             }
             else{
                 Settings.failurePopup('ERROR',"Please enter text!");
@@ -3762,7 +3236,6 @@ angular.module('ebs.controller')
         }
         // Add OrderType to settings
         $scope.addOrderType = function(source){
-
             if(source != '' && source != undefined){
                 if($scope.orderType.length){
                     if($scope.orderType.indexOf(source) == -1){
@@ -3775,11 +3248,9 @@ angular.module('ebs.controller')
                 else{
                     orderTypeFunc ();
                 }
-
                 function orderTypeFunc (){
                     var temp = $scope.orderType;
                     temp.push(source)
-
                     $http.post("/dash/settings/orderType", temp)
                         .success(function(res){
                             $scope.orderType = temp;
@@ -3787,9 +3258,7 @@ angular.module('ebs.controller')
                             Settings.success_toast('SUCCESS',"OrderType successfully added!");
                             Settings.setInstanceDetails('orderType', $scope.orderType)
                         })
-
                 }
-
             }
             else{
                 Settings.failurePopup('ERROR',"Please enter text!");
@@ -3797,7 +3266,6 @@ angular.module('ebs.controller')
         }
                 // Add UOM to settings
                 $scope.addUOM = function(source){
-
                     if(source != '' && source != undefined){
                         if($scope.salesUOM.length){
                             if($scope.salesUOM.indexOf(source.toLowerCase()) == -1){
@@ -3810,11 +3278,9 @@ angular.module('ebs.controller')
                         else{
                             salesUOMFunc ();
                         }
-
                         function salesUOMFunc (){
                             var temp = $scope.salesUOM;
                             temp.push(source.toLowerCase())
-
                             $http.post("/dash/settings/salesUOM", temp)
                                 .success(function(res){
                                     $scope.salesUOM = temp;
@@ -3822,18 +3288,14 @@ angular.module('ebs.controller')
                                     Settings.success_toast('SUCCESS',"Sales UOM successfully added!");
                                     Settings.setInstanceDetails('salesUOM', $scope.salesUOM)
                                 })
-
                         }
-
                     }
                     else{
                         Settings.failurePopup('ERROR',"Please enter text!");
                     }
                 }
-
         //Add lead source to settings
         $scope.addLeadSource = function(source){
-
             if(source != '' && source != undefined){
                 if($scope.leadSource.length){
                     if($scope.leadSource.indexOf(source.toLowerCase()) == -1){
@@ -3846,11 +3308,9 @@ angular.module('ebs.controller')
                 else{
                     leadSourceFunc ();
                 }
-
                 function leadSourceFunc (){
                     var temp = $scope.leadSource;
                     temp.push(source.toLowerCase())
-
                     $http.post("/dash/settings/leadsource", temp)
                         .success(function(res){
                             $scope.leadSource = temp;
@@ -3858,9 +3318,7 @@ angular.module('ebs.controller')
                             Settings.success_toast('SUCCESS',"Lead source successfully added!");
                             Settings.setInstanceDetails('leadSource', $scope.leadSource)
                         })
-
                 }
-
             }
             else{
                 Settings.failurePopup('ERROR',"Please enter text!");
@@ -3944,7 +3402,6 @@ Remove  orderType from settings page
         };
                 //Function to update sales UOM from SETTINGS PAGE. Only by Admin
                 $scope.editSalesUOMFromSettings = function(source, index,type){
-
                     if(source == undefined){
                         Settings.failurePopup('ERROR',"Please enter text");
                     }
@@ -3957,17 +3414,14 @@ Remove  orderType from settings page
                                 Settings.failurePopup('ERROR',"sales UOM already exist");
                             }
                         }
-
                         function editSalesUomFunc(){
                             var sourceObj = [];
                             sourceObj = $scope.salesUOM;
                             sourceObj[index] = source.toLowerCase();
-
                             $http.post("/dash/settings/salesUOM", sourceObj)
                                 .success(function(res){
                                     if(res){
                                         Settings.success_toast('SUCCESS',"salesUOM successfully updated!");
-
                                         $scope.orderType[index] = source.toLowerCase();
                                         Settings.setInstanceDetails('salesUOM', $scope.salesUOM)
                                     }
@@ -3975,16 +3429,11 @@ Remove  orderType from settings page
                                         Settings.failurePopup('ERROR',"Could not update salesUOM!");
                                     }
                                 })
-
                         }
-
-
-
                     }
                 }
         //Function to update OrderType from SETTINGS PAGE. Only by Admin
         $scope.editOrderTypeFromSettings = function(source, index,type){
-
             if(source == undefined){
                 Settings.failurePopup('ERROR',"Please enter text");
             }
@@ -3997,17 +3446,14 @@ Remove  orderType from settings page
                         Settings.failurePopup('ERROR',"OrderType already exist");
                     }
                 }
-
                 function editOrderTypeFunc(){
                     var sourceObj = [];
                     sourceObj = $scope.orderType;
                     sourceObj[index] = source.toLowerCase();
-
                     $http.post("/dash/settings/orderType", sourceObj)
                         .success(function(res){
                             if(res){
                                 Settings.success_toast('SUCCESS',"orderType successfully updated!");
-
                                 $scope.orderType[index] = source.toLowerCase();
                                 Settings.setInstanceDetails('orderType', $scope.orderType)
                             }
@@ -4015,16 +3461,11 @@ Remove  orderType from settings page
                                 Settings.failurePopup('ERROR',"Could not update orderType!");
                             }
                         })
-
                 }
-
-
-
             }
         }
         //Function to update MPG from SETTINGS PAGE. Only by Admin
         $scope.editMPGFromSettings = function(source, index,type){
-
             if(source == undefined){
                 Settings.failurePopup('ERROR',"Please enter text");
             }
@@ -4037,17 +3478,14 @@ Remove  orderType from settings page
                         Settings.failurePopup('ERROR',"Source name already exist");
                     }
                 }
-
                 function editMPGFunc(){
                     var sourceObj = [];
                     sourceObj = $scope.mpg;
                     sourceObj[index] = source.toLowerCase();
-
                     $http.post("/dash/settings/mpg", sourceObj)
                         .success(function(res){
                             if(res){
                                 Settings.success_toast('SUCCESS',"MPG successfully updated!");
-
                                 $scope.mpg[index] = source.toLowerCase();
                                 Settings.setInstanceDetails('mpg', $scope.mpg)
                             }
@@ -4055,16 +3493,11 @@ Remove  orderType from settings page
                                 Settings.failurePopup('ERROR',"Could not update MPG!");
                             }
                         })
-
                 }
-
-
-
             }
         }
         //Function to update lead SOURCE from SETTINGS PAGE. Only by Admin
         $scope.editLeadSourceFromSettings = function(source, index,type){
-
             if(source == undefined){
                 Settings.failurePopup('ERROR',"Please enter text");
             }
@@ -4077,17 +3510,14 @@ Remove  orderType from settings page
                         Settings.failurePopup('ERROR',"Source name already exist");
                     }
                 }
-
                 function editLeadSourceFunc(){
                     var sourceObj = [];
                     sourceObj = $scope.leadSource;
                     sourceObj[index] = source.toLowerCase();
-
                     $http.post("/dash/settings/leadsource", sourceObj)
                         .success(function(res){
                             if(res){
                                 Settings.success_toast('SUCCESS',"Lead source successfully updated!");
-
                                 $scope.leadSource[index] = source.toLowerCase();
                                 Settings.setInstanceDetails('leadSource', $scope.leadSource)
                             }
@@ -4095,14 +3525,9 @@ Remove  orderType from settings page
                                 Settings.failurePopup('ERROR',"Could not update lead source!");
                             }
                         })
-
                 }
-
-
-
             }
         }
-
         /*..........
          Remove user roles from settings page
          .........*/
@@ -4128,22 +3553,16 @@ Remove  orderType from settings page
             else{
                 Settings.failurePopup('ERROR',"A minimum of one role has to be present!");
             }
-
-
         }
-
-
         /*..........
          customize name settings page
          .........*/
-
         $scope.addCustomName = function(customName){
             if(customName != '' && customName != undefined){
                 $scope.customNames[$scope.customNames.length] = {
                     name : customName,
                     displayName : customName
                 };
-
                 console.log('$scope.customNames',$scope.customNames)
                 $http.put("/dash/settings/update/custom/name",  $scope.customNames)
                     .success(function(res){
@@ -4157,13 +3576,11 @@ Remove  orderType from settings page
                 Settings.failurePopup('ERROR',"Please enter text!");
             }
         }
-
         $scope.removeCustomName = function(name){
             var index = $scope.customNames.map(function(o) { return o.name; }).indexOf(name);
             if(index != -1 && ($scope.customNames.length > 1)){
                 // console.log(index);
                 $scope.customNames.splice(index, 1);
-
                 $http.put("/dash/settings/update/custom/name", $scope.customNames)
                     .success(function(res){
                         //console.log(res);
@@ -4175,7 +3592,6 @@ Remove  orderType from settings page
                 Settings.failurePopup('ERROR',"A default custom name has to be present!");
             }
         }
-
         $scope.addUserRoles = function(roles){
             if(roles != '' && roles != undefined){
                 $scope.nav[4].roles[$scope.nav[4].roles.length] = {
@@ -4183,22 +3599,17 @@ Remove  orderType from settings page
                     role : roles,
                     status : true
                 };
-
                 $scope.allRoles[$scope.nav[4].roles.length-1] = {
                     role : roles
                 };
-
-
                 $http.put("/dash/nav/roles/update", $scope.nav[4].roles)
                     .success(function(res){
-
                         $http.put("/dash/settings/update/roles",  $scope.nav[4].roles)
                             .success(function(res){
                                 console.log(res);
                                 $scope.userRole = res;
                                 $scope.newUserRole = '';
                                 Settings.setInstanceDetails('userRole', $scope.userRole)
-
                             })
                     })
             }
@@ -4206,16 +3617,12 @@ Remove  orderType from settings page
                 Settings.failurePopup('ERROR',"Please enter text!");
             }
         }
-
-
         $scope.changeDealerPricelist = function(data,index){
             var temp = $scope.dealerClasses ;
-
             temp[index] = {
                 name : data.name,
                 priceList : data.priceList
             };
-
             $http.put("/dash/settings/dealer/class", temp)
                 .success(function(res){
                     //console.log(res);
@@ -4232,10 +3639,7 @@ Remove  orderType from settings page
                     // console.log($scope.priceListName)
                     Settings.success_toast('SUCCESS', "Class Updated Successfully!")
                 })
-
         }
-
-
         $scope.removeDealerPricelist = function(index){
             var temp = $scope.dealerClasses ;
             temp.splice(index,1)
@@ -4246,10 +3650,7 @@ Remove  orderType from settings page
                     Settings.setInstanceDetails('dealerClass', $scope.dealerClasses)
                     Settings.success_toast('SUCCESS', "Class Removed Successfully!")
                 })
-
         }
-
-
         $scope.addDealerClass = function(data){
             if(data.name){
                 if($scope.dealerClasses.length){
@@ -4272,12 +3673,10 @@ Remove  orderType from settings page
                 }
                 function postData(){
                     var temp = $scope.dealerClasses ;
-
                     temp[temp.length] = {
                         name : data.name,
                         priceList : data.priceList
                     };
-
                     $http.put("/dash/settings/dealer/class", temp)
                         .success(function(res){
                             //console.log(res);
@@ -4293,8 +3692,6 @@ Remove  orderType from settings page
                 Settings.failurePopup('ERROR',"Please enter text!");
             }
         }
-
-
         $scope.addPricelistName = function(name){
             if(name){
                 if(name.toUpperCase() != 'MASTER'){
@@ -4316,13 +3713,10 @@ Remove  orderType from settings page
                     else{
                         postlist();
                     }
-
                     function postlist(){
                         var temp = $scope.masterPriceList ;
                         temp[temp.length] = name ;
                         console.log(temp)
-
-
                         $http.put("/dash/settings/pricelist/name", temp)
                             .success(function(res){
                                 $scope.editedItem[res[res.length - 1]] = "";
@@ -4337,24 +3731,15 @@ Remove  orderType from settings page
                 else{
                     Settings.failurePopup('ERROR',"Pricelist cannot be named as MASTER!");
                 }
-
             } else{
                 Settings.failurePopup('ERROR',"Please enter text!");
             }
-
         }
-
-
         //------------------------------------------------------------------------------//
-
         //**** BUSY INTEGRATION ****//
-
         //------------------------------------------------------------------------------//
-
         $scope.busy = {};
-
         $scope.addBusyDetails = function(company){
-
             $http.post("/dash/busy/creds/update",$scope.busy)
                 .success(function(response){
                     console.log(response);
@@ -4364,12 +3749,9 @@ Remove  orderType from settings page
                     Settings.failurePopup('ERROR',"Could not update! Try again Later");
                 })
         }
-
-
         /*
          EXPENSE TYPE Turn ON/OFF a notification
          */
-
         $scope.expense = {};
         $scope.newExpense = {};
         $scope.newExpense.name = '';
@@ -4377,7 +3759,6 @@ Remove  orderType from settings page
             if(newExpense) {
                 var body = {};
                 body.expensetype = newExpense;
-
                 $http.post('/dash/expense/update/category', body).success(function (res) {
                     if(res){
                         $scope.newExpense.name = '';
@@ -4394,10 +3775,7 @@ Remove  orderType from settings page
             } else{
                 Settings.failurePopup('ERROR',"Please enter text");
             }
-
         }
-
-
         var selectBackgroundColor = 0;
         $scope.selectBackgroundColor = function(dataIndex){
             document.getElementById("selectBackground"+dataIndex).style.background = '#dedbdbd4';
@@ -4406,13 +3784,10 @@ Remove  orderType from settings page
             }
             selectBackgroundColor = dataIndex;
         }
-
-
         $scope.selectExpense = '';
         $scope.selectExpenses = function (expense){
             $scope.selectExpense = expense;
             $scope.selectSubExpense = false;
-
             if($scope.expense_Type.category.length){
                 for(var i = 0; i < $scope.expense_Type.category.length;i++){
                     if($scope.expense_Type.category[i].name == expense){
@@ -4421,8 +3796,6 @@ Remove  orderType from settings page
                 }
             }
         }
-
-
         $scope.expenseEditName = '';
         $scope.editExpenseType = function(type, expensetype, expenseIndex, expneseInputs) {
             var body = {};
@@ -4430,7 +3803,6 @@ Remove  orderType from settings page
             body.expenseIndex = expenseIndex;
             body.expenseInputs = expneseInputs;
             body.editType = type;
-
             if (type == "edit") {
                 $http.put('/dash/expense/edit/update/category', body)
                     .success(function (result) {
@@ -4457,14 +3829,11 @@ Remove  orderType from settings page
                 })
             }
         }
-
-
         $scope.reorderExpenseCategory = function(dir, value){
             if(dir == 'up'){
                 var temp = $scope.expense_Type.category[value];
                 $scope.expense_Type.category[value] = $scope.expense_Type.category[value - 1];
                 $scope.expense_Type.category[value - 1] = temp;
-
                 $http.put("/dash/expense/reorder/category", $scope.expense_Type.category)
                     .success(function(res){
                     })
@@ -4479,8 +3848,6 @@ Remove  orderType from settings page
                     })
             }
         }
-
-
         $scope.subExpenseType = {};
         $scope.addSubExpenseType = function(expense, subExpense, inputs) {
             if (expense && subExpense && inputs) {
@@ -4509,8 +3876,6 @@ Remove  orderType from settings page
                 }
             }
         }
-
-
         $scope.subExpenseEditSubName = '';
         $scope.editSubExpenseType = function(type, expense, subExpIndex, subName){
             var body = {};
@@ -4525,8 +3890,6 @@ Remove  orderType from settings page
                     $scope.getExpense(expense);
                 })
         }
-
-
         //Function to update User roles from SETTINGS PAGE. Only by Admin
         $scope.editUserRolesFromSettings = function(roles, index){
             if(roles == undefined){
@@ -4539,26 +3902,21 @@ Remove  orderType from settings page
                     name : roles,
                     role : $scope.nav[4].roles[index].role,
                     status : true
-
                 };
-
                 $http.put("/dash/nav/roles/update", rolesObj)
                     .success(function(res){
                         if(res){
                             Settings.successPopup('SUCCESS',"User Roles successfully updated!");
-
                             $scope.allRoles[index] = {
                                 name: roles,
                                 role : $scope.allRoles[index].role
                             };
-
                             $http.put("/dash/settings/update/roles", rolesObj)
                                 .success(function(res){
                                     //console.log(res);
                                     $scope.userRole = res;
                                     Settings.setInstanceDetails('userRole', $scope.userRole)
                                 })
-
                         }
                         else{
                             Settings.failurePopup('ERROR',"Error while updating user roles");
@@ -4566,20 +3924,17 @@ Remove  orderType from settings page
                     })
             }
         };
-
         //Function to update custom name from SETTINGS PAGE. Only by Admin
         $scope.editCustomNameFromSettings = function(name, displayName,  index){
             if(displayName == undefined || displayName == ''){
                 Settings.failurePopup('ERROR',"Please enter text");
             }
             else{
-
                 if($scope.customNames.length && $scope.customNames[index].name == name){
                     $scope.customNames[index] = {
                         name: name,
                         displayName : displayName
                     };
-
                     $http.put("/dash/settings/update/custom/name", $scope.customNames)
                         .success(function(res){
                             //console.log(res);
@@ -4592,10 +3947,7 @@ Remove  orderType from settings page
                 }
             }
         };
-
         //............ TAX SETUP ...................
-
-
         $scope.toggleTaxSetup = enable => {
             $http.put("/dash/settings/tax/enable", {"activate" : enable})
                 .then(response => {
@@ -4622,8 +3974,6 @@ Remove  orderType from settings page
                         $window.location.href = '/404';
                 });
         }
-
-
         $scope.toggleTaxExclusive = function(exclusive){
             $http.put("/dash/settings/catalog/prices/tax/exclusive", {activate : exclusive})
                 .then(response => {
@@ -4634,8 +3984,6 @@ Remove  orderType from settings page
                     }
                 })
         }
-
-
         /*.........
          Save new tax obj
          .......*/
@@ -4644,7 +3992,6 @@ Remove  orderType from settings page
             if(tax){
                 if(tax.name){
                 var message ='CGST : '+(tax.cgst ?  tax.cgst+' %' : '0 %')+' || SGST : '+(tax.sgst ?  tax.sgst+' %' : '0 %')+' || IGST : '+(tax.igst ?  tax.igst+' %' : '0 %');
-
                         Settings.confirmPopup("Are you sure?",message,function (res) {
                         if(res){
                                 var date = new Date();
@@ -4655,7 +4002,6 @@ Remove  orderType from settings page
                                 tax.seller = $scope.user.sellerphone ? $scope.user.sellerphone : '';
                                 tax.date_added = [date.getFullYear(),(date.getMonth()+1).padLeft(), date.getDate().padLeft() ].join('-') + ' '
                                     + [date.getHours().padLeft(), date.getMinutes().padLeft(), date.getSeconds().padLeft()].join (':');
-
                                 $http.post("/dash/tax/addNew", tax)
                                     .success(function(response){
                                         //console.log(response);
@@ -4680,10 +4026,7 @@ Remove  orderType from settings page
             else{
                 Settings.failurePopup('ERROR','You have not entered anything!');
             }
-
         }
-
-
         /*.....
          Set a tax to be default
          ..... */
@@ -4692,14 +4035,12 @@ Remove  orderType from settings page
                 var localTax = $scope.tax;
                 $scope.tax = [];
                 var flag = true;
-
                 for(var i=0; i< localTax.length ; i++){
                     localTax[i].default = false;
                     if(localTax[i].name == tax.name && flag){
                         localTax[i].default = true;
                     }
                 }
-
                 $http.put("/dash/tax/updateTax/default", localTax)
                     .success(function(res){
                         if(res){
@@ -4715,7 +4056,6 @@ Remove  orderType from settings page
                 var localTax = $scope.otherTax;
                 $scope.OtherTax = [];
                 var flag = true;
-
                 for(var i=0; i< localTax.length ; i++){
                     localTax[i].default = false;
                     if(localTax[i].taxSetupName == tax.taxSetupName && flag){
@@ -4723,7 +4063,6 @@ Remove  orderType from settings page
                         $scope.otherTaxDefault = localTax[i];
                     }
                 }
-
                 $http.put("/dash/tax/updateTax/otherTax", localTax)
                     .success(function(res){
                         if(res){
@@ -4736,11 +4075,7 @@ Remove  orderType from settings page
                     })
             }
         }
-
-
         <!-- .......... NOTIFICATION SETUP ............ -->
-
-
         $scope.ClearEmail = function () {
             $scope.email.company_name = '';
             $scope.email.from = '';
@@ -4752,8 +4087,6 @@ Remove  orderType from settings page
             $scope.email.company_website_url = '';
             $scope.email.company_description = '';
         }
-
-
         $scope.setEmail = function () {
             console.log($scope.email)
             Settings.confirmPopup("Confirm", "Save Email",function (result) {
@@ -4769,7 +4102,6 @@ Remove  orderType from settings page
                                 Settings.successPopup('SUCCESS','Updated Successfully!');
                                 //console.log("Updated Company Logo URL --> "+response);
                             }
-
                         })
                 }
                 else {
@@ -4777,14 +4109,11 @@ Remove  orderType from settings page
                 }
             });
         }
-
-
         /*
          Turn ON/OFF a notification
          */
         $scope.toggleNotification = function(user, platform, type, flag){
             $scope.notificationConfig[user][platform == 'email' ? 0 : 1]['status'][type] = flag;
-
             $http.put("/dash/settings/update/push/notification", $scope.notificationConfig)
                 .then(response => {
                     if(response.data && response.data.status == "success"){
@@ -4796,12 +4125,8 @@ Remove  orderType from settings page
                     }
                 })
         };
-
-
         $scope.toggleSendSms = function(type, flag){
-
             $scope.sendSms[type] = flag;
-
             $http.put("/dash/settings/update/sms/notification", $scope.sendSms)
                 .then(response => {
                     if(response.data && response.data.status == "success"){
@@ -4813,11 +4138,7 @@ Remove  orderType from settings page
                     }
                 })
         }
-
-
         <!-- .......... PAYMENT SETUP ............ -->
-
-
         $scope.togglePaymentModeSelect = function (data){
             // console.log(data)
             if(data){
@@ -4829,7 +4150,6 @@ Remove  orderType from settings page
                         if(data.name == $scope.paymentModes[i].name){
                             $scope.paymentModes[i] = data;
                             // console.log($scope.paymentModes);
-
                             $http.put("/dash/settings/update/payment/mode", $scope.paymentModes)
                                 .success(function(res){
                                     $scope.paymentModes = res
@@ -4840,11 +4160,7 @@ Remove  orderType from settings page
                 }
             }
         }
-
-
         <!-- .......... EDIT SETUP ............ -->
-
-
         $scope.toggleEditOrderDealer = function(user, action, type, flag){
             if(type == 'shipment'){
                 $scope.editByRoles[user][action == 'edit' ? 0 : 1]['status'][type] = flag;
@@ -4868,13 +4184,9 @@ Remove  orderType from settings page
                     })
             }
         }
-
-
-
         /*
     Enable SuperJIni for store
      */
-
         //.... Enable/disable to superjini...
         $scope.superJiniStore = function (enable) {
             console.log("Super Jini store enable function");
@@ -4886,7 +4198,6 @@ Remove  orderType from settings page
                 var storeURL = '';
                 var storeVal = '';
             }
-
             $http.put("/dash/settings/enable/superjini", {superjini : enable, store_id : store_id, storeURL : storeURL, storeVal : storeVal})
                 .success(function (response) {
                     if (!response) {
@@ -4900,7 +4211,6 @@ Remove  orderType from settings page
 						$http.get('/dash/get/recentID/'+'dealer').success(function(storeRes){
                             console.log("recent dealer code ")
                             console.log(storeRes);
-
                                 $scope.dealer = {};
                                 $scope.dealer.store_id = store_id;
                                 $scope.dealer.Dealercode = storeRes.Dealercode + 1;
@@ -4928,26 +4238,15 @@ Remove  orderType from settings page
                                     $scope.dealer.cloudinaryURL = [];
                                 }
                                 $scope.dealer.doccloudinaryURL = [];
-
                                 $http.post('/dash/stores/add/new',$scope.dealer).success(function(dealerAdded){
                                     console.log(dealerAdded);
                                     if(dealerAdded.ops[0].Dealercode){
                                         $http.put("/jini/memberDealer/"+ dealerAdded.ops[0].Dealercode).success(function(code){
                                             console.log("dealercode put in members for identification" + code)
-
-
                                         })
                                     }
                                 })
-
-
-
-
-
-
                         })
-
-
                           }
 						 }
                         else if(enable == false){
@@ -4957,7 +4256,6 @@ Remove  orderType from settings page
                     }
                 })
         }
-
         $scope.saveStoreURL = function(storeVal){
             console.log(storeVal);
             /*
@@ -4973,10 +4271,8 @@ Remove  orderType from settings page
                 } else {
                     Settings.success_toast('SUCCESS', "Store URL Updated!")
                 }
-
             });
         };
-
         /*$scope.customerNotification = () => {
             $http.put("/jini/customer/notification", {storeVal: storeVal}).success(function(response){
                 console.log(response);
@@ -4988,10 +4284,8 @@ Remove  orderType from settings page
                 } else {
                     Settings.success_toast('SUCCESS', "Store URL Updated!")
                 }
-
             });
         }*/
-
         $scope.setInvoice = function (name,type) {
             if(type == 'name'){
                 if(!name){
@@ -5003,10 +4297,8 @@ Remove  orderType from settings page
                             $scope.invoiceID.name = response;
                             Settings.success_toast('SUCCESS','Updated Successfully!');
                             Settings.setInstanceDetails('invoiceID', response)
-
                         }
                     })
-
             }
             else{
                 Settings.confirmPopup("Confirm","Generation of invoice number will start from "+ name +"?",function (result) {
@@ -5020,7 +4312,6 @@ Remove  orderType from settings page
                                 if(res)
                                     $scope.invoiceID.num = zeroPad(res.value.invoiceID, 5);
                                 Settings.success_toast('SUCCESS','InvoiceID Updated Successfully!');
-
                             }).error(function (error) {
                             Settings.failurePopup('ERROR', 'Failed to update!');
                         })
@@ -5032,20 +4323,14 @@ Remove  orderType from settings page
                                 if(!response){
                                     $scope.invoiceID.num = zeroPad(1,5)
                                 }else{
-
                                     $scope.invoiceID.num = zeroPad(response.invoiceID,5);
                                     // console.log($scope.invoiceID.num)
                                 }
                             });
-
                     }
                 })
-
-
             }
-
         };
-
         //..... set subscription threshold (1to1)........
         $scope.setSubscriptionThreshold = function () {
             console.log($scope.subscription);
@@ -5054,20 +4339,16 @@ Remove  orderType from settings page
                     console.log(res)
                     if(res)
                         Settings.success_toast('SUCCESS','Minimum Subscription Balance Updated Successfully!');
-
                 }).error(function (error) {
                 Settings.failurePopup('ERROR', 'Failed to update!');
             })
-
         };
-
         $scope.distMaxtrix = {}
         $scope.distMaxtrix.minAmount = '';
         $scope.distMaxtrix.maxAmount = '';
         $scope.distMaxtrix.minDist = '';
         $scope.distMaxtrix.maxDist = '';
         $scope.distMaxtrix.deliveryFee = '';
-
         $scope.addDelivery = function(){
             console.log($scope.distMaxtrix);
             $http.put('/dash/fill/distMatrix',$scope.distMaxtrix).success(function(resp){
@@ -5078,7 +4359,6 @@ Remove  orderType from settings page
                         if(matrixData.length){
                             $scope.deliveryData = matrixData[0].matrix;
                         }
-
                     });
                     $scope.distMaxtrix.minAmount = '';
                     $scope.distMaxtrix.maxAmount = '';
@@ -5086,16 +4366,12 @@ Remove  orderType from settings page
                     $scope.distMaxtrix.maxDist = '';
                     $scope.distMaxtrix.deliveryFee = '';
                 }
-
-
             });
-
         }
         $scope.removeDelivery = function(index){
            // console.log(index);
             $scope.deliveryData.splice(index, 1);
            // console.log($scope.deliveryData);
-
             $http.put('/dash/edit/distMatrix',$scope.deliveryData).success(function(resp){
                 if(resp){
                     // console.log(resp);
@@ -5104,136 +4380,92 @@ Remove  orderType from settings page
                         if(matrixData.length){
                             $scope.deliveryData = matrixData[0].matrix;
                         }
-
                     });
                 }
-
-
             });
-
         }
-
-
-
         $scope.appBanner = {};
         $scope.appBanner.title = '';
         $scope.appBanner.heading1 = '';
         $scope.appBanner.heading2 = '';
         $scope.appBanner.appimage = '';
-
         $http.get('/dash/settings/appBanner').success(function (appBanner) {
             console.log("Get dist appBanner"+ appBanner.length);
             if(appBanner.length){
                 $scope.appBannerData = appBanner[0].banner;
             }
         });
-
-
 // AppBanner  to settings collection.....
-
         $scope.updatePicture  = function(image,appimage){
             if(image[0].size >= 1024000 ){
                 Settings.confirmPopup('warning',"Image Size should lesser than 1MB, please check");
-
             }else {
                 $scope.userPicture = appimage;
             }
-
         }
-
         // Adding AppBanner  to settings collection.....
         $scope.saveAppBanner = function(appBanner) {
-
             $scope.appBanner.appimage =   $scope.userPicture;
          //   console.log("app banner save button",$scope.appBanner.title);
-
             if(appBanner.title) {
                 $http.put('/dash/fill/appBanner', $scope.appBanner).success(function (resp) {
-
                     if (resp) {
                      //   console.log(resp);
                         $http.get('/dash/settings/appBanner').success(function (appBanner) {
                            // console.log("Get dist appBanner" + appBanner.length);
                             if (appBanner.length) {
-
                                 $scope.appBannerData = appBanner[0].banner;
                             }
-
                         });
                         $scope.appBanner.title = '';
                         $scope.appBanner.heading1 = '';
                         $scope.appBanner.heading2 = '';
                         $scope.appBanner.appimage = '';
-
                         Settings.success_toast("Success", "AppBanner Added Successfully");
-
                     }
                 });
-
             } else {
                 Settings.failurePopup('ERROR',"Please enter Title");
             }
         }
-
-
-
         $scope.updatePicture1  = function(image,appimage){
-
             if(image[0].size >= 1024000 ){
                 Settings.confirmPopup('warning',"Image Size should lesser than 1MB, please check");
-
             }else {
                 $scope.userPicture1 = appimage;
             }
-
-
         }
-
         // Edit and update AppBanner.......c
-
-
         $scope.editAppBannerFromSetting = function(newAppBanner,index) {
-
             if(newAppBanner.title) {
-
             //    console.log("edit app banner", newAppBanner);
             $http.get('/dash/settings/appBanner').success(function (appBanner) {
                 if (appBanner.length) {
                     $scope.appBannerData = appBanner[0].banner;
                 }
             });
-
             if($scope.userPicture1){
                 newAppBanner.appimage = $scope.userPicture1;
             }
-
-
                 for (var i = 0; i < $scope.appBannerData.length; i++) {
                 $scope.appBannerData[i].edited = false ;
-
                 if (i == index) {
                     $scope.appBannerData[i] = newAppBanner;
                     $scope.appBannerData[i].edited = true ;
-
                 }
             }
-
-
             $http.put('/dash/edit/appBanner', $scope.appBannerData)
                 .success(function (resp) {
                     if (resp) {
                           console.log(resp);
                         $http.get('/dash/settings/appBanner').success(function (appBanner) {
                       //      console.log("Get newAppBanner"+ appBanner[0].banner, appBanner.length);
-
                             if (appBanner.length) {
                                 $scope.appBannerData = appBanner[0].banner;
                             }
-
                         });
                         Settings.success_toast("Success", "AppBanner Updated Successfully");
                     }
-
                 });
         }
         else
@@ -5241,16 +4473,11 @@ Remove  orderType from settings page
             Settings.failurePopup('ERROR',"Please enter Title");
         }
         }
-
-
-
 //remove  AppBanner  to settings collection.....
-
         $scope.removeAppBanner = function(index){
             // console.log(index);
             $scope.appBannerData.splice(index, 1);
              console.log($scope.appBannerData);
-
             $http.put('/dash/edit/appBanner',$scope.appBannerData).success(function(resp){
                 if(resp){
                     // console.log(resp);
@@ -5259,15 +4486,9 @@ Remove  orderType from settings page
                         if(appBanner.length){
                             $scope.appBannerData = appBanner[0].banner;
                         }
-
                     });
                 }
-
             });
-
         }
-
-
 //end  AppBanner  to settings collection.....
-
     });

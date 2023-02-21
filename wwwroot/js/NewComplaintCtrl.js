@@ -1,15 +1,8 @@
-
-
 angular.module('ebs.controller')
-
 .controller("NewComplaintCtrl", function ($scope, $http, $routeParams, Settings, $location, $window) {
     console.log("Hello From New Complaint Controller .... !!!!");
-
-
     const generateOrderId = () => {
-
         var date = new Date();
-
         var components = [
             date.getYear(),
             (date.getMonth() < 10)? '0' + date.getMonth() : date.getMonth(),
@@ -19,51 +12,41 @@ angular.module('ebs.controller')
             (date.getSeconds() < 10)? '0' + date.getSeconds() : date.getSeconds(),
             (date.getMilliseconds() < 10)? '00' + date.getMilliseconds() : (date.getMilliseconds() < 100)? '0' + date.getMilliseconds() : date.getMilliseconds()
         ];
-
         var date_ = components.join("");
         return date_;
     }
-
     //.... Capture new ticket details...
     $scope.ticket = {
         "priority" : "Low",
         "ticket_id": generateOrderId()
     };
-
     $scope.user_details = {};
     $scope.product = {};
     $scope.product.kw = '';
     $scope.product.pole = '';
     $scope.product.category = '';
     $scope.productObj = '';
-
     //.... Customer Code from the params if available...
     //... This will prefix the customer details...
     const customer_code =  $routeParams.code;
-
     let instanceDetails =  Settings.getInstance();
-
     Settings.getNav((nav) => {
         console.log('nav-=> ',nav)
         $scope.nav = nav;
         $scope.userRole = $scope.nav[4].roles ? $scope.nav[4].roles: [];
     });
-
     Settings.getUserInfo(user_details => {
         if(user_details)
             $scope.user_details = user_details;
     })
-
     const startLoader = () => {
         jQuery.noConflict();
         $('.refresh').css("display", "inline");
     }
-
     const stopLoader = () => {
         jQuery.noConflict();
         $('.refresh').css("display", "none");
     }
-
     $scope.issue_types = [
         {
             "type" : "Amount Over Charged",
@@ -94,7 +77,6 @@ angular.module('ebs.controller')
             "name" : "Others"
         }
     ]
-
     $scope.ticket_types = [
         {
             "type" : "Negative Interactions",
@@ -125,7 +107,6 @@ angular.module('ebs.controller')
             "name" : "Others"
         }
     ];
-
     $scope.branches = [
         {
             "type" : "JP Nagar Branch",
@@ -140,11 +121,8 @@ angular.module('ebs.controller')
             "name" : "Basavangudi Branch"
         }
     ]
-
     $scope.itemSearch = {};
     $scope.itemSearch.filter = '';
-
-
     $scope.searchCustomer = function(text){
         $scope.customers = [];
         $scope.ticket.customer_phone = '';
@@ -156,7 +134,6 @@ angular.module('ebs.controller')
             });
         }else $scope.customers = [];
     }
-
     $scope.customer = {};
     $scope.itemSelected = function(customer){
         console.log("customer", customer)
@@ -166,14 +143,11 @@ angular.module('ebs.controller')
             $scope.ticket.customer_email = customer.email;
         }
     }
-
     // $scope.selectProduct = function(product){
     //     console.log("product-=> ",product);
     //     $scope.product = JSON.parse(product.name);
-
     //     console.log($scope.product)
     // }
-
     $scope.ticket.products = [];
     $scope.addProduct = function(item,prod){
         item = JSON.parse(item)
@@ -182,7 +156,6 @@ angular.module('ebs.controller')
             const max = $scope.ticket.products.reduce((prev, current) => (prev.lineId > current.lineId) ? prev.lineId : current.lineId, 1)
             item.lineId = max+1;
         }else item.lineId = 1;
-
         item.category = prod.category || '';
         item.kW = prod.kW || '';
         item.pole = prod.pole || '';
@@ -199,27 +172,22 @@ angular.module('ebs.controller')
         let select_box = document.getElementById("issue-subject-product");
         select_box.selectedIndex = 0;
     }
-
     $scope.clearProduct = function(){
         $scope.product = {};
         $scope.productObj = {};
         $scope.productAttachment = [];
     }
-
     $scope.removeProduct = function(index){
         $scope.ticket.products.splice(index, 1);
     }
-
     $scope.removeProductAttachments = function(index){
         // console.log('remove attachment ', index)
         $scope.productAttachment.splice(index, 1)
     }
-
     $scope.removeTicketAttachments = function(index){
         // console.log('remove attachment ', index)
         $scope.ticket.attachments.splice(index, 1)
     }
-
     const getCustomerDetails = code => {
         $http.get("/dash/store/" + code)
         .then(store_details => {
@@ -228,13 +196,11 @@ angular.module('ebs.controller')
                 $scope.ticket.existing_customer = true;
                 $scope.ticket.customer_code = store_details.data[0].Dealercode[0];
                 $scope.ticket.customer_name = store_details.data[0].DealerName[0];
-
                 if(store_details.data[0].email && store_details.data[0].email[0]) $scope.ticket.customer_email = store_details.data[0].email[0];
                 if(store_details.data[0].Phone && store_details.data[0].Phone[0]) $scope.ticket.customer_phone = store_details.data[0].Phone[0];
             }
         });
     }
-
     const loadTicketTypes = () => {
         startLoader();
         $http.get("/dash/settings/service/ticket/types")
@@ -253,7 +219,6 @@ angular.module('ebs.controller')
                     $window.location.href = '/404';
             });
     }
-
     const loadIssueTypes = () => {
         $http.get("/dash/settings/service/issue/types")
             .then(types => {
@@ -264,7 +229,6 @@ angular.module('ebs.controller')
     }
     loadTicketTypes();
     loadIssueTypes();
-
     const validateTicketData = data => {
         if(!$scope.ticket.regalStatus){
             if(!data.issue){
@@ -297,7 +261,6 @@ angular.module('ebs.controller')
             return false;
         }else return true;
     };
-
     $scope.submitTicket = () => {
         // console.log($scope.ticket);
         if($scope.nav[25] && $scope.nav[25].activated) {
@@ -329,7 +292,6 @@ angular.module('ebs.controller')
             })
         }
     }
-
     if($scope.user_details.role == "Dealer"){
         if($scope.user_details.sellerObject && $scope.user_details.sellerObject.Dealercode){
             getCustomerDetails($scope.user_details.sellerObject.Dealercode);
@@ -341,7 +303,6 @@ angular.module('ebs.controller')
                             $scope.ticket.existing_customer = true;
                             $scope.ticket.customer_code = store_details.data[0].Dealercode;
                             $scope.ticket.customer_name = store_details.data[0].DealerName;
-            
                             if(store_details.data[0].email && store_details.data[0].email) $scope.ticket.customer_email = store_details.data[0].email;
                             if(store_details.data[0].Phone && store_details.data[0].Phone) $scope.ticket.customer_phone = store_details.data[0].Phone;
                         }
@@ -355,12 +316,10 @@ angular.module('ebs.controller')
             getCustomerDetails(customer_code);
         }
     }
-
     //add Dealer auto fill address
     $scope.addNewAddress = function () {
         var input = document.getElementById('end-user-address');
         var addressAutocomplete = new google.maps.places.Autocomplete(input);
-
         addressAutocomplete.addListener('place_changed', function () {
             var newplace = addressAutocomplete.getPlace();
             var lat=newplace.geometry.location.lat();
@@ -379,7 +338,6 @@ angular.module('ebs.controller')
                 if(newplace.address_components[i].types[0] == 'country')
                     var jcountry = newplace.address_components[i].long_name;
             }
-
             var scope = angular.element(document.getElementById('end-user-address')).scope();
             scope.ticket.endUserCity = jcity;
             scope.ticket.endUserArea = jarea;
@@ -389,20 +347,16 @@ angular.module('ebs.controller')
             scope.ticket.endUserAddress = jaddress;
             scope.ticket.endUserlatitude = lat;
             scope.ticket.endUserlongitude = long;
-
             $('#endUserCity').val(jcity);
             $('#endUserPincode').val(jpostalCode);
             scope.$apply();
-
         })
     };
-
     const loadScript = (key, type, charset) => {
         if(!google || !google.maps){
             console.log("No google SDK found, loading a new one - " + key);
             let url = 'https://maps.google.com/maps/api/js?key=' + key + '&libraries=geometry,places';
             let heads = document.getElementsByTagName("head");
-
             if (heads && heads.length) {
                 let head = heads[0];
                 if (head) {
@@ -416,9 +370,7 @@ angular.module('ebs.controller')
         }else
             console.log("Voila! Google is already loaded on your browser ---> ");
     };
-
     loadScript(Settings.getInstanceDetails('gMapAPI'), 'text/javascript', 'utf-8');
-
     $scope.type1Selected = (type) => {
         if($scope.regalIssueTypes.length){
             $scope.regalIssueTypes.map(issue => {
@@ -431,7 +383,6 @@ angular.module('ebs.controller')
             })
         }
     }
-
     $scope.type2Selected = (type) => {
         if($scope.regalIssueType2.length){
             $scope.regalIssueType2.map(issue => {
@@ -442,7 +393,6 @@ angular.module('ebs.controller')
             })
         }
     }
-
     $scope.regalStatus =[];
     const getSettingTypes = (typeName) => {
         startLoader();
@@ -473,8 +423,6 @@ angular.module('ebs.controller')
                     $window.location.href = '/404';
             });
     }
-
-
     // $scope.productAttachment = {};
     $scope.productAttachment = [];
     $scope.ticket.attachments = [];
@@ -495,11 +443,9 @@ angular.module('ebs.controller')
             $('#ticket-fake-file-button-upload').prop('disabled', true);
         }
         startLoader();
-
         console.log(reader);
         reader.onloadend = function() {
             tempObj.image = reader.result;
-
             $http.post("/dash/upload/service/complaint/product", tempObj)
                 .success(function(docs){
                     if(docs){
@@ -527,11 +473,9 @@ angular.module('ebs.controller')
                     else
                         $window.location.href = '/404';
                 });
-
         }
         reader.readAsDataURL(image[0]);
     }
-
     console.log('$scope.nav', $scope.nav);
     if($scope.nav.length && $scope.nav[25] && $scope.nav[25].activated){
         getSettingTypes("regalIssueType");
@@ -539,6 +483,5 @@ angular.module('ebs.controller')
         getSettingTypes("regalProductCategory");
         getSettingTypes("regalStatus")
     }
-    
     $scope.goBack = () => $window.history.back();
 });

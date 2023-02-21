@@ -426,7 +426,6 @@ intellisense.annotate(jQuery, {
     /// </signature>
   },
 });
-
 var _1228819969 = jQuery.Callbacks;
 jQuery.Callbacks = function(flags) {
 var _object = _1228819969(flags);
@@ -492,11 +491,9 @@ intellisense.annotate(_object, {
     /// </signature>
   },
 });
-
 return _object;
 };
 intellisense.redirectDefinition(jQuery.Callbacks, _1228819969);
-
 var _731531622 = jQuery.Deferred;
 jQuery.Deferred = function(func) {
 var _object = _731531622(func);
@@ -634,11 +631,9 @@ intellisense.annotate(_object, {
     /// </signature>
   },
 });
-
 return _object;
 };
 intellisense.redirectDefinition(jQuery.Callbacks, _731531622);
-
 intellisense.annotate(jQuery.Event.prototype, {
   'currentTarget': function() {
     /// <summary>The current DOM element within the event bubbling phase.</summary>
@@ -714,7 +709,6 @@ intellisense.annotate(jQuery.Event.prototype, {
     /// <returns type="Number" />
   },
 });
-
 intellisense.annotate(jQuery.fn, {
   'add': function() {
     /// <signature>
@@ -2637,7 +2631,6 @@ intellisense.annotate(jQuery.fn, {
     /// </signature>
   },
 });
-
 intellisense.annotate(window, {
   '$': function() {
     /// <signature>
@@ -2668,4 +2661,3 @@ intellisense.annotate(window, {
     /// </signature>
   },
 });
-

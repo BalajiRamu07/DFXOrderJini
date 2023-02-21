@@ -1,5 +1,4 @@
 angular.module('ebs.controller')
-
     .controller("NewRequestCtrl",function ($scope, $filter, $http,Settings, $modal, $window, toastr, $interval,$sce,$mdDialog) {
         console.log("Hello From  NewRequestCtrl Controller .... !!!!");
         $scope.assetItems = {}
@@ -9,8 +8,6 @@ angular.module('ebs.controller')
         $scope.assetItems.value = '';
         $scope.assetItems.comments = '';
         $scope.assetItems.unitOfMeasure = '';
-
-
         $scope.toaddress={};
         $scope.toaddress.searchText='';
         $scope.fromaddress={};
@@ -21,9 +18,6 @@ angular.module('ebs.controller')
         $scope.allBranches=[];
         $scope.allCustomers=[];
         // $scope.fromaddress='';
-
-
-
         $scope.newRequest={};
         $scope.newRequest.branchName='';
         $scope.newRequest.branchAddress='';
@@ -34,31 +28,23 @@ angular.module('ebs.controller')
         $scope.newRequest.comments='';
         $scope.newRequest.vehicleNumber='';
         $scope.newRequest.courierTrackingNumber='';
-
-
         $scope.newRequest.type='';
         $scope.newRequest.requestID='';
         $scope.newRequest.items=[];
         $scope.itemsArray=[];
         $scope.user={};
         $scope.branchCodes=[];
-
-
         // console.log($scope.assetItems);
         Settings.getUserInfo(function(user_details){
             $scope.user = user_details;
-
             // $scope.branchCodes.push();
             $scope.branchCodes=$scope.user.sellerObject.branchCode;
             if($scope.branchCodes && $scope.user.role!='Admin'){
                 $scope.fromaddress.branchCodes=$scope.branchCodes;
                 console.log($scope.fromaddress);
-
             }
             console.log($scope.branchCodes);
             console.log($scope.user);
-
-
             // console.log($scope.newRequest);
             // console.log($scope.user);
         });
@@ -66,9 +52,7 @@ angular.module('ebs.controller')
         //
         //     console.log(instance_details);
         // });
-
         //Get All branches
-
         $scope.getAllBranches=function(){
             if($scope.user.role!='Admin' && $scope.branchCodes.length ){
                 var body={};
@@ -90,7 +74,6 @@ angular.module('ebs.controller')
                     else
                         $window.location.href = '/404';
                 });
-
             }
             else{
                 console.log("else");
@@ -109,13 +92,9 @@ angular.module('ebs.controller')
                     else
                         $window.location.href = '/404';
                 });
-
-
             }
-
         }
         $scope.getAllBranches();
-
         $scope.getAllCustomers=function(){
             $http.get("/dash/assets/allCustomers")
                 .success(function (res) {
@@ -135,14 +114,11 @@ angular.module('ebs.controller')
             });
         }
         $scope.getAllCustomers();
-
         // Add items to cart
         $scope.addItems = function() {
-
             var tempItems=$scope.assetItems;
             $scope.assetItems.comments= $scope.assetItems.comments ? $scope.assetItems.comments : '';
             $scope.assetItems.unitOfMeasure= $scope.assetItems.unitOfMeasure ? $scope.assetItems.unitOfMeasure : ''
-
             if(tempItems){
                 if(!$scope.itemsArray.length){
                     $http.get("/dash/get/recentID/item")
@@ -167,11 +143,8 @@ angular.module('ebs.controller')
                         for(let i=0;i<$scope.itemsArray.length;i++){
                             console.log($scope.itemsArray[i]);
                             tempItems.itemCode = $scope.itemsArray[i].itemCode+1;
-
                         }
-
                 }
-
                 tempItems.Manufacturer= 'DEFAULT';
                 tempItems.subCategory= 'DEFAULT';
                 tempItems.subSubCategory= 'DEFAULT';
@@ -180,22 +153,17 @@ angular.module('ebs.controller')
                 // tempItems.comments = $scope.assetItems.comments ? $scope.assetItems.comments : 'N/A'
                 $scope.itemsArray.push(tempItems);
                 $scope.assetItems={};
-
             }
-
-
         }
         // Delete items from cart
         $scope.removeItems=function(index){
     $scope.itemsArray.splice(index, 1);
         }
-
         $scope.getStoreAddress=function(){
             // console.log( $scope.toaddress.searchText);
             // console.log($scope.toaddress);
             if($scope.toaddress.searchText.length>=3) {
                 $scope.searchedToAddress=[];
-
                 $http.post('/dash/search/asset/Dealer', $scope.toaddress)
                     .success(function (res) {
                         // console.log(res);
@@ -203,7 +171,6 @@ angular.module('ebs.controller')
                             $scope.searchedToAddress = res;
                             // console.log($scope.searchedToAddress);
                         }
-
                         // $http.get("/dash/stores/all/stockist").success(function(response){
                         //
                         // $scope.renderStoreMap(res);
@@ -219,13 +186,9 @@ angular.module('ebs.controller')
             }
             else if($scope.toaddress.searchText==''){
                 $scope.searchedToAddress=$scope.allCustomers;
-
             }
-
         }
-
         $scope.getFromAddress=function(){
-
             $scope.searchedFromAddress=[];
             if($scope.fromaddress.searchText.length>=3) {
                 console.log($scope.fromaddress);
@@ -236,7 +199,6 @@ angular.module('ebs.controller')
                             $scope.searchedFromAddress = res;
                             // console.log($scope.searchedFromAddress);
                         }
-
                         // $http.get("/dash/stores/all/stockist").success(function(response){
                         //
                         // $scope.renderStoreMap(res);
@@ -252,9 +214,7 @@ angular.module('ebs.controller')
             }
            else if($scope.fromaddress.searchText==''){
                 $scope.searchedFromAddress=$scope.allBranches;
-
             }
-
         }
         $scope.setDealerAddress=function(data){
             // console.log(data);
@@ -264,7 +224,6 @@ angular.module('ebs.controller')
             $scope.newRequest.customerCity=data.City;
             $scope.newRequest.customerId=data.Dealercode;
             $scope.newRequest.customerGst=data.GST ? data.GST : '' ;
-
         }
         $scope.setBranchAddress=function(data){
             // console.log(data);
@@ -283,15 +242,10 @@ angular.module('ebs.controller')
                         if($scope.newRequest.type=='Returnable'){
                             $scope.newRequest.requestCode=res.requestCode+1;
                             $scope.newRequest.requestID='RTN'+$scope.newRequest.requestCode;
-
-
                         }
                         else{
                             $scope.newRequest.requestCode=res.requestCode+1;
                             $scope.newRequest.requestID='NRTN'+$scope.newRequest.requestCode;
-
-
-
                         }
                         // $scope.newRequest.requestID = res.requestID + 1;
                     }else{
@@ -315,7 +269,6 @@ angular.module('ebs.controller')
                     $window.location.href = '/404';
             });
         }
-
         $scope.submitRequest=function (){
             console.log( $scope.newRequest);
             $scope.newRequest.status='Open';
@@ -331,7 +284,6 @@ angular.module('ebs.controller')
                         // console.log("Response....");
                         // console.log(res);
                         if(res){
-
                             $http.post('/dash/asset/addItems', $scope.newRequest.items)
                                 .success(function (res) {
                                     // console.log("Response....");
@@ -345,9 +297,7 @@ angular.module('ebs.controller')
                                         $scope.searchedToAddress=$scope.allCustomers;
                                         $scope.searchedFromAddress=$scope.allBranches;
                                         Settings.successPopup('Success', 'Request successfully submitted.');
-
                                     }
-
                                 }).error(function (error, status) {
                                 console.log(error, status);
                                 if (status >= 400 && status < 404)
@@ -357,9 +307,7 @@ angular.module('ebs.controller')
                                 else
                                     $window.location.href = '/404';
                             });
-
                         }
-
                     }).error(function (error, status) {
                     console.log(error, status);
                     if (status >= 400 && status < 404)
@@ -369,23 +317,12 @@ angular.module('ebs.controller')
                     else
                         $window.location.href = '/404';
                 });
-
-
             }
         }
         $scope.getValue=function(){
-
             $scope.assetItems.value='';
             if($scope.assetItems.MRP>0 &&  $scope.assetItems.Qty>0){
                 $scope.assetItems.value=$scope.assetItems.MRP*$scope.assetItems.Qty;
             }
-
-
-
         }
-
-
-
-
-
         });

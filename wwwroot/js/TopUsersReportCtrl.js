@@ -1,36 +1,27 @@
 angular.module('ebs.controller')
-
     .controller("TopUsersReportCtrl", function ($scope, $http, Settings, $window) {
         console.log("Hello From Top Users Report Controller .... !!!!");
-
         //.... User details....
         $scope.user = {};
-
         //..... Pagination.....
         $scope.viewLength = 0;
         $scope.newViewBy = 10;
-
         //.... Other View Values....
         $scope.newViewBy1 = {};
         $scope.newViewBy1.view = 10;
-
         $scope.reportTabName = "Top Users";
-
         $scope.reportTabId = 3;
         $scope.tab = 8;
         $scope.showReports = true;
-
         let localViewBy = $scope.newViewBy;
         let initialViewBy = 60;
         let instanceDetails =  Settings.getInstance();
         const api_timeout = 600000;
-
         $scope.sellerReportSearch = {};
         $scope.sellerReportSearch.filter = '';
         $scope.user_count = 0;
         //.... Reports Filter.....
         $scope.sellerReportFilter = {};
-
         $scope.branches = [];
         //.... Set Filter Dates to last 7 days....
         $scope.sellerReportFilter.startDate = new Date();
@@ -38,16 +29,12 @@ angular.module('ebs.controller')
         $scope.sellerReportFilter.startDate.setHours(0, 0, 0, 0);
         $scope.sellerReportFilter.endDate = new Date();
         $scope.sellerReportFilter.endDate.setHours(23, 59, 59, 59);
-
-
         let topUserSearchObj = {};
         let topSellerSearchBy = ['sellername'];
-
         const startLoader = () => {
             jQuery.noConflict();
             $('.refresh').css("display", "inline");
         }
-
         const stopLoader = () => {
             jQuery.noConflict();
             $('.refresh').css("display", "none");
@@ -55,19 +42,16 @@ angular.module('ebs.controller')
         $scope.topSellerDuration = Settings.daysDifference($scope.sellerReportFilter.startDate , $scope.sellerReportFilter.endDate);
         $scope.parseData = (viewLength, newViewBy) => parseInt(viewLength) + parseInt(newViewBy);
         $scope.DateTimeFormat = (date, when) => Settings.dateFilterFormat(date, when);
-
         $scope.openFilterClear = () => {
             $scope.sellerReportFilter.startDate = '';
             $scope.sellerReportFilter.endDate = '';
             $scope.sellerReportFilter.branchCode = '';
-
             $scope.sellerReportFilter.startDate = new Date();
             $scope.sellerReportFilter.startDate.setDate($scope.sellerReportFilter.startDate.getDate() - 7);
             $scope.sellerReportFilter.startDate.setHours(0, 0, 0, 0);
             $scope.sellerReportFilter.endDate = new Date();
             $scope.sellerReportFilter.endDate.setHours(23, 59, 59, 59);
         }
-
         $scope.reportsTransactionCount = (response) => {
             // console.log("top user report  ",response);
             if(response){
@@ -77,7 +61,6 @@ angular.module('ebs.controller')
                 else if(response <= $scope.newViewBy){
                     $scope.user_count = response;
                     $scope.newViewBy = response;
-
                 }
                 else{
                     $scope.sellerreport = [];
@@ -93,7 +76,6 @@ angular.module('ebs.controller')
                 $scope.viewLength = -1;
             }
         }
-
         const loadstorejiniReport = (topUserSearchObj) => {
             $http.post("/dash/reports/storeJini/sellers", topUserSearchObj)
                 .success(function(response){
@@ -111,14 +93,12 @@ angular.module('ebs.controller')
                         $window.location.href = '/404';
                 });
         }
-
         const loadReport = (topUserSearchObj) => {
             $http.post("/dash/reports/sellers", topUserSearchObj)
                 .success(function(response){
                     for(let i = 0; i < response.length; i++){
                         $scope.sellerreport.push(response[i]);
                     }
-
                     stopLoader();
                 })
                 .error(function(error, status){
@@ -131,7 +111,6 @@ angular.module('ebs.controller')
                         $window.location.href = '/404';
                 });
         }
-
         const loadReportCount = (searchObj) => {
             $http.post("/dash/reports/top/user/count", searchObj)
                 .success($scope.reportsTransactionCount)
@@ -145,7 +124,6 @@ angular.module('ebs.controller')
                         $window.location.href = '/404';
                 });
         }
-
         //... Pagination for all reports
         $scope.navPage =  function(direction, newViewBy){
             $scope.newViewBy = parseInt(newViewBy);
@@ -153,7 +131,6 @@ angular.module('ebs.controller')
             var viewBy = $scope.newViewBy;
             if(direction){
                 // console.log("NEXT");
-
                 if(viewLength + viewBy >= $scope.sellerreport.length){
                     if(viewLength + viewBy < $scope.user_count){
                         viewLength += viewBy;
@@ -168,7 +145,6 @@ angular.module('ebs.controller')
                         topUserSearchObj.eDate = $scope.DateTimeFormat($scope.sellerReportFilter.endDate, 'end');
                         topUserSearchObj.searchFor = $scope.sellerReportSearch.filter;
                         topUserSearchObj.searchBy = topSellerSearchBy;
-                        
                         startLoader();
                         loadReport(topUserSearchObj);
                     }
@@ -184,7 +160,6 @@ angular.module('ebs.controller')
                 else{
                     // console.log("Minus viewby")
                     viewLength += viewBy;
-
                     if(viewLength + viewBy > $scope.user_count){
                         a = viewLength + viewBy - $scope.user_count;
                         viewBy -= a;
@@ -195,7 +170,6 @@ angular.module('ebs.controller')
                             topUserSearchObj.eDate = $scope.DateTimeFormat($scope.sellerReportFilter.endDate, 'end');
                             topUserSearchObj.searchFor = $scope.sellerReportSearch.filter;
                             topUserSearchObj.searchBy = topSellerSearchBy;
-
                             startLoader();
                             loadReport(topUserSearchObj);
                         }
@@ -207,7 +181,6 @@ angular.module('ebs.controller')
                             topUserSearchObj.eDate = $scope.DateTimeFormat($scope.sellerReportFilter.endDate, 'end');
                             topUserSearchObj.searchFor = $scope.sellerReportSearch.filter;
                             topUserSearchObj.searchBy = topSellerSearchBy;
-
                             startLoader();
                             loadReport(topUserSearchObj);
                         }
@@ -226,27 +199,20 @@ angular.module('ebs.controller')
                         viewBy += a;
                         a = 0;
                     }
-
                     viewLength -= viewBy;
-
                     $scope.viewLength = viewLength;
                     $scope.newViewBy = viewBy;
                 }
             }
         }
-
-
         $scope.changeReportView = (newViewBy) =>{
             startLoader();
             $scope.newViewBy1.view = newViewBy || 10;
             $scope.newViewBy = parseInt(newViewBy || 10);
-
             $scope.sellerreport = [];
-
             if($scope.sellerReportFilter.startDate && $scope.sellerReportFilter.endDate){
                 if (($scope.sellerReportFilter.startDate - $scope.sellerReportFilter.endDate) > 0){
                     Settings.alertPopup("WARNING", "Start date cannot be greater than End date.");
-
                     $scope.sellerReportFilter.startDate = new Date();
                     $scope.sellerReportFilter.startDate.setDate($scope.sellerReportFilter.startDate.getDate() - 7);
                     $scope.sellerReportFilter.startDate.setHours(0, 0, 0, 0);
@@ -254,7 +220,6 @@ angular.module('ebs.controller')
                     $scope.sellerReportFilter.endDate.setHours(23, 59, 59, 59);
                 }
             }
-
             topUserSearchObj.viewLength = 0;
             if($scope.newViewBy > initialViewBy ){
                 topUserSearchObj.viewBy = $scope.newViewBy;
@@ -267,24 +232,18 @@ angular.module('ebs.controller')
             topUserSearchObj.searchBy = topSellerSearchBy;
             topUserSearchObj.branch = '';
             $scope.sellerreport = [];
-
             if($scope.sellerReportFilter.branch)
                 topUserSearchObj.branch = $scope.sellerReportFilter.branch ;
-
             $scope.viewLength = 0;
-
             if(!newViewBy) {
                 $scope.newViewBy = parseInt(localViewBy);
             }
-
             loadReport(topUserSearchObj);
             loadReportCount(topUserSearchObj);
         }
-
         $scope.changeReportDuration = (startDate, endDate, reset) => {
             if(endDate)
                 endDate.setHours(23, 59, 59, 59);
-
             if(!reset) {
                 if(startDate || endDate){
                     let numberOfDays
@@ -300,7 +259,6 @@ angular.module('ebs.controller')
                     }
                     else
                         numberOfDays = 0;
-
                     $scope.topSellerDuration = numberOfDays;
                 }
             }else
@@ -314,7 +272,6 @@ angular.module('ebs.controller')
                 timeout : api_timeout,
                 data : topUserSearchObj
             };
-
             $http(request_object)
                 .then((count) => {
                 console.log(count);
@@ -333,18 +290,15 @@ angular.module('ebs.controller')
                 stopLoader();
             }
             else {
-
                 console.log(topUserSearchObj);
                 topUserSearchObj.viewLength = 0;
                 topUserSearchObj.viewBy = count.data;
-
                 var request_object = {
                     url : "/dash/reports/sellers",
                     method : "POST",
                     timeout : api_timeout,
                     data : topUserSearchObj
                 };
-
                 $http(request_object)
                     .then((result) => {
                     let _data = result.data;
@@ -354,7 +308,6 @@ angular.module('ebs.controller')
                 for (var i = 0; i < _data.length; i++) {
                     output += i + 1;
                     output += ',';
-
                     try {
                         if (_data[i].sellername) {
                             if ((_data[i].sellername).toString().indexOf(',') != -1) {
@@ -366,47 +319,36 @@ angular.module('ebs.controller')
                     } catch (e) {
                     }
                     output += ',';
-
                     if (_data[i].orderId[0][0].length)
                         output += _data[i].orderId[0][0].length;
                     output += ',';
-
                     if (_data[i].visit)
                         output += _data[i].visit;
                     output += ',';
-
                     if (_data[i].quantity) {
                         _data[i].quantity = _data[i].quantity[0][0].length;
                         output += _data[i].quantity;
                     }
                     output += ',';
-
                     if (_data[i].total_amount)
                         output += _data[i].total_amount.toFixed(2);
                     output += ',';
-
                     if (_data[i].orderTotal_amount)
                         output += _data[i].orderTotal_amount.toFixed(2);
-
                     output += '\n';
-
                 }
-
                 var blob = new Blob([output], {type : "text/csv;charset=UTF-8"});
                 console.log(blob);
                 window.URL = window.webkitURL || window.URL;
                 var url = window.URL.createObjectURL(blob);
-
                 var d = new Date();
                 var anchor = angular.element('<a/>');
-
                 anchor.attr({
                     href: url,
                     target: '_blank',
                     download: 'Mbj_' + instanceDetails.api_key + '_UserReport_' +d.getDate()+'/'+(d.getMonth()+1)+'/'+d.getFullYear()+'.csv'
                     //download: 'Mbj_' + '_UserReport_' +d.getDate()+'/'+(d.getMonth()+1)+'/'+d.getFullYear()+'.csv'
                 })[0].click();
-
                 stopLoader();
             })
             .catch((error, status) => {
@@ -430,6 +372,5 @@ angular.module('ebs.controller')
                 $window.location.href = '/404';
         });
         }
-
         $scope.changeReportView(localViewBy);
     })

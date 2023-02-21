@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Diagnostics;
 using System.Linq;
 using System.Web;
 namespace DFXOrderJini.Models
@@ -17,7 +18,7 @@ namespace DFXOrderJini.Models
         public string? PlantCode { get; set; }
         public string? Cust_Ref { get; set; }
         public string? Cust_Comments { get; set; }
-        public string? CRD_Date { get; set; }
+        public DateTime? CRD_Date { get; set; }
         public string? OrderID { get; set; }
         public string? OrderDate { get; set; }
         public string? OrderStatus { get; set; }
@@ -26,8 +27,32 @@ namespace DFXOrderJini.Models
         public string? PrimaryUOM { get; set; }
         public string? ApprovedBy { get; set; }
         public string? Status { get; set; }
+        public string? ProductItems { get; set; }
+        public string? ProductGrade { get; set; }
+        public string? CREATED_ON { get; set; }
+        public string? MODIFIEDBY { get; set; }
+        public string? MODIFIED_ON { get; set; }
+        public string? ItemName { get; set; }
+        public string? MaterialID { get; set; }
+        public string? Wmax { get; set; }
+        public string? Tmax { get; set; }
+        public string? QTY { get; set; }
+        public string? Lmax { get; set; }
+        public string? Pieces { get; set; }
+        public string? LDPE { get; set; }
+        public string? Grade { get; set; }
+        public string? Density { get; set; }
+        public string? Volume { get; set; }
+        public string? Item_Name { get; set; }
+        public string? ITEMTYPE { get; set; }
+        public string? VehicleType { get; set; }
+        public string? VehiTypedesc { get; set; }
+        public string? Flag { get; set; }
+        public string? VEHICLE_CODE { get; set; }
+        
+
+
 
 
     }
-            
 }

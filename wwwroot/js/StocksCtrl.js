@@ -1,23 +1,17 @@
 /**
  * Created by shreyasgombi on 05/03/20.
  */
-
 angular.module('ebs.controller')
-
     .controller("StocksCtrl",function ($scope, $filter, $http, $modal, $window, $interval,$sce,$mdDialog) {
         console.log("Hello From Stocks Controller .... !!!!");
-
         $scope.stocksSearch = {};
         $scope.stocksSearch.filter = '';
-
         $scope.filter = {};
         $scope.filter.sales = 'All';
         $scope.filter.sales.seller = '';
         $scope.filter.branch = 'All';
-
         $scope.displayStocksRefresh = true;
         var stocksSearchBy = ['dealercode', 'dealername', 'product','itemcode','City', 'seller','SellerName', 'StockistName', 'Area', 'Phone', 'email'];
-
         //New Pagination variables
         $scope.viewLength = 0;
         $scope.newViewBy = 10;
@@ -25,13 +19,11 @@ angular.module('ebs.controller')
         viewBy.stocks = 10;
         var initialViewBy = 60;
         var localViewBy = $scope.newViewBy;
-
         //stocks
         var stockSearchObj = {};
         stockSearchObj.viewLength = 0;
         stockSearchObj.viewBy = initialViewBy;
         stockSearchObj.searchBy = stocksSearchBy;
-
         $scope.refreshStocks = function(){
             $http.post("/dash/stock", stockSearchObj)
                 .success(function (res) {
@@ -43,7 +35,6 @@ angular.module('ebs.controller')
                 })
         }
         $scope.refreshStocks();
-
         $scope.transactionCount = function(response, tab){
             if(response){
                 if(response > viewBy.stocks){
@@ -68,7 +59,6 @@ angular.module('ebs.controller')
                 $scope.viewLength = -1;
             }
         }
-
         $scope.refreshTransactions = function(tab){
             stockSearchObj = {};
             stockSearchObj.viewLength = 0;
@@ -79,21 +69,16 @@ angular.module('ebs.controller')
             stockSearchObj.searchFor = '';
             stockSearchObj.searchBy = [];
             $scope.stocksSearch.filter = '';
-
             $scope.displayStocksRefresh = false;
-
             $scope.refreshStocks();
         }
-
         $scope.navPage = function(tab, direction){
             var viewLength = $scope.viewLength;
             var viewBy = $scope.newViewBy;
-
             if(direction){
                 //console.log("NEXT");
                 if(viewLength + viewBy >= $scope.stocks.length){
                     if(viewLength + viewBy < $scope.stock_count){
-
                         viewLength += viewBy;
                         //console.log("Fetch more");
                         stocksSearchObj = {};
@@ -106,14 +91,12 @@ angular.module('ebs.controller')
                         else {
                             stocksSearchObj.stockist = '';
                         }
-
                         if($scope.filter.class != 'All'){
                             stocksSearchObj.class = $scope.filter.class;
                         }
                         else {
                             stocksSearchObj.class = '';
                         }
-
                         if($scope.filter.sales != 'All'){
                             stocksSearchObj.seller = $scope.filter.sales.seller;
                         }
@@ -121,7 +104,6 @@ angular.module('ebs.controller')
                             stocksSearchObj.seller = '';
                         }
                         stocksSearchObj.searchBy = stocksSearchBy;
-
                         jQuery.noConflict();
                         $('.refresh').css("display", "inline");
                         $http.post("/dash/stock",stocksSearchObj)
@@ -132,14 +114,12 @@ angular.module('ebs.controller')
                                     }
                                 }
                                 //$scope.stocks = response;
-
                                 if (viewLength + viewBy > $scope.stock_count) {
                                     a = viewLength + viewBy - $scope.stock_count;
                                     viewBy -= a;
                                     $scope.newViewBy = viewBy;
                                 }
                                 $scope.viewLength = viewLength;
-
                             })
                             .error(function(error, status){
                                 console.log(error, status);
@@ -150,7 +130,6 @@ angular.module('ebs.controller')
                                 else
                                     $window.location.href = '/404';
                             });
-
                         jQuery.noConflict();
                         $('.refresh').css("display", "none");
                     }
@@ -166,7 +145,6 @@ angular.module('ebs.controller')
                 else{
                     //console.log("Minus viewby")
                     viewLength += viewBy;
-
                     if(viewLength + viewBy > $scope.stock_count){
                         a = viewLength + viewBy - $scope.stock_count;
                         viewBy -= a;
@@ -185,20 +163,16 @@ angular.module('ebs.controller')
                         viewBy += a;
                         a = 0;
                     }
-
                     viewLength -= viewBy;
-
                     $scope.viewLength = viewLength;
                     $scope.newViewBy = viewBy;
                 }
             }
         }
-
         $scope.selectStockDealer = function(dealerName){
             $scope.stocksSearch.filter = dealerName;
             $scope.stocksSearchFilter();
         }
-
         $scope.stockSearch = {};
         //Store filter function
         $scope.stocksSearchFilter = function(){
@@ -208,11 +182,9 @@ angular.module('ebs.controller')
             stockSearchObj.searchBy = stocksSearchBy;
             $scope.viewLength = 0;
             $scope.newViewBy = localViewBy;
-
             if($scope.stocksSearch.filter){
                 stockSearchObj.searchFor = $scope.stocksSearch.filter;
             }
-
             stockSearchObj.stockist = {};
             if($scope.filter.branch != 'All'){
                 stockSearchObj.stockist = $scope.filter.branch;
@@ -220,25 +192,19 @@ angular.module('ebs.controller')
             else {
                 stockSearchObj.stockist = '';
             }
-
             if($scope.filter.sales != 'All'){
                 stockSearchObj.seller = $scope.filter.sales;
             }
             else{
                 stockSearchObj.seller = '';
             }
-
             $scope.stocks = [];
-
             $scope.refreshStocks();
-
-
             // $scope.showStockFilter = true;
             //
             // if($scope.dealerSearch.filter == '' && $scope.filter.branch == 'All' && $scope.filter.sales == 'All')
             //     $scope.showStockFilter = false;
         };
-
         $scope.clearFilter = function(tab){
             stockSearchObj = {};
             stockSearchObj.viewLength = 0;
@@ -247,15 +213,12 @@ angular.module('ebs.controller')
             stockSearchObj.seller = '';
             stockSearchObj.stockist = '';
             stockSearchObj.searchBy = [];
-
             $scope.viewLength = 0;
             $scope.newViewBy = viewBy.dealer;
             $scope.stocksSearch.filter = '';
             $scope.stocks = [];
-
             $scope.refreshStocks();
         }
-
         $scope.clearFilterButton = function (search,tab){
             if(!search){
                 stockSearchObj = {};
@@ -265,14 +228,11 @@ angular.module('ebs.controller')
                 stockSearchObj.seller = '';
                 stockSearchObj.stockist = '';
                 stockSearchObj.searchBy = [];
-
                 $scope.viewLength = 0;
                 $scope.newViewBy = viewBy.dealer;
                 $scope.stockSearch.filter = '';
                 $scope.stocks = [];
-
                 $scope.refreshStocks();
             }
         }
-
     })

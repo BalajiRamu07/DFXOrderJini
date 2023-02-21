@@ -1,26 +1,17 @@
 /**
  * Created by shreyasgombi on 15/09/22.
  */
-
  angular.module('ebs.controller')
-
-
  .controller("EnquiryDetailsCtrl",function ($scope, $routeParams, $http, Settings, $window, $location) {
      console.log("Hello From Enquiry Details Controller .... !!!!");
-
-
      //.... Ticket information....
     $scope.enquiry = {};
     $scope.enquiry_update = {};
-
     //... List of users...
     $scope.users = [];
-
     //.... Ticket ID from the params...
     const enquiry_id =  $routeParams.id;
-
     console.log("Enquiry Details for - ", enquiry_id);
-
     ///..... Function to fetch ticket details....
     const getEnquiryDetails = () => {
         if(enquiry_id){
@@ -37,9 +28,7 @@
                                 }
                             }
                         }
-
                         $scope.enquiry = enquiry_details.data[0];
-
                         if(enquiry_details.data[0].lead_by && enquiry_details.data[0].lead_by._id) $scope.enquiry_update.lead_by = enquiry_details.data[0].lead_by._id;
                         if(enquiry_details.data[0].priority) $scope.enquiry_update.priority = enquiry_details.data[0].priority;
                         if(enquiry_details.data[0].due_date) $scope.enquiry_update.due_date = new Date(enquiry_details.data[0].due_date);
@@ -55,7 +44,6 @@
                 });
         }
     };
-
     //.... Function to get all users...
     const getUsers = () => {
         $http.post("/dash/users/list", {})
@@ -74,9 +62,7 @@
                     $window.location.href = '/404';
             });
     }
-
     $scope.goBack = () => $window.history.back();
-
     const updateEnquiry = () => {
         $http.put("/dash/enquiry/update/followup/details/" + enquiry_id, $scope.enquiry_update)
             .then((updated_enquiry) => {
@@ -88,11 +74,9 @@
                 }
             })
     }
-
     //... Update the ticket details...
     $scope.updateEnquiry = () => {
         console.log($scope.enquiry_update);
-        
         if($scope.enquiry_update.lead_by || $scope.enquiry_update.comments || $scope.enquiry_update.comments){
             startLoader();
             Settings.confirmPopup(
@@ -103,8 +87,6 @@
             )
         }
     }
-
-
     getEnquiryDetails();
     getUsers();
  })

@@ -1,35 +1,25 @@
 /**
  * Created by shreyasgombi on 31/07/22.
  */
-
-
  angular.module('ebs.controller')
-
  .controller("BillingAdminCtrl", function($scope, $routeParams, $location, $http, $window, Settings){
     console.log("Hello From Admin Settings Billing Controller .... !!!!");
-
     $scope.invoices = [];
-
     $scope.plan_details = {'plan' : "Free", "pricing_type" : "Flat", "flat_rate" : 850};
     $scope.estimate = {};
     $scope.billing = {};
     $scope.billing.enable = false;
-
     $scope.user_activites = [];
-
     let instance_details = Settings.getInstance();
     $scope.currency = instance_details.currency;
-
     const startLoader = () => {
         jQuery.noConflict();
         $('.refresh').css("display", "inline");
     };
-
     const stopLoader = () => {
         jQuery.noConflict();
         $('.refresh').css("display", "none");
     }
-
     const fetchInvoices = () => {
         startLoader();
         $http.get("/dash/settings/admin/billing/invoices")
@@ -42,14 +32,12 @@
                         else if(invoices.data[i].amount && invoices.data[i].CGST && invoices.data[i].SGST){
                             invoices.data[i].amount += ((invoices.data[i].amount * (invoices.data[i].CGST / 100)) + (invoices.data[i].amount * (invoices.data[i].SGST / 100)));
                         }
-
                         invoices.data[i].amount = parseFloat(invoices.data[i].amount.toFixed(2));
                     }
                     $scope.invoices = invoices.data;
                 }
             })
     }
-
     const fetchBillingStatus = () => {
         $http.get("/dash/settings/admin/billing/status")
             .then(billing => {
@@ -60,7 +48,6 @@
                 }
             })
     }
-
     const fetchPlan = () => {
         startLoader();
         $http.get("/dash/settings/admin/billing/plan")
@@ -76,7 +63,6 @@
                 }
             })
     }
-
     const fetchUserActivities = () => {
         startLoader();
         $http.get("/dash/settings/admin/billing/user/activities")
@@ -87,7 +73,6 @@
                 }
             })
     }
-
     const getCurrentEstimate = () => {
         $http.get("/dash/settings/admin/billing/estimate")
             .then(estimate => {
@@ -99,21 +84,16 @@
                             estimate.data.amount += ((estimate.data.amount * (estimate.data.CGST / 100)) + (estimate.data.amount * (estimate.data.SGST / 100)));
                         }
                         estimate.data.amount = parseFloat(estimate.data.amount.toFixed(2));
-
                         $scope.estimate = estimate.data;
                 }else{
                     $scope.estimate.error = estimate.data.message;
                 }
             })
     }
-
-
     $scope.refreshPlan = () => fetchPlan();
-
     $scope.updatePlan = () => {
         if($scope.plan_details.plan && $scope.plan_details.flat_rate){
             if(!$scope.plan_details.purchase_id) $scope.plan_details.purchase_id = Settings.generateId();
-            
             Settings.confirmPopup("Confrim", "Confirm Plan Change?",
                 result => {
                     if(result){
@@ -128,7 +108,6 @@
                 })
         }else fetchPlan();
     }
-
     $scope.enableBilling = () => {
         Settings.confirmPopup("Confrim", ($scope.billing.enable ? "Enable" : "Disable") + " Billing?",
                 result => {
@@ -143,12 +122,9 @@
                     }else fetchBillingStatus();
                 })
     }
-
     fetchUserActivities();
     fetchInvoices();
     fetchPlan();
     fetchBillingStatus();
     getCurrentEstimate();
-
-   
  })

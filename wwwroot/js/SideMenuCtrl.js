@@ -1,20 +1,15 @@
 /**
  * Created by shreyasgombi on 03/04/20.
  */
-
-angular.module('ebs.controller')
-
-.controller("SideMenuCtrl",function ($scope, Settings, $http, $location, toastr, $window) {
+angular.module('MyApp2')
+    .controller("MyController2",function ($scope, Settings, $http, $location, toastr, $window) {
     console.log("Hello From Side Menu Controller .... !!!!");
-
     $scope.trustSrc = function(src) {
         return $sce.trustAsResourceUrl(src);
     };
-
     $scope.stateComparator = function (user, viewValue) {
         return viewValue === secretEmptyKey || (''+user).toLowerCase().indexOf((''+viewValue).toLowerCase()) > -1;
     };
-
     $scope.onFocus = function (e) {
         console.log('onFocus');
         $timeout(function () {
@@ -22,7 +17,6 @@ angular.module('ebs.controller')
             $(e.target).trigger('change'); // for IE
         });
     };
-
     $scope.nav = [];
     $scope.sellers = [];
     $scope.reportTab = [];
@@ -40,17 +34,12 @@ angular.module('ebs.controller')
     $scope.disableAddItems = false;
     $scope.disableAddDealers = false;
     $scope.shopify = {};
-
     var recentTransactionFromServer = {};
     var masterRecentTransactions = {};
-
     var instance_details = {};
     var email = {};
     var defaultTaxObj = {};
-
-
     //........... Get Shopify Creds ...........
-
     $http.get("/dash/shopify/creds/fetch")
         .success(function (response) {
             console.log("Shopify credentials Fetched");
@@ -64,7 +53,6 @@ angular.module('ebs.controller')
         .error(function (error){
             console.log(error)
         })
-
     $http.get("/dash/instanceDetails")
         .success(function(response){
             console.log("Instance details ---> ", response);
@@ -119,7 +107,6 @@ angular.module('ebs.controller')
                 instance_details.companyLatitude = response.companyLatitude || '';
                 instance_details.companyLongitude = response.companyLongitude || '';
                 instance_details.gMapAPI = response.gMapAPI || 'AIzaSyAPs4yVp42Ko_GzD7jUX6mBxFIQT-Ryguo';
-
                 instance_details.companyAddress = response.companyAddress || '';
                 instance_details.companyCity = response.companyCity || '';
                 instance_details.companyState = response.companyState || '';
@@ -130,26 +117,19 @@ angular.module('ebs.controller')
                 instance_details.editItemPrice = response.editItemPrice || false;
                 instance_details.percentageDiscount=response.percentageDiscount || false;
                 instance_details.csv_upload_date = response.csv_upload_date
-
                 $scope.taxExclusive = instance_details.taxExclusive;
-
                 // $scope.leadstatus=response.leadStatus || [];
                 // if($scope.leadStatus.length){
                 //     $scope.RenderLeadData();
                 //
                 // }
-
                 //.... Set the Instance's Wizard...
                 $scope.instance_details.setupCheck = response.setupCheck;
-
                 if(!$scope.instance_details.companyEmail){
                     $scope.instance_details.companyEmail = 'support@mobijini.com';
                 }
-
-
                 if(!response.setupCheck || response.setupCheck < 4)
                     $scope.getAccountDataCount();
-
                 Settings.setInstance(instance_details);
                 //.... All the email configuration is set here....!!!
                 email.company_name = response.company_name;
@@ -160,7 +140,6 @@ angular.module('ebs.controller')
                 email.company_logo_url = response.company_logo_url;
                 email.company_description = response.company_description;
                 email.company_website_url = response.company_website_url;
-
                 if(response.tax && response.tax.length){
                     for(var i = 0; i < response.tax.length; i++){
                         if(response.tax[i].default){
@@ -169,7 +148,6 @@ angular.module('ebs.controller')
                         }
                     }
                 }
-
                 Settings.setEmailConfig(instance_details);
             }else
                 $window.location.href = '/404';
@@ -181,7 +159,6 @@ angular.module('ebs.controller')
             else if(status >= 500)
                 $window.location.href = '/500';
         });
-
     $http.get("/country/countryCode").
         then(function (res) {
             if(res.data){
@@ -194,7 +171,6 @@ angular.module('ebs.controller')
             else if(status >= 500)
                 $window.location.href = '/500';
         });
-
     $http.get('/dash/enforce/orderInventory/fetch').then(function (response){
             if(response.data.length){
                 $scope.enforceInventoryOrder = response.data[0].enforceInventoryOrder || false;
@@ -207,7 +183,6 @@ angular.module('ebs.controller')
             else if(status >= 500)
                 $window.location.href = '/500';
         });
-
     $http.get('/dash/settings/standard/fulfilment').then(function (response){
         if(response.data.length){
             $scope.standardOrderFulfilFlag = response.data[0].standardOrderFulfilFlag || false;
@@ -220,11 +195,9 @@ angular.module('ebs.controller')
         else if(status >= 500)
             $window.location.href = '/500';
     });
-
     Settings.getUserInfo(function(user_details){
         $scope.user = user_details;
     });
-
     $scope.getRole = function(role){
         let temp = role;
         if(role){
@@ -240,19 +213,15 @@ angular.module('ebs.controller')
             temp = "Portal Admin";
         return temp ;
     };
-
-
     const statusCountInit = () => {
         // $http.post('/dash/orders/status/count', searchObj)
         // .success(function (response) {
-            
         //     $scope.OrderStausCount = {};
         //     $scope.OrderStausCount['total'] = 0;
         //     $scope.OrderStausCount['others'] = 0;
         //     if($scope.nav[1])
         //         $scope.OrderStausCount[$scope.nav[1].status[0]] = 0;
         //     else $scope.OrderStausCount['new'] = 0;
-
         //     if(response){
         //         $scope.OrderStausCount = response; // before all data we are fetching later here we are calculating now it is calculating in DB
         //         // if(response.length){
@@ -279,8 +248,6 @@ angular.module('ebs.controller')
         //         //     }
         //         // }
         //     }
-
-
         // })
         // .error(function(error, status){
         //     console.log(error, status);
@@ -292,7 +259,6 @@ angular.module('ebs.controller')
         //         $window.location.href = '/404';
         // })
     }
-
     Settings.getNav(false, function(nav_details){
         if(nav_details){
             $scope.nav = nav_details;
@@ -532,13 +498,11 @@ angular.module('ebs.controller')
                 }
             ]
         }
-
         if($scope.nav[1]){
             if(!$scope.nav[1].paymentstatus){
                 $scope.nav[1].paymentstatus = ["pending","approved","failed"];
             }
         }
-
         if(!$scope.nav[1].status){
             $scope.nav[1].status = ["new","open","closed"];
         }else{
@@ -546,7 +510,6 @@ angular.module('ebs.controller')
                 $scope.orderStatus.push(($scope.nav[1].status[i].toLowerCase()))
             }
         }
-
         if($scope.nav[8]){
             $scope.reportTab = $scope.nav[8].cols;
             if($scope.nav[8].cols){
@@ -559,21 +522,14 @@ angular.module('ebs.controller')
                 }
             }
         }
-
         statusCountInit()
     });
-
-
-
-
-
     //Render Tenants
     $scope.renderSettings = function (response) {
         console.log("GetAll Settings -->" );
         //console.log(response);
         $scope.settings = response;
     };
-
     var sellerSearchObj = {};
     sellerSearchObj.viewLength = 0;
     sellerSearchObj.viewBy = 10;
@@ -583,7 +539,6 @@ angular.module('ebs.controller')
     if($scope.applicationType == 'Atmosphere' && $scope.user.sellerObject) {
         sellerSearchObj.resort = $scope.user.sellerObject.Resort;
     }
-
     $scope.refreshNotification = function(){
         $http.get("/dash/notification/counts").then(function(response) {
             if (response.data) {
@@ -596,7 +551,6 @@ angular.module('ebs.controller')
             else if(status >= 500)
                 $window.location.href = '/500';
         });
-
         $http.get("/dash/notifications").then(function(response){
             if(response.data.length){
                 $scope.notifications = response.data;
@@ -619,7 +573,6 @@ angular.module('ebs.controller')
                 $window.location.href = '/500';
         });
     };
-
     $scope.formatDate = function(date){
         if(date==undefined || date == '')
             return ('');
@@ -632,8 +585,6 @@ angular.module('ebs.controller')
         var dateOut = dt+" - "+monthNames[d.getMonth()]+" - "+(d.getFullYear());
         return dateOut;
     }
-
-
     $scope.renderSellers = function (response) {
         // console.log(response)
         console.log("GetAll Users and Branches --> "+response.length);
@@ -644,32 +595,26 @@ angular.module('ebs.controller')
         $scope.roleStockist = [];
         $scope.roleDealerPortalApp = [];
         $scope.roleManager = [];
-
         //create fulfillers list
         for(var i = 0; i < $scope.sellers.length; i++){
             if($scope.sellers[i].salesrep){
                 $scope.roleSalesrep.push($scope.sellers[i]);
-
                 if($scope.sellers[i].latitude)
                     $scope.locSeller.push($scope.sellers[i]);
             }
-
             //Admin list
             if($scope.sellers[i].admin){
                 $scope.roleAdmin.push($scope.sellers[i]);
             }
-
             //Stockist list
             if($scope.sellers[i].stockist){
                 $scope.roleStockist.push($scope.sellers[i]);
             }
-
             //Dealer list in sellers collection
             if($scope.sellers[i].dealer)
                 $scope.roleDealerPortalApp.push($scope.sellers[i]);
         }
     };
-
     $http.post("/dash/users/list", sellerSearchObj)
         .success(function (res) {
             $scope.renderSellers(res);
@@ -682,7 +627,6 @@ angular.module('ebs.controller')
             else if(status >= 500)
                 $window.location.href = '/500';
         });
-
     $scope.markNotificationRead = function(notification_id){
         $http.put("/dash/read/notification", [notification_id]).then(function(response){
             if(response.data.status && response.data.status == "success"){
@@ -696,16 +640,12 @@ angular.module('ebs.controller')
                 $window.location.href = '/500';
         });
     };
-
     //Order Id generator
     //Its picked up from the app code as thats what is been used by the apps to generate
     //order id. Its as is
-
     //... This function is generic and can be called from any controller....
     $scope.generateOrderId = function(){
-
         var date = new Date();
-
         var components = [
             date.getYear(),
             (date.getMonth() < 10)? '0' + date.getMonth() : date.getMonth(),
@@ -715,27 +655,19 @@ angular.module('ebs.controller')
             (date.getSeconds() < 10)? '0' + date.getSeconds() : date.getSeconds(),
             (date.getMilliseconds() < 10)? '00' + date.getMilliseconds() : (date.getMilliseconds() < 100)? '0' + date.getMilliseconds() : date.getMilliseconds()
         ];
-
         var date_ = components.join("");
-
-
         //At app side, category is appended to the orderid
         // shreyas said , it was use case for patanjali and is not
         // needed for other company user. So sticking to date only as base
         // kind of order id is applied in portal
         // app  side category is - category[i].Category
-
         return date_;
-
     }//End of function to generate Order Id
-
     $scope.fetchRecentTranasctions = function () {
-
         //console.log('Fetch recent transactions for the last 7 days')
         recentTransactionFromServer = {};
         masterRecentTransactions = {};
         // console.log('sidemenu')
-
         $http.get('/dash/orders/recent/transactions').then(function (res) {
             recentTransactionFromServer = res.data; //Holds response from server for further use
             masterRecentTransactions = res.data; //Holds response for filtration
@@ -743,20 +675,16 @@ angular.module('ebs.controller')
             $(document).ready(function() {
                 $('.recentTransaction').find('#overall-tab').trigger('click');
             });
-
             $scope.recentTransactionType = 'all';
             renderRecentTransactions(res.data);
         })
     }
-
     function renderRecentTransactions(res) {
         var dates = [];
         for (var i = 0; i < res.length; i++) {
             dates.push({'date': $scope.formatDate(res[i].date_added[0])})
         }
-
         var uniqueDates = dates.unique('date');
-
         $scope.allRecent = [];
         for (var i = 0; i < uniqueDates.length; i++) {
             var tempObj = {};
@@ -772,7 +700,6 @@ angular.module('ebs.controller')
                             res[j].order_type = "Order";
                     }
                     tempObj.transaction.push(res[j]);
-
                     if (res[j].type == 'Payment') { //Caluclate total payment received for a day
                         tempObj.value += Number(res[j].quantity[0]);
                     }
@@ -781,13 +708,10 @@ angular.module('ebs.controller')
                     }
                 }
             }
-
             $scope.allRecent.push(tempObj);
         }
     }
-
     $scope.fetchRecentTranasctions();
-
     $scope.filterRecentTransaction = function (id) {
         switch (id) {
             case 0 :
@@ -796,7 +720,6 @@ angular.module('ebs.controller')
                 console.log(masterRecentTransactions)
                 renderRecentTransactions(masterRecentTransactions);
                 break;
-
             case 1:
                 $scope.recentTransactionType = 'order';
                 $scope.allRecent = [];
@@ -811,7 +734,6 @@ angular.module('ebs.controller')
                 }
                 renderRecentTransactions(temp);
                 break;
-
             case 2:
                 $scope.recentTransactionType = 'payment';
                 $scope.allRecent = [];
@@ -822,7 +744,6 @@ angular.module('ebs.controller')
                 }
                 renderRecentTransactions(temp);
                 break;
-
             case 3:
                 $scope.recentTransactionType = 'checkIn';
                 $scope.allRecent = [];
@@ -833,7 +754,6 @@ angular.module('ebs.controller')
                 }
                 renderRecentTransactions(temp);
                 break;
-
             case 4:
                 $scope.recentTransactionType = 'attendance';
                 $scope.allRecent = [];
@@ -844,7 +764,6 @@ angular.module('ebs.controller')
                 }
                 renderRecentTransactions(temp);
                 break;
-
             case 5:
                 $scope.recentTransactionType = 'sale';
                 $scope.allRecent = [];
@@ -855,17 +774,12 @@ angular.module('ebs.controller')
                             masterRecentTransactions[i].order_type = "Sale";
                             temp.push(masterRecentTransactions[i]);
                         }
-
                     }
-
                 }
                 renderRecentTransactions(temp);
                 break;
         }
     };
-
-
-
     $scope.filterTransactionBySeller = function (user) {
         console.log(user)
         if (user) {
@@ -882,21 +796,13 @@ angular.module('ebs.controller')
             $scope.filterRecentTransaction(0);
         }
     }
-
     var searchObj = {};
-
     $scope.refreshNotification();
-
-
     /*....
      Jini Saas - Wizard Setup....
-
      ..*/
-
     // ................................ Jini - Saas functions ....................................
-
     //....... Jini Saas : get users, items and stores count.........
-
     $scope.getAccountDataCount = function() {
         $http.get("/dash/wizard/progress")
             .success(function (res) {
@@ -915,7 +821,6 @@ angular.module('ebs.controller')
                 if(res.storeSkip){
                     $scope.account.storeSkip = res.storeSkip;
                 }
-
                 if(res.users || res.userSkip)
                     $scope.account.setupCheck += 1;
                 if(res.items || res.itemSkip)
@@ -924,7 +829,6 @@ angular.module('ebs.controller')
                     $scope.account.setupCheck += 1;
                 if(res.orders)
                     $scope.account.setupCheck += 1;
-
                 $http.put("/dash/wizard/step/update", $scope.account)
                     .success(function (response) {
                         if(response.n){
@@ -933,7 +837,6 @@ angular.module('ebs.controller')
                     });
             });
     };
-
     $scope.skip = function(data){
         $http.put("/dash/wizard/step/update", data)
             .success(function (response) {
@@ -942,7 +845,6 @@ angular.module('ebs.controller')
                 }
             });
     };
-
     $scope.getNumber = new Array(5);
     $scope.userAdded = [];
     $scope.itemAdded = [];
@@ -955,7 +857,6 @@ angular.module('ebs.controller')
     $scope.tempSeller = {};
     $scope.tempItem = {};
     $scope.tempCust = {};
-
     $scope.sellerDataAdded = function(value,data,index){
         if(index == 0){
             if(value && data){
@@ -977,9 +878,6 @@ angular.module('ebs.controller')
             }
         }
     };
-
-
-
     $scope.addTeamMembers = function(allSellers) {
         //  console.log("Add team member")
         $scope.disableAddSellers = true;
@@ -1004,7 +902,6 @@ angular.module('ebs.controller')
                                 if (seller[k]) {
                                     if (tempSeller.includes(seller[k].email)) {
                                         $scope.disableAddSellers = false;
-
                                         Settings.failurePopup("ERROR", "Email ID already exists");
                                             /*bootbox.alert({
                                             title: 'ERROR',
@@ -1012,10 +909,8 @@ angular.module('ebs.controller')
                                             className: 'text-center'
                                         });*/
                                         break;
-
                                     } else if (tempPhone.includes(seller[k].sellerphone)) {
                                         $scope.disableAddSellers = false;
-
                                         Settings.failurePopup("ERROR", seller[k].sellerphone + " Phone number already exists");
                                         /*bootbox.alert({
                                             title: 'ERROR',
@@ -1023,7 +918,6 @@ angular.module('ebs.controller')
                                             className: 'text-center'
                                         });*/
                                         break;
-
                                     } else {
                                         if (seller[k].sellerphone) {
                                             tempPhone.push(seller[k].sellerphone);
@@ -1043,7 +937,6 @@ angular.module('ebs.controller')
                                         var date1 = new Date();
                                         seller[k].date_added = [date1.getFullYear(), (date1.getMonth() + 1).padLeft(), date1.getDate().padLeft()].join('-') + ' '
                                             + [date1.getHours().padLeft(), date1.getMinutes().padLeft(), date1.getSeconds().padLeft()].join(':');
-
                                         if (seller[k].role == "Salesperson") {
                                             seller[k].salesrep = true;
                                             seller[k].role = "Salesperson"
@@ -1056,17 +949,12 @@ angular.module('ebs.controller')
                                                 .success(function (response) {
                                                     console.log("Create -->" + response);
                                                     $scope.disableAddSellers = false;
-
                                                     Settings.success_toast("SUCCESS", "User Added successfully");
-
                                                     document.getElementById("addUsers").style.display = "none";
                                                     //hide the modal
-
                                                     $('body').removeClass('modal-open');
                                                     //modal-open class is added on body so it has to be removed
-
                                                     $('.modal-backdrop').remove();
-
                                                     //toastr.success('User Added successfully')
                                                     /*jQuery.noConflict();
                                                     $('#addUsers').modal('hide');*/
@@ -1083,7 +971,6 @@ angular.module('ebs.controller')
                     console.log("data not available");
                     if(!allSellers[i].email){
                         $scope.disableAddSellers = false;
-
                         Settings.failurePopup("ERROR", "Please enter valid Email ID");
                         /*bootbox.alert({
                             title: 'ERROR',
@@ -1091,11 +978,9 @@ angular.module('ebs.controller')
                             className: 'text-center'
                         });*/
                         break;
-
                     }
                     if(!allSellers[i].role){
                         $scope.disableAddSellers = false;
-
                         Settings.failurePopup("ERROR", "Please select role");
                         /*bootbox.alert({
                             title: 'ERROR',
@@ -1108,7 +993,6 @@ angular.module('ebs.controller')
             }
         }
     };
-
     $scope.itemDataAdded = function(value,data,index){
         if(index == 0){
             if(value && data){
@@ -1129,8 +1013,6 @@ angular.module('ebs.controller')
             }
         }
     };
-
-
     $scope.addCatalogData = function(data){
         /* console.log("addd item funt");
          console.log(data);*/
@@ -1140,7 +1022,6 @@ angular.module('ebs.controller')
                 data.splice(j, 1);
             }
         }
-
         if(data.length){
             for(var j=0;j<data.length;j++){
                 if(data[j] && data[j].Product) {
@@ -1155,43 +1036,33 @@ angular.module('ebs.controller')
                         data[j].MRP = data[j].MRP? data[j].MRP :0;
                         data[j].cloudinaryURL = [];
                         data[j].looseQty = false;
-
                         if(j == data.length -1){
                             $http.post("/dash/wizard/items", data)
                                 .success(function (res) {
                                     //console.log(res)
-
                                     if (res) {
                                         $scope.disableAddItems=false;
-
                                         Settings.success_toast("SUCCESS", "Successfully added..!");
-
                                         document.getElementById("addItems").style.display = "none";
                                         //hide the modal
-
                                         $('body').removeClass('modal-open');
                                         //modal-open class is added on body so it has to be removed
-
                                         $('.modal-backdrop').remove();
-
                                         //toastr.success("Successfully added..!");
                                         /*jQuery.noConflict();
                                         $('#addItems').modal('hide');*/
                                         $scope.getAccountDataCount()
                                     } else {
                                         $scope.disableAddItems=false;
-
                                         Settings.alertPopup("ERROR", "Failed to add. Please try again later");
                                         //bootbox.alert("Failed to add. Please try again later");
                                     }
                                 })
                         }
                     })(j);
-
                 }
                 else{
                     $scope.disableAddItems=false;
-
                     Settings.failurePopup("ERROR", "Please enter Product Name");
                         /*bootbox.alert({
                         title: 'ERROR',
@@ -1200,15 +1071,12 @@ angular.module('ebs.controller')
                     });*/
                 }
             }
-
         }
         else{
             $scope.disableAddItems=false;
             console.log("no items added")
         }
-
     }
-
     $scope.customerDataAdded = function(value,data,index){
         if(index == 0){
             if(value && data){
@@ -1229,16 +1097,12 @@ angular.module('ebs.controller')
             }
         }
     }
-
-
     $scope.addCustomerData = function (dealer) {
-
         for(var m=0;m<dealer.length;m++) {
             if (dealer[m].DealerName == undefined && dealer[m].Phone == undefined) {
                 dealer.splice(m, 1);
             }
         }
-
         if(dealer.length){
             $scope.disableAddDealers = true;
             for(var m=0;m<dealer.length;m++){
@@ -1254,15 +1118,11 @@ angular.module('ebs.controller')
                             $http.post("/dash/wizard/customers", dealer)
                                 .success(function (res) {
                                     $scope.disableAddDealers = false;
-
                                     Settings.success_toast("SUCCESS", "Customers Successfully added..!");
-
                                     document.getElementById("addCustomers").style.display = "none";
                                     //hide the modal
-
                                     $('body').removeClass('modal-open');
                                     //modal-open class is added on body so it has to be removed
-
                                     $('.modal-backdrop').remove();
                                     //toastr.success("Customers Successfully added..!");
                                     /*jQuery.noConflict();
@@ -1270,16 +1130,11 @@ angular.module('ebs.controller')
                                     $scope.getAccountDataCount()
                                 })
                         }
-
-
                     })(m);
-
                 }
-
                 else{
                     if(!dealer[m].Phone){
                         $scope.disableAddDealers = false;
-
                         Settings.failurePopup("ERROR", "Please enter valid Customer Phone number");
                         /*bootbox.alert({
                             title: 'ERROR',
@@ -1290,7 +1145,6 @@ angular.module('ebs.controller')
                     }
                     if(!dealer[m].DealerName){
                         $scope.disableAddDealers = false;
-
                         Settings.failurePopup("ERROR", "Please enter Customer name");
                         /*bootbox.alert({
                             title: 'ERROR',
@@ -1301,87 +1155,67 @@ angular.module('ebs.controller')
                     }
                 }
             }
-
         }
         else{
             $scope.disableAddDealers = false;
-
             console.log("no dealers")
         }
     };
-
     $scope.goToSettings = function (){
         $location.path('/settings')
     }
-
     const updateWizardSetup = () => {
         $scope.accountSettings.setupCheck = 4;
-
         $http.put("/dash/wizard/step/update", $scope.accountSettings)
             .success(function (response) {
                 if (response.n) {
                     $scope.showSetup4 = false;
                     $scope.instance_details.setupCheck = $scope.accountSettings.setupCheck;
-                    
                     $(document).ready(function() {
                         $('#setupComplete').modal();
                     });
-
                 }
             });
     }
-
     $scope.completeSetup = function(){
         var image = [];
-
         if(document.getElementById('company_logo')){
             image = document.getElementById('company_logo').files;
         }
-        
         if(!$scope.accountSettings.currency)
             $scope.accountSettings.currency = '₹';
         else $scope.currency = $scope.accountSettings.currency;
-
-
         if($scope.accountSettings.currency && $scope.accountSettings.companyEmail && !$scope.accountSettings.logo_url && image[0]) {
             var reader = new FileReader();
                 reader.onloadend = function () {
                     var tempObj = {};
                     tempObj.image = reader.result;
-
                     $http.post("/dash/upload/logo", tempObj)
                         .success(function (err, logo) {
                             //console.log(logo);
                             console.log("Logo Uploaded!! ---->>>>> ");
                         })
-
                 }
                 reader.readAsDataURL(image[0]);
-
                 updateWizardSetup();
         } else{
             updateWizardSetup();
         }
     }
-
     $scope.loadDemo = () => {
         $http.get("/dash/wizard/load/demo")
             .then((res) => {
                 if(res && res.data){
                     console.log(res.data);
                     Settings.success_toast("Success", "Sample Data Loaded");
-
                     $scope.updateWizardSetup();
                 }
             })
     }
-
     $scope.showLastSetup = function(){
         $scope.accountSettings.currency = '₹';
         $scope.showSetup4 = true;
     }
-
-
     /*====== common function for tax =======*/
     $scope.data = {
         "newOrderStore" : {}
@@ -1396,7 +1230,6 @@ angular.module('ebs.controller')
         VAT_VAL: 15,
         COVID : 1
     }
-
     $scope.getCalulatedTax = function(res,tab ,store,calculateigst){
         $scope.calculateIGST = calculateigst ? calculateigst :false;
         $scope.newOrderItemList = res;
@@ -1410,7 +1243,6 @@ angular.module('ebs.controller')
         $scope.newOrderTotalAmount = 0;
         $scope.newOrderMRPTotalAmount = 0;
         var grandTotalTax = 0;
-
         $scope.newOrderTaxAmount.totalOtherTaxes = [];
         $scope.newOrderOtherTaxesNames = [];
         var totalOtherTaxes = [];
@@ -1418,25 +1250,20 @@ angular.module('ebs.controller')
             case 1: {
                 if ($scope.newOrderItemList && $scope.newOrderItemList.length) {
                     for (var i = 0; i < $scope.newOrderItemList.length; i++) {
-
                         if ($scope.data.newOrderStore.customerVariant == 'bulk' && $scope.newOrderItemList[i].itemDetails.BulkPrice) {
                             $scope.newOrderExcTaxNHIL = 0;
                             $scope.newOrderExcTaxGETL = 0;
                             $scope.newOrderExcTaxVAT = 0;
                             $scope.newOrderExcTaxCOVID = 0;
-
                             var mrp = parseFloat($scope.newOrderItemList[i].itemDetails.MRP);
                             var BulkPrice = parseFloat($scope.newOrderItemList[i].itemDetails.BulkPrice);
                             var taxableMrp = parseFloat(BulkPrice / (100 + $scope.ghanaTax.NHIL + $scope.ghanaTax.GETL + $scope.ghanaTax.VAT + $scope.ghanaTax.COVID) * 100);
                             var listTexableMrp = parseFloat(mrp);
-
                             if ($scope.taxExclusive) {
                                 var taxableMrp = parseFloat(BulkPrice);
-
                             } else {
                                 var taxableMrp = parseFloat(BulkPrice / (100 + $scope.ghanaTax.NHIL + $scope.ghanaTax.GETL + $scope.ghanaTax.VAT + $scope.ghanaTax.COVID) * 100);
                             }
-
                             $scope.orderTotal = (Number($scope.newOrderItemList[i].quantity) * taxableMrp);
                             $scope.newOrderExcTaxAmount += $scope.orderTotal;
                             $scope.newOrderExcTaxNHIL = ($scope.newOrderExcTaxAmount * $scope.ghanaTax.NHIL) / 100;
@@ -1447,7 +1274,6 @@ angular.module('ebs.controller')
                             $scope.newOrderExcTaxNHIL = parseFloat($scope.newOrderExcTaxNHIL.toFixed(2));
                             $scope.newOrderExcTaxGETL = parseFloat($scope.newOrderExcTaxGETL.toFixed(2));
                             $scope.newOrderExcTaxVAT = parseFloat($scope.newOrderExcTaxVAT.toFixed(2));
-
                             if ($scope.calculateIGST) {
                                 $scope.newOrderMRPTotalAmount = ($scope.newOrderExcTaxAmount + grandTotalTax);
                                 $scope.newOrderMRPTotalAmount = $scope.newOrderMRPTotalAmount;
@@ -1457,29 +1283,23 @@ angular.module('ebs.controller')
                                 $scope.newOrderMRPTotalAmount = ($scope.newOrderExcTaxAmount + grandTotalTax);
                                 $scope.newOrderTotalAmount += ((listTexableMrp ) * ($scope.newOrderItemList[i].quantity));
                             }
-
                             $scope.newOrderTaxAmount.totalTax += (parseFloat($scope.ghanaTax.NHIL / 100) * taxableMrp) * Number($scope.newOrderItemList[i].quantity) + (parseFloat($scope.ghanaTax.GETL / 100) * taxableMrp) * Number($scope.newOrderItemList[i].quantity) + (parseFloat($scope.ghanaTax.VAT / 100) * taxableMrp) + (parseFloat($scope.ghanaTax.COVID / 100) * taxableMrp) * Number($scope.newOrderItemList[i].quantity);
                             $scope.newOrderTaxAmount.totalCGST += (parseFloat($scope.ghanaTax.NHIL / 100) * taxableMrp) * Number($scope.newOrderItemList[i].quantity);
                             $scope.newOrderTaxAmount.totalSGST += (parseFloat($scope.ghanaTax.GETL / 100) * taxableMrp) * Number($scope.newOrderItemList[i].quantity);
                             $scope.newOrderTaxAmount.totalIGST += (parseFloat($scope.ghanaTax.VAT / 100) * taxableMrp) * Number($scope.newOrderItemList[i].quantity);
                             $scope.newOrderTaxAmount.totalCOVID += (parseFloat($scope.ghanaTax.COVID / 100) * taxableMrp) * Number($scope.newOrderItemList[i].quantity);
-
                         } else {
                             if (!$scope.taxSetups.otherSetup) {
                                 $scope.newOrderExcTaxNHIL = 0;
                                 $scope.newOrderExcTaxGETL = 0;
                                 $scope.newOrderExcTaxVAT = 0;
                                 $scope.newOrderExcTaxCOVID = 0;
-
                                 var mrp = parseFloat($scope.newOrderItemList[i].itemDetails.MRP);
                                 var orderMrp = parseFloat($scope.newOrderItemList[i].itemDetails.orderMRP);
                                 var taxableMrp = parseFloat(orderMrp / (100 + $scope.ghanaTax.NHIL + $scope.ghanaTax.GETL + $scope.ghanaTax.VAT + $scope.ghanaTax.COVID) * 100);
                                 var listTexableMrp = parseFloat(mrp);
-
-
                                 if ($scope.taxExclusive) {
                                     var taxableMrp = parseFloat(orderMrp);
-
                                 } else {
                                     var taxableMrp = parseFloat(orderMrp / (100 + $scope.ghanaTax.NHIL + $scope.ghanaTax.GETL + $scope.ghanaTax.VAT + $scope.ghanaTax.COVID) * 100);
                                 }
@@ -1494,7 +1314,6 @@ angular.module('ebs.controller')
                                 $scope.newOrderExcTaxGETL = parseFloat($scope.newOrderExcTaxGETL.toFixed(2));
                                 $scope.newOrderExcTaxVAT = parseFloat($scope.newOrderExcTaxVAT.toFixed(2));
                                 $scope.newOrderExcTaxCOVID = parseFloat($scope.newOrderExcTaxCOVID.toFixed(2));
-
                                 if ($scope.calculateIGST) {
                                     $scope.newOrderMRPTotalAmount = ($scope.newOrderExcTaxAmount + grandTotalTax);
                                     $scope.newOrderMRPTotalAmount = $scope.newOrderMRPTotalAmount;
@@ -1504,39 +1323,28 @@ angular.module('ebs.controller')
                                     $scope.newOrderMRPTotalAmount = ($scope.newOrderExcTaxAmount + grandTotalTax);
                                     $scope.newOrderTotalAmount += ((listTexableMrp ) * ($scope.newOrderItemList[i].quantity));
                                 }
-
                                 $scope.newOrderTaxAmount.totalTax = grandTotalTax;
                                 $scope.newOrderTaxAmount.totalCGST += (parseFloat($scope.ghanaTax.NHIL / 100) * taxableMrp) * Number($scope.newOrderItemList[i].quantity);
                                 $scope.newOrderTaxAmount.totalSGST += (parseFloat($scope.ghanaTax.GETL / 100) * taxableMrp) * Number($scope.newOrderItemList[i].quantity);
                                 $scope.newOrderTaxAmount.totalIGST += (parseFloat($scope.ghanaTax.VAT / 100) * taxableMrp) * Number($scope.newOrderItemList[i].quantity);
                                 $scope.newOrderTaxAmount.totalCOVID += (parseFloat($scope.ghanaTax.COVID / 100) * taxableMrp) * Number($scope.newOrderItemList[i].quantity);
-
                             } else if ($scope.newOrderItemList[i].otherTaxes && $scope.newOrderItemList[i].otherTaxes.length) {
-
                                 var sumOfTax = 0;
-
                                 if (!$scope.newOrderOtherTaxesNames.length && $scope.newOrderItemList[i].otherTaxes) {
                                     $scope.newOrderOtherTaxesNames = $scope.newOrderItemList[i].otherTaxes;
                                 }
-
                                 for (var j = 0; j < $scope.newOrderItemList[i].otherTaxes.length; j++) {
                                     sumOfTax += $scope.newOrderItemList[i].otherTaxes[j].value;
                                 }
-
                                 var mrp = parseFloat($scope.newOrderItemList[i].itemDetails.MRP);
                                 var orderMrp = parseFloat($scope.newOrderItemList[i].itemDetails.orderMRP);
-
-
                                 var taxableMrp = parseFloat(orderMrp / (100 + sumOfTax) * 100);
                                 var listTexableMrp = parseFloat(mrp / (100 + sumOfTax) * 100);
-
-
                                 if ($scope.taxExclusive) {
                                     var taxableMrp = parseFloat(orderMrp);
                                 } else {
                                     var taxableMrp = parseFloat(orderMrp / (100 + sumOfTax) * 100);
                                 }
-
                                 if ($scope.calculateIGST) {
                                     $scope.newOrderMRPTotalAmount =(taxableMrp + (taxableMrp * ($scope.ghanaTax.NHIL / 100)) + (taxableMrp * ($scope.ghanaTax.GETL / 100)) + (taxableMrp * ($scope.ghanaTax.VAT / 100)) + (taxableMrp * ($scope.ghanaTax.COVID / 100))) * ($scope.newOrderItemList[i].quantity);
                                     $scope.newOrderTotalAmount += ((listTexableMrp + (mrp * (igst / 100))) * ($scope.newOrderItemList[i].quantity));
@@ -1545,69 +1353,54 @@ angular.module('ebs.controller')
                                     var sumOftaxableMrp = 0;
                                     var sumOflistTexableMrp = 0;
                                     var totalTax = 0;
-
                                     if ($scope.newOrderItemList[i].itemDetails.otherTaxes) {
                                         for (var j = 0; j < $scope.newOrderItemList[i].itemDetails.otherTaxes.length; j++) {
                                             sumOftaxableMrp += (taxableMrp * ($scope.newOrderItemList[i].itemDetails.otherTaxes[j].value / 100));
                                             sumOflistTexableMrp += (listTexableMrp * ($scope.newOrderItemList[i].itemDetails.otherTaxes[j].value / 100))
                                             $scope.newOrderTaxAmount.totalTax += (parseFloat($scope.newOrderItemList[i].itemDetails.otherTaxes[j].value / 100) * taxableMrp) * Number($scope.newOrderItemList[i].quantity);
-
                                             if (!totalOtherTaxes[$scope.newOrderItemList[i].itemDetails.otherTaxes[j].name])
                                                 totalOtherTaxes[$scope.newOrderItemList[i].itemDetails.otherTaxes[j].name] = 0;
                                             totalOtherTaxes[$scope.newOrderItemList[i].itemDetails.otherTaxes[j].name] += (parseFloat($scope.newOrderItemList[i].itemDetails.otherTaxes[j].value / 100) * taxableMrp) * Number($scope.newOrderItemList[i].quantity);
                                             $scope.newOrderTaxAmount.totalOtherTaxes[$scope.newOrderItemList[i].itemDetails.otherTaxes[j].name] = totalOtherTaxes[$scope.newOrderItemList[i].itemDetails.otherTaxes[j].name];
-
                                         }
                                     } else {
                                         for (var j = 0; j < $scope.newOrderItemList[i].otherTaxes.length; j++) {
                                             sumOftaxableMrp += (taxableMrp * ($scope.newOrderItemList[i].otherTaxes[j].value / 100));
                                             sumOflistTexableMrp += (listTexableMrp * ($scope.newOrderItemList[i].otherTaxes[j].value / 100))
                                             $scope.newOrderTaxAmount.totalTax += (parseFloat($scope.newOrderItemList[i].otherTaxes[j].value / 100) * taxableMrp) * Number($scope.newOrderItemList[i].quantity);
-
                                             if (!totalOtherTaxes[$scope.newOrderItemList[i].otherTaxes[j].name])
                                                 totalOtherTaxes[$scope.newOrderItemList[i].otherTaxes[j].name] = 0;
                                             totalOtherTaxes[$scope.newOrderItemList[i].otherTaxes[j].name] += (parseFloat($scope.newOrderItemList[i].otherTaxes[j].value / 100) * taxableMrp) * Number($scope.newOrderItemList[i].quantity);
                                             $scope.newOrderTaxAmount.totalOtherTaxes[$scope.newOrderItemList[i].otherTaxes[j].name] = totalOtherTaxes[$scope.newOrderItemList[i].otherTaxes[j].name];
-
                                         }
                                     }
-
                                     $scope.newOrderMRPTotalAmount += ((taxableMrp + sumOftaxableMrp  ) * ($scope.newOrderItemList[i].quantity));
                                     $scope.newOrderTotalAmount += ((listTexableMrp + sumOflistTexableMrp ) * ($scope.newOrderItemList[i].quantity));
                                     $scope.newOrderMRPTotalAmount = $scope.newOrderMRPTotalAmount;
                                 }
-
                                 $scope.orderTotal = Number($scope.newOrderItemList[i].quantity) * taxableMrp;
                                 $scope.newOrderExcTaxAmount += $scope.orderTotal;
                             }
                         }
-
-
                     }
                     break;
                 }
             }
             case 2:{
                 for(var i=0; i<$scope.newOrderItemList.length; i++){
-
                     if($scope.data.newOrderStore.customerVariant == 'bulk' && $scope.newOrderItemList[i].itemDetails.BulkPrice){
                         var cgst = 0;
                         var sgst = 0;
                         var igst = 0;
-
                         cgst = $scope.newOrderItemList[i].CGST;
                         sgst = $scope.newOrderItemList[i].SGST;
                         igst = $scope.newOrderItemList[i].IGST;
-
                         var mrp = parseFloat($scope.newOrderItemList[i].itemDetails.MRP);
                         var BulkPrice = parseFloat($scope.newOrderItemList[i].itemDetails.BulkPrice);
                         var taxableMrp = parseFloat(BulkPrice / (100 + cgst + sgst + igst) * 100);
                         var listTexableMrp = parseFloat(mrp / (100 + cgst + sgst + igst)* 100);
-
-
                         if($scope.taxExclusive){
                             var taxableMrp = parseFloat(BulkPrice);
-
                         }else{
                             var taxableMrp = parseFloat(BulkPrice / (100 + cgst + sgst + igst) * 100);
                         }
@@ -1619,33 +1412,26 @@ angular.module('ebs.controller')
                             $scope.newOrderMRPTotalAmount += ((taxableMrp +( (taxableMrp * (cgst/100)) + (taxableMrp *(sgst/100)))) * ($scope.newOrderItemList[i].quantity));
                             $scope.newOrderTotalAmount += ((listTexableMrp +( (listTexableMrp * (cgst/100)) + (listTexableMrp *(sgst/100)))) * ($scope.newOrderItemList[i].quantity));
                         }
-
                         $scope.newOrderTaxAmount.totalTax +=  (parseFloat(cgst/100) * taxableMrp) * Number($scope.newOrderItemList[i].quantity) + (parseFloat(sgst/100) * taxableMrp) * Number($scope.newOrderItemList[i].quantity) + (parseFloat(igst/100) * taxableMrp) * Number($scope.newOrderItemList[i].quantity);
                         $scope.newOrderTaxAmount.totalCGST += (parseFloat(cgst/100) * taxableMrp) * Number($scope.newOrderItemList[i].quantity);
                         $scope.newOrderTaxAmount.totalSGST += (parseFloat(sgst/100) * taxableMrp) * Number($scope.newOrderItemList[i].quantity);
                         $scope.newOrderTaxAmount.totalIGST += (parseFloat(igst/100) * taxableMrp) * Number($scope.newOrderItemList[i].quantity);
                         $scope.orderTotal = Number($scope.newOrderItemList[i].quantity) * taxableMrp;
                         $scope.newOrderExcTaxAmount += $scope.orderTotal;
-
                     }else{
                         if(!$scope.taxSetups.otherSetup){
                             var cgst = 0;
                             var sgst = 0;
                             var igst = 0;
-
                             cgst = $scope.newOrderItemList[i].CGST;
                             sgst = $scope.newOrderItemList[i].SGST;
                             igst = $scope.newOrderItemList[i].IGST;
-
                             var mrp = parseFloat($scope.newOrderItemList[i].itemDetails.MRP);
                             var orderMrp = parseFloat($scope.newOrderItemList[i].itemDetails.orderMRP);
                             var taxableMrp = parseFloat(orderMrp / (100 + cgst + sgst + igst) * 100);
                             var listTexableMrp = parseFloat(mrp / (100 + cgst + sgst + igst)* 100);
-
-
                             if($scope.taxExclusive){
                                 var taxableMrp = parseFloat(orderMrp);
-
                             }else{
                                 var taxableMrp = parseFloat(orderMrp / (100 + cgst + sgst + igst) * 100);
                             }
@@ -1657,7 +1443,6 @@ angular.module('ebs.controller')
                                 $scope.newOrderMRPTotalAmount += ((taxableMrp +( (taxableMrp * (cgst/100)) + (taxableMrp *(sgst/100)))) * ($scope.newOrderItemList[i].quantity));
                                 $scope.newOrderTotalAmount += ((listTexableMrp +( (listTexableMrp * (cgst/100)) + (listTexableMrp *(sgst/100)))) * ($scope.newOrderItemList[i].quantity));
                             }
-
                             $scope.newOrderTaxAmount.totalTax +=  (parseFloat(cgst/100) * taxableMrp) * Number($scope.newOrderItemList[i].quantity) + (parseFloat(sgst/100) * taxableMrp) * Number($scope.newOrderItemList[i].quantity) + (parseFloat(igst/100) * taxableMrp) * Number($scope.newOrderItemList[i].quantity);
                             $scope.newOrderTaxAmount.totalCGST += (parseFloat(cgst/100) * taxableMrp) * Number($scope.newOrderItemList[i].quantity);
                             $scope.newOrderTaxAmount.totalSGST += (parseFloat(sgst/100) * taxableMrp) * Number($scope.newOrderItemList[i].quantity);
@@ -1665,32 +1450,22 @@ angular.module('ebs.controller')
                             $scope.orderTotal = Number($scope.newOrderItemList[i].quantity) * taxableMrp;
                             $scope.newOrderExcTaxAmount += $scope.orderTotal;
                         }else if($scope.newOrderItemList[i].otherTaxes && $scope.newOrderItemList[i].otherTaxes.length){
-
                             var sumOfTax = 0;
-
                             if(!$scope.newOrderOtherTaxesNames.length && $scope.newOrderItemList[i].otherTaxes){
                                 $scope.newOrderOtherTaxesNames = $scope.newOrderItemList[i].otherTaxes;
                             }
-
                             for(var j=0; j< $scope.newOrderItemList[i].otherTaxes.length; j++){
                                 sumOfTax += $scope.newOrderItemList[i].otherTaxes[j].value;
                             }
-
-
                             var mrp = parseFloat($scope.newOrderItemList[i].itemDetails.MRP);
                             var orderMrp = parseFloat($scope.newOrderItemList[i].itemDetails.orderMRP);
-
-
                             var taxableMrp = parseFloat(orderMrp / (100 + sumOfTax) * 100);
                             var listTexableMrp = parseFloat(mrp / (100 + sumOfTax)* 100);
-
-
                             if($scope.taxExclusive){
                                 var taxableMrp = parseFloat(orderMrp);
                             }else{
                                 var taxableMrp = parseFloat(orderMrp / (100 + sumOfTax) * 100);
                             }
-
                             if($scope.calculateIGST){
                                 $scope.newOrderMRPTotalAmount += ((taxableMrp +(taxableMrp * (igst/100))) * ($scope.newOrderItemList[i].quantity));
                                 $scope.newOrderTotalAmount += ((listTexableMrp +(mrp * (igst/100))) * ($scope.newOrderItemList[i].quantity));
@@ -1699,51 +1474,37 @@ angular.module('ebs.controller')
                                 var sumOftaxableMrp = 0;
                                 var sumOflistTexableMrp = 0;
                                 var totalTax = 0;
-
                                 if($scope.newOrderItemList[i].itemDetails.otherTaxes){
                                     for(var j=0; j< $scope.newOrderItemList[i].itemDetails.otherTaxes.length; j++){
                                         sumOftaxableMrp += (taxableMrp * ($scope.newOrderItemList[i].itemDetails.otherTaxes[j].value/100));
                                         sumOflistTexableMrp += (listTexableMrp * ($scope.newOrderItemList[i].itemDetails.otherTaxes[j].value/100))
                                         $scope.newOrderTaxAmount.totalTax += (parseFloat($scope.newOrderItemList[i].itemDetails.otherTaxes[j].value/100) * taxableMrp) * Number($scope.newOrderItemList[i].quantity);
-
                                         if(!totalOtherTaxes[$scope.newOrderItemList[i].itemDetails.otherTaxes[j].name])
                                             totalOtherTaxes[$scope.newOrderItemList[i].itemDetails.otherTaxes[j].name] = 0;
                                         totalOtherTaxes[$scope.newOrderItemList[i].itemDetails.otherTaxes[j].name]+= (parseFloat($scope.newOrderItemList[i].itemDetails.otherTaxes[j].value/100) * taxableMrp) * Number($scope.newOrderItemList[i].quantity);
                                         $scope.newOrderTaxAmount.totalOtherTaxes[$scope.newOrderItemList[i].itemDetails.otherTaxes[j].name] = totalOtherTaxes[$scope.newOrderItemList[i].itemDetails.otherTaxes[j].name];
-
                                     }
                                 }else{
                                     for(var j=0; j< $scope.newOrderItemList[i].otherTaxes.length; j++){
                                         sumOftaxableMrp += (taxableMrp * ($scope.newOrderItemList[i].otherTaxes[j].value/100));
                                         sumOflistTexableMrp += (listTexableMrp * ($scope.newOrderItemList[i].otherTaxes[j].value/100))
                                         $scope.newOrderTaxAmount.totalTax += (parseFloat($scope.newOrderItemList[i].otherTaxes[j].value/100) * taxableMrp) * Number($scope.newOrderItemList[i].quantity);
-
                                         if(!totalOtherTaxes[$scope.newOrderItemList[i].otherTaxes[j].name])
                                             totalOtherTaxes[$scope.newOrderItemList[i].otherTaxes[j].name] = 0;
                                         totalOtherTaxes[$scope.newOrderItemList[i].otherTaxes[j].name]+= (parseFloat($scope.newOrderItemList[i].otherTaxes[j].value/100) * taxableMrp) * Number($scope.newOrderItemList[i].quantity);
                                         $scope.newOrderTaxAmount.totalOtherTaxes[$scope.newOrderItemList[i].otherTaxes[j].name] = totalOtherTaxes[$scope.newOrderItemList[i].otherTaxes[j].name];
-
                                     }
                                 }
-
                                 $scope.newOrderMRPTotalAmount += ((taxableMrp + sumOftaxableMrp  ) * ($scope.newOrderItemList[i].quantity));
                                 $scope.newOrderTotalAmount += ((listTexableMrp + sumOflistTexableMrp ) * ($scope.newOrderItemList[i].quantity));
-
                             }
-
                             $scope.orderTotal = Number($scope.newOrderItemList[i].quantity) * taxableMrp;
                             $scope.newOrderExcTaxAmount += $scope.orderTotal;
                         }
                     }
-
-
-
                 }
                 break;
             }
         }
-
     }
-
-
 })

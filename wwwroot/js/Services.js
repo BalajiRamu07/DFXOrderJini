@@ -2,13 +2,10 @@
  * Created by shreyasgombi on 05/03/20.
  */
 'use strict';
-
 angular.module('ebs.services', [])
-
 .factory('Settings', function($rootScope, $http, $window) {
     //.... Declare all the services that you want to be session cached....
     //..... Use local variable as buckets to store session details like, role, access controls, instance details, etc...
-
     var instance_details = {};
     var user_details = null;
     var nav_details = null;
@@ -25,7 +22,6 @@ angular.module('ebs.services', [])
     var UsercreatedFlag = false;
     var userRecord = {};
     var isAuthenticated = false;
-
     return {
         setLocal: function( key, value ){
             try{
@@ -53,7 +49,6 @@ angular.module('ebs.services', [])
         },
         //.... For example, for any kind of simple formatting, we can use the below function for formatting the dates..
         // formatDate : function(){
-
         // },
         //.... Clear session will reset all the data when the page for example, is reloaded...
         clearSession : function(){
@@ -64,22 +59,18 @@ angular.module('ebs.services', [])
             company_details = {};
             item_data ={};
         },
-
         setId : function(details){
             Id = details;
         },
         getId : function(){
             return Id;
         },
-
         setInstance : function(details){
             instance_details = details;
         },
-
         setInstanceDetails : function(key, value){
             instance_details[key] = value;
         },
-
         getInstance : function(){
             return instance_details;
         },
@@ -87,7 +78,6 @@ angular.module('ebs.services', [])
             if(instance_details)
                 return instance_details[key];
             else return '';
-
         },
         getInstanceInfo : function(callback){
             if(!instance_info){
@@ -225,7 +215,6 @@ angular.module('ebs.services', [])
         set1to1Orders : function(key) {
             order_data = key
         },
-
         get1to1Orders : function() {
             return order_data;
         },
@@ -233,15 +222,12 @@ angular.module('ebs.services', [])
             order_lIst_data = [];
             order_lIst_data.push(key);
         },
-
         getOrderData : function() {
             return order_lIst_data;
         },
-
         setSubscriptionData : function(key) {
             subscription_data = key
         },
-
         getSubscriptionData : function() {
             return subscription_data;
         },
@@ -249,7 +235,6 @@ angular.module('ebs.services', [])
             //covid set flag after created
             UsercreatedFlag = key
         },
-
         getUserCreatedFlag : function() {
             //covid get flag if created or not
             return UsercreatedFlag;
@@ -257,7 +242,6 @@ angular.module('ebs.services', [])
         setRegisteredUser : function(key) {
             userRecord = key
         },
-
         getRegisteredUser : function() {
             return userRecord;
         },
@@ -267,7 +251,6 @@ angular.module('ebs.services', [])
         getItemData : function(){
             return item_data;
         },
-
         //.... Date formatting services....
         formatDate : (date) => {
             if(date){
@@ -280,12 +263,10 @@ angular.module('ebs.services', [])
                 return (dt + " - " + monthNames[d.getMonth()] + " - " + (d.getFullYear()));
             } else return '';
         },
-
         formatOnlyDate : date => {
             if(date) {
                 /* replace is used to ensure cross browser support*/
                 let d = new Date(date.toString().replace("-","/").replace("-","/"));
-
                 let dt = d.getDate();
                 let mon = d.getMonth() + 1;
                 if(dt < 10)
@@ -295,7 +276,6 @@ angular.module('ebs.services', [])
                     return (dt + " - " + mon + " - " + (d.getFullYear()));
             } else return '';
         },
-
         //.... This is the service that gives you a start date and an end date where,
         //... for start date, the time will be 0:0:0:0 and for end dates it will be 23:59:59:999
         dateFilterFormat : (date, when) => {
@@ -306,12 +286,10 @@ angular.module('ebs.services', [])
                 else if (when == 'end') _date.setHours(23, 59, 59, 999);
                 let dformat = [_date.getFullYear(), (_date.getMonth() + 1).padLeft(), _date.getDate().padLeft()].join('-') + ' '
                     + [_date.getHours().padLeft(), _date.getMinutes().padLeft(), _date.getSeconds().padLeft()].join(':');
-
                 return (dformat);
             } else
                 return 0;
         },
-
         //.... This function will spit a date in the format - Thursday, January 27, 2022
         customDate : date => {
             let _date = date ? new Date(date) : new Date();
@@ -319,13 +297,11 @@ angular.module('ebs.services', [])
             let dformat = _date.toLocaleDateString("en-US", options);
             return (dformat);
         },
-
         newDate : date => {
             let _date = date ? new Date(date) : new Date();
             return [_date.getFullYear(), (_date.getMonth() + 1).padLeft(), _date.getDate().padLeft()].join('-') + ' '
             + [_date.getHours().padLeft(), _date.getMinutes().padLeft(), _date.getSeconds().padLeft()].join(':');
         },
-
         daysDifference : (startDate, endDate) => {
             let numberOfDays;
             if (startDate && endDate) {
@@ -342,10 +318,8 @@ angular.module('ebs.services', [])
                 numberOfDays = 0;
             return numberOfDays;
         },
-
         generateId : (short, length) => {
             let date = new Date();
-
             let components = [
                 date.getYear(),
                 (date.getMonth() < 10)? '0' + date.getMonth() : date.getMonth(),
@@ -355,17 +329,12 @@ angular.module('ebs.services', [])
                 (date.getSeconds() < 10)? '0' + date.getSeconds() : date.getSeconds(),
                 (date.getMilliseconds() < 10)? '00' + date.getMilliseconds() : (date.getMilliseconds() < 100)? '0' + date.getMilliseconds() : date.getMilliseconds()
             ];
-
             let date_ = components.join("");
-
             if(short)
                 date_ = date_.slice(length || 8);
-
             return date_;
         },
-
         zeroPad : (num, places) => String(num).padStart(places, '0'),
-
         success_toast : function(heading, text){
             $.toast({
                 heading: heading,
@@ -494,7 +463,6 @@ angular.module('ebs.services', [])
                 }
             )
         },
-        
         loginRedirectPopup : function(title, text, data, callback){
             swal({
                 title: title,

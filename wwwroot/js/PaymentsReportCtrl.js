@@ -1,73 +1,57 @@
 angular.module('ebs.controller')
-
     .controller("PaymentsReportCtrl", function ($scope, $http, Settings, $window) {
         console.log("Hello From Payments Report Controller .... !!!!");
-
         //.... User details....
         $scope.user = {};
-
         //..... Pagination.....
         $scope.viewLength = 0;
         $scope.newViewBy = 10;
-
         //.... Other View Values....
         $scope.newViewBy1 = {};
         $scope.newViewBy1.view = 10;
-
         $scope.reportTabName = "Payments";
-
         $scope.reportTabId = 5;
         $scope.tab = 8;
         $scope.showReports = true;
         $scope.payment_count = 0;
         let localViewBy = $scope.newViewBy;
         let initialViewBy = 60;
-
         let instanceDetails =  Settings.getInstance();
         const api_timeout = 600000;
         $scope.paymentReportSearch = {};
         $scope.paymentReportSearch.filter = '';
-
         //.... Reports Filter.....
         $scope.paymentsreport = {};
-
         //.... Set Filter Dates to last 7 days....
         $scope.paymentsreport.startDate = new Date();
         $scope.paymentsreport.startDate.setDate($scope.paymentsreport.startDate.getDate() - 7);
         $scope.paymentsreport.startDate.setHours(0, 0, 0, 0);
         $scope.paymentsreport.endDate = new Date();
         $scope.paymentsreport.endDate.setHours(23, 59, 59, 59);
-
         let paymentSearchObj = {};
         let paymentSearchBy = ['dealername', 'sellername'];
         $scope.cashreport = [];
-
         $scope.paymentDuration = Settings.daysDifference($scope.paymentsreport.startDate , $scope.paymentsreport.endDate);
         $scope.parseData = (viewLength, newViewBy) => parseInt(viewLength) + parseInt(newViewBy);
         $scope.DateTimeFormat = (date, when) => Settings.dateFilterFormat(date, when);
-
         const startLoader = () => {
             jQuery.noConflict();
             $('.refresh').css("display", "inline");
         }
-
         const stopLoader = () => {
             jQuery.noConflict();
             $('.refresh').css("display", "none");
         }
-
         $scope.openFilterClear = () => {
             $scope.paymentsreport.startDate = '';
             $scope.paymentsreport.endDate = '';
             $scope.paymentsreport.branchCode = '';
-
             $scope.paymentsreport.startDate = new Date();
             $scope.paymentsreport.startDate.setDate($scope.paymentsreport.startDate.getDate() - 7);
             $scope.paymentsreport.startDate.setHours(0, 0, 0, 0);
             $scope.paymentsreport.endDate = new Date();
             $scope.paymentsreport.endDate.setHours(23, 59, 59, 59);
         }
-
         const loadReport = (paymentSearchObj) => {
             $http.post("/dash/reports/cashitems",paymentSearchObj)
                 .success(function(response){
@@ -87,12 +71,10 @@ angular.module('ebs.controller')
                         $window.location.href = '/404';
                 });
         }
-
         //... TODO : Deprecate the Storejini APIs......
         const loadStorejiniReport = (paymentSearchObj) => {
             $http.post("/dash/reports/storeJini/payments", paymentSearchObj)
                 .success(function(response){
-
                     for(var i=0; i<response.length; i++){
                         $scope.cashreport.push(response[i]);
                     }
@@ -108,7 +90,6 @@ angular.module('ebs.controller')
                         $window.location.href = '/404';
                 });
         }
-
         const loadReportCount = (paymentSearchObj) => {
             $http.post("/dash/reports/payment/count", paymentSearchObj)
                 .success($scope.reportsTransactionCount)
@@ -122,7 +103,6 @@ angular.module('ebs.controller')
                         $window.location.href = '/404';
                 });
         }
-
         $scope.reportsTransactionCount = (response) => {
             if(response){
                 if(response > $scope.newViewBy){
@@ -131,7 +111,6 @@ angular.module('ebs.controller')
                 else if(response <= $scope.newViewBy){
                     $scope.payment_count = response;
                     $scope.newViewBy = response;
-
                 }
                 else{
                     $scope.cashreport = [];
@@ -147,7 +126,6 @@ angular.module('ebs.controller')
                 $scope.viewLength = -1;
             }
         }
-
         //... Pagination for all reports
         $scope.navPage =  function(direction, newViewBy){
             $scope.newViewBy = parseInt(newViewBy);
@@ -155,7 +133,6 @@ angular.module('ebs.controller')
             var viewBy = $scope.newViewBy;
             if(direction){
                 // console.log("NEXT");
-
                 if(viewLength + viewBy >= $scope.cashreport.length){
                     if(viewLength + viewBy < $scope.payment_count){
                         viewLength += viewBy;
@@ -171,7 +148,6 @@ angular.module('ebs.controller')
                         paymentSearchObj.searchFor = $scope.paymentReportSearch.filter;
                         paymentSearchObj.searchBy = paymentSearchBy;
                         paymentSearchObj.filter = $scope.modeOfPayment;
-
                         startLoader();
                         loadReport(paymentSearchObj);
                         if(viewLength + viewBy > $scope.payment_count){
@@ -193,7 +169,6 @@ angular.module('ebs.controller')
                 else{
                     // console.log("Minus viewby")
                     viewLength += viewBy;
-
                     if(viewLength + viewBy > $scope.payment_count){
                         a = viewLength + viewBy - $scope.payment_count;
                         viewBy -= a;
@@ -205,7 +180,6 @@ angular.module('ebs.controller')
                             paymentSearchObj.searchFor = $scope.paymentReportSearch.filter;
                             paymentSearchObj.searchBy = paymentSearchBy;
                             paymentSearchObj.filter = $scope.modeOfPayment;
-
                             startLoader();
                             loadReport(paymentSearchObj);
                         }
@@ -218,7 +192,6 @@ angular.module('ebs.controller')
                             paymentSearchObj.searchFor = $scope.paymentReportSearch.filter;
                             paymentSearchObj.searchBy = paymentSearchBy;
                             paymentSearchObj.filter = $scope.modeOfPayment;
-
                             startLoader();
                             loadReport(paymentSearchObj);
                         }
@@ -237,49 +210,36 @@ angular.module('ebs.controller')
                         viewBy += a;
                         a = 0;
                     }
-
                     viewLength -= viewBy;
-
                     $scope.viewLength = viewLength;
                     $scope.newViewBy = viewBy;
                 }
             }
         };
-
         $scope.clearFilter = () => {
             //.... Payments Report...
             paymentSearchObj.viewLength = 0;
             paymentSearchObj.viewBy = initialViewBy;
-
             $scope.viewLength = 0;
             $scope.newViewBy = localViewBy;
-
             if($scope.paymentReportSearch.filter){
                 paymentSearchObj.searchFor = $scope.paymentReportSearch.filter;
                 paymentSearchObj.searchBy = paymentSearchBy;
             }
-
             $scope.cashreport = [];
-
-
             $scope.showPaymentFilter = true;
-
             if($scope.paymentReportSearch.filter == '')
                 $scope.showPaymentFilter = false;
-
             $scope.changeReportView();
         }
-
         $scope.changeReportView = function(newViewBy){
             startLoader();
             $scope.newViewBy1.view = newViewBy || 10;
             $scope.newViewBy = parseInt(newViewBy || 10);
             //$scope.reportTabName = "Payments";
-
             if($scope.paymentsreport.startDate && $scope.paymentsreport.endDate) {
                 if (($scope.paymentsreport.startDate - $scope.paymentsreport.endDate) > 0) {
                     Settings.alertPopup("WARNING", "Start date cannot be greater than End date.");
-
                     $scope.paymentsreport.startDate = new Date();
                     $scope.paymentsreport.startDate.setDate($scope.paymentsreport.startDate.getDate() - 7);
                     $scope.paymentsreport.startDate.setHours(0, 0, 0, 0);
@@ -287,9 +247,6 @@ angular.module('ebs.controller')
                     $scope.paymentsreport.endDate.setHours(23, 59, 59, 59);
                 }
             }
-
-
-
             paymentSearchObj.viewLength = 0;
             if($scope.newViewBy > initialViewBy ){
                 paymentSearchObj.viewBy = $scope.newViewBy;
@@ -304,22 +261,18 @@ angular.module('ebs.controller')
             paymentSearchObj.branch = '';
             if($scope.paymentsreport.branchCode)
                 paymentSearchObj.branch = $scope.paymentsreport.branchCode ;
-
             $scope.cashreport = [];
             $scope.viewLength = 0;
             if(!newViewBy){
                 $scope.newViewBy = parseInt(localViewBy);
             }
-
             startLoader();
             loadReport(paymentSearchObj);
             loadReportCount(paymentSearchObj);
         };
-
         $scope.changeReportDuration = (startDate, endDate, reset) => {
             if(endDate)
                 endDate.setHours(23, 59, 59, 59);
-
             if(!reset) {
                 if(startDate || endDate){
                     let numberOfDays
@@ -335,25 +288,20 @@ angular.module('ebs.controller')
                     }
                     else
                         numberOfDays = 0;
-
                     $scope.paymentDuration = numberOfDays;
                 }
             }else
                 $scope.paymentDuration = 0;
         }
-
         Settings.getUserInfo((user_details) => {
             if(user_details.sellerObject)
                 $scope.user = user_details.sellerObject;
             else
                 $scope.user = user_details;
         });
-
-
         $scope.showImage = function(order, type){
             if(type == 'payment'){
                 $scope.showPaymentImage = [];
-
                 if(typeof order.cloudinaryURL[0] == "object"){
                     for(var i=0; i<order.cloudinaryURL.length; i++){
                         for(var j=0; j<order.cloudinaryURL[i].length; j++) {
@@ -369,7 +317,6 @@ angular.module('ebs.controller')
             var payment = {};
             payment.orderId = order._id;
             payment.status = order.status;
-
             $http.put("/dash/reports/payment/editstatus", payment)
                 .success(function(res){
                     if(res){
@@ -389,7 +336,6 @@ angular.module('ebs.controller')
                         $window.location.href = '/404';
                 });
         }
-
         $scope.downloadCSV = function(){
             startLoader();
             var request_object = {
@@ -398,7 +344,6 @@ angular.module('ebs.controller')
                 timeout : api_timeout,
                 data : paymentSearchObj
             };
-
             $http(request_object)
                 .then((count) => {
                 console.log(count);
@@ -417,18 +362,15 @@ angular.module('ebs.controller')
                 stopLoader();
             }
             else {
-
                 console.log(paymentSearchObj);
                 paymentSearchObj.viewLength = 0;
                 paymentSearchObj.viewBy = count.data;
-
                 var request_object = {
                     url : "/dash/reports/cashitems",  // Storejini payments report needs to be written
                     method : "POST",
                     timeout : api_timeout,
                     data : paymentSearchObj
                 };
-
                 $http(request_object)
                     .then((result) => {
                     let _data = result.data;
@@ -436,13 +378,10 @@ angular.module('ebs.controller')
                 var output = 'id,Payment ID,Date_added,Time,Dealercode,Dealername,Dealer_Phone,Salesperson No.,Salesperson,Stockist,Stockist_Name,Stockist_Area,Payment_Method,Amount,Comment,Type,Address,Latitude,Longitude';
                 output += '\n'
                 for (var i = 0; i < _data.length; i++) {
-
                     output += i + 1;
                     output += ',';
-
                     output += _data[i].orderId;
                     output += ',';
-
                     if (_data[i].date_added)
                         function formatdate(date) {
                             if (date == undefined || date == '')
@@ -456,12 +395,9 @@ angular.module('ebs.controller')
                             var dateOut = dt + "-" + monthNames[d.getMonth()] + "-" + (d.getFullYear())
                             return dateOut;
                         }
-
-
                     var dateformat = formatdate(_data[i].date_added);
                     output += dateformat;
                     output += ',';
-
                     if (_data[i].date_added)
                         function formattime(date) {
                             if (date == undefined || date == '')
@@ -473,17 +409,13 @@ angular.module('ebs.controller')
                             var datetime = (d.getHours()) + ":" + (d.getMinutes())
                             return datetime;
                         }
-
                     var dateformat = formattime(_data[i].date_added);
                     output += dateformat;
                     output += ',';
-
-
                     if(_data[i].dealercode)
                         output += _data[i].dealercode;
                     // else output += '';
                     output += ',';
-
                     try {
                         if (_data[i].dealername) {
                             if ((_data[i].dealername).toString().indexOf(',') != -1) {
@@ -495,15 +427,12 @@ angular.module('ebs.controller')
                     } catch (e) {
                     }
                     output += ',';
-
                     if (_data[i].dealerphone)
                         output += _data[i].dealerphone;
                     output += ',';
-
                     if (_data[i].seller)
                         output += _data[i].seller;
                     output += ',';
-
                     try {
                         if (_data[i].sellername) {
                             if ((_data[i].sellername).toString().indexOf(',') != -1) {
@@ -524,7 +453,6 @@ angular.module('ebs.controller')
                     if (_data[i].stockistarea)
                         output += _data[i].stockistarea;
                     output += ',';
-
                     try {
                         if (_data[i].medicine) {
                             if ((_data[i].medicine).toString().indexOf(',') != -1) {
@@ -536,11 +464,9 @@ angular.module('ebs.controller')
                     } catch (e) {
                     }
                     output += ',';
-
                     if (_data[i].quantity)
                         output += _data[i].quantity;
                     output += ',';
-
                     var comment = '';
                     try {
                         comment = _data[i].comment[0][(_data[i].comment.length) - 1].comment;
@@ -554,13 +480,9 @@ angular.module('ebs.controller')
                     } catch (e) {
                     }
                     output += ',';
-
-
                     if (_data[i].type)
                         output += _data[i].type;
                     output += ',';
-
-
                     try {
                         if (_data[i].Address) {
                             if ((_data[i].Address).toString().indexOf(',') != -1) {
@@ -573,32 +495,25 @@ angular.module('ebs.controller')
                         console.log(e)
                     }
                     output += ',';
-
-
                     if (_data[i].latitude && _data[i].latitude != 'undefined')
                         output += _data[i].latitude;
                     output += ',';
                     if (_data[i].longitude && _data[i].longitude != 'undefined')
                         output += _data[i].longitude;
                     output += '\n';
-
                 }
-
                 var blob = new Blob([output], {type : "text/csv;charset=UTF-8"});
                 console.log(blob);
                 window.URL = window.webkitURL || window.URL;
                 var url = window.URL.createObjectURL(blob);
-
                 var d = new Date();
                 var anchor = angular.element('<a/>');
-
                 anchor.attr({
                     href: url,
                     target: '_blank',
                     download: 'Mbj_' + instanceDetails.api_key + '_Payments_' +d.getDate()+'/'+(d.getMonth()+1)+'/'+d.getFullYear()+'.csv'
                     //download: 'Mbj_' + '_Payments_' +d.getDate()+'/'+(d.getMonth()+1)+'/'+d.getFullYear()+'.csv'
                 })[0].click();
-
                 stopLoader();
             })
             .catch((error, status) => {

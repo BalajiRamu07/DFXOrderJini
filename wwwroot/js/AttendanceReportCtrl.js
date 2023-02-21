@@ -1,67 +1,52 @@
 angular.module('ebs.controller')
-
     .controller("AttendanceReportCtrl", function ($scope, $http, Settings, $window) {
         console.log("Hello From Attendance Report Controller .... !!!!");
-
         //.... User details....
         $scope.user = {};
-
         //..... Pagination.....
         $scope.viewLength = 0;
         $scope.newViewBy = 10;
-
         //.... Other View Values....
         $scope.newViewBy1 = {};
         $scope.newViewBy1.view = 10;
-
         $scope.reportTabName = "Attendance";
-
         $scope.reportTabId = 11;
         $scope.tab = 8;
         $scope.showReports = true;
         $scope.attendance_count = 0;
-
         let localViewBy = $scope.newViewBy;
         let initialViewBy = 60;
         let master_date_added = {};
         let instanceDetails =  Settings.getInstance();
         const api_timeout = 600000;
-
         $scope.showAtdDashboard = true;
         $scope.attendancereport = [];
-
         //.... Reports Filter.....
         $scope.atdreports = {};
         $scope.atdChartReport           = {};
-
         //.... Set Filter Dates to last 7 days....
         $scope.atdreports.startDate = new Date();
         $scope.atdreports.startDate.setDate($scope.atdreports.startDate.getDate() - 3);
         $scope.atdreports.startDate.setHours(0, 0, 0, 0);
         $scope.atdreports.endDate = new Date();
         $scope.atdreports.endDate.setHours(23, 59, 59, 59);
-
         $scope.atdChartReport.startDate = new Date();
         $scope.atdChartReport.startDate.setDate($scope.atdChartReport.startDate.getDate() - 3);
         $scope.atdChartReport.startDate.setHours(0, 0, 0, 0);
         $scope.atdChartReport.endDate = new Date();
         $scope.atdChartReport.endDate.setHours(23, 59, 59, 59);
-
         $scope.AttendanceReportSearch = {};
         $scope.AttendanceReportSearch.filter = '';
         $scope.mapsFilter = {};
         $scope.mapsFilter.to = new Date();
         $scope.mapsFilter.to.setHours(23, 59, 59, 59);
-
         let attSearchObj = {};
         //$scope.attendanceDuration = $scope.daysDifference($scope.atdreports.startDate , $scope.atdreports.endDate);
         $scope.parseData = (viewLength, newViewBy) => parseInt(viewLength) + parseInt(newViewBy);
         $scope.DateTimeFormat = (date, when) => Settings.dateFilterFormat(date, when);
-
         $scope.openFilterClear = () => {
             $scope.atdreports.startDate = '';
             $scope.atdreports.endDate = '';
-
             $scope.atdreports.startDate = new Date();
             $scope.atdreports.startDate.setDate($scope.atdreports.startDate.getDate() - 7);
             $scope.atdreports.startDate.setHours(0, 0, 0, 0);
@@ -72,19 +57,15 @@ angular.module('ebs.controller')
             jQuery.noConflict();
             $('.refresh').css("display", "inline");
         }
-
         const stopLoader = () => {
             jQuery.noConflict();
             $('.refresh').css("display", "none");
         };
-
-
         const loadScript = (key, type, charset) => {
             if(!google || !google.maps){
                 console.log("No google SDK found, loading a new one - " + key);
                 let url = 'https://maps.google.com/maps/api/js?key=' + key + '&libraries=geometry,places';
                 let heads = document.getElementsByTagName("head");
-
                 if (heads && heads.length) {
                     let head = heads[0];
                     if (head) {
@@ -98,37 +79,29 @@ angular.module('ebs.controller')
             }else
                 console.log("Voila! Google is already loaded on your browser ---> ");
         };
-
         loadScript(Settings.getInstanceDetails('gMapAPI'), 'text/javascript', 'utf-8');
-
-        
         function getMaster_Date_added(date) {
             var d = new Date(date);
             var d2 = new Date(date);
             master_date_added.date = date.getDate();
             master_date_added.month = date.getMonth();
             master_date_added.year = date.getFullYear();
-
             d.setDate(d.getDate() - 1);
             master_date_added.date_1 = d.getDate();
             master_date_added.month_1 = d.getMonth();
             master_date_added.year_1 = d.getFullYear();
-
             d2.setDate(d2.getDate() - 2)
             master_date_added.date_2 = d2.getDate();
             master_date_added.month_2 = d2.getMonth();
             master_date_added.year_2 = d2.getFullYear();
         }
-
         function reverseGeocode(callback, latlng, type){
             var geocoder = new google.maps.Geocoder();
-
             if(type == 'ATD'){
                 geocoder.geocode({ 'latLng': latlng }, function (results, status) {
                     if (status !== google.maps.GeocoderStatus.OK) {
                         console.log(status);
                     }
-
                     if (status == google.maps.GeocoderStatus.OK) {
                         //console.log(results);
                         var address = (results[0].formatted_address);
@@ -141,7 +114,6 @@ angular.module('ebs.controller')
                     if (status !== google.maps.GeocoderStatus.OK) {
                         console.log(status);
                     }
-
                     if (status == google.maps.GeocoderStatus.OK) {
                         //console.log(results);
                         var address = (results[0].formatted_address);
@@ -154,7 +126,6 @@ angular.module('ebs.controller')
                     if (status !== google.maps.GeocoderStatus.OK) {
                         console.log(status);
                     }
-
                     if (status == google.maps.GeocoderStatus.OK) {
                         //console.log(results);
                         var address = (results[0].formatted_address);
@@ -167,7 +138,6 @@ angular.module('ebs.controller')
                     if (status !== google.maps.GeocoderStatus.OK) {
                         console.log(status);
                     }
-
                     if (status == google.maps.GeocoderStatus.OK) {
                         //console.log(results);
                         var address = (results[0].formatted_address);
@@ -179,7 +149,6 @@ angular.module('ebs.controller')
                     if (status !== google.maps.GeocoderStatus.OK) {
                         console.log(status);
                     }
-
                     if (status == google.maps.GeocoderStatus.OK) {
                         //console.log(results);
                         var address = (results[0].formatted_address);
@@ -187,25 +156,19 @@ angular.module('ebs.controller')
                     }
                 });
             }
-
             else if(type == 'bidhistory'){
                 geocoder.geocode({ 'latLng': latlng }, function (results, status) {
                     if (status !== google.maps.GeocoderStatus.OK) {
                         console.log(status);
                     }
-
                     if (status == google.maps.GeocoderStatus.OK) {
                         console.log("bidhistory address==");
                         var address = (results[0].formatted_address);
-
                         callback.call(this, address, 'bidhistory');
                     }
                 });
             }
-
-
         }
-
         function geocode_address(result, type){
             if(type == 'ATD'){
                 //console.log(result)
@@ -232,7 +195,6 @@ angular.module('ebs.controller')
                 $scope.$apply();
             }
         }
-
         $scope.toggleDashboard = function(){
             $scope.showAtdDashboard = !$scope.showAtdDashboard;
             if(!$scope.showAtdDashboard)
@@ -242,14 +204,11 @@ angular.module('ebs.controller')
             console.log("No attendance------>")
             var attr = '', attSearchObj1 = {};
             attr = new Date();
-
-
             attSearchObj1.viewLength = 0;
             attSearchObj1.viewBy = initialViewBy;
             attSearchObj1.sDate = $scope.DateTimeFormat(attr, 'start');
             attSearchObj1.eDate = $scope.DateTimeFormat(attr, 'end');
             attSearchObj1.searchFor = '';
-
             $http.post("/dash/reports/noattendance", attSearchObj1)
                 .success(function (response) {
                     $scope.noAttendanceRes = response;
@@ -288,13 +247,11 @@ angular.module('ebs.controller')
                 $scope.viewLength = -1;
             }
         };
-
         const loadReport = (attSearchObj) =>{
             startLoader();
             $http.post("/dash/reports/attendance", attSearchObj)
                 .success(function(response){
                     console.log("GetAll Attendance reports-->", response);
-
                     $scope.attendancereport = response;
                     allAttendance = response;
                     stopLoader();
@@ -327,14 +284,11 @@ angular.module('ebs.controller')
                         $window.location.href = '/404';
                 });
         }
-
         $scope.navPage = (direction, newViewBy) => {
             var viewLength = $scope.viewLength;
             var viewBy = $scope.newViewBy;
-
             if(direction){
                 //console.log("NEXT");
-
                 if(viewLength + viewBy >= $scope.attendancereport.length){
                     if(viewLength + viewBy < $scope.attendance_count){
                         viewLength += viewBy;
@@ -344,17 +298,14 @@ angular.module('ebs.controller')
                         attSearchObj.sDate = $scope.DateTimeFormat($scope.atdreports.startDate, 'start');
                         attSearchObj.eDate = $scope.DateTimeFormat($scope.atdreports.endDate, 'end');
                         attSearchObj.searchFor = $scope.AttendanceReportSearch.filter;
-
                         $http.post("/dash/reports/attendance",attSearchObj)
                             .success(function(response){
                                 //console.log(response);
-
                                 for(var i=0; i<response.length; i++){
                                     $scope.attendancereport.push(response[i]);
                                 }
                             })
                         //loadReport(attSearchObj);
-
                         if(viewLength + viewBy > $scope.attendance_count){
                             a = viewLength + viewBy - $scope.attendance_count;
                             viewBy -= a;
@@ -374,7 +325,6 @@ angular.module('ebs.controller')
                 else{
                     //console.log("Minus viewby")
                     viewLength += viewBy;
-
                     if(viewLength + viewBy > $scope.attendance_count){
                         a = viewLength + viewBy - $scope.attendance_count;
                         viewBy -= a;
@@ -393,32 +343,26 @@ angular.module('ebs.controller')
                         viewBy += a;
                         a = 0;
                     }
-
                     viewLength -= viewBy;
-
                     $scope.viewLength = viewLength;
                     $scope.newViewBy = viewBy;
                 }
             }
         }
-
         $scope.changeReportView = (newViewBy) => {
             //startLoader();
             $scope.newViewBy1.view = newViewBy || 10;
             $scope.newViewBy = parseInt(newViewBy || 10);
-
             $scope.atdreports.startDate = new Date();
             $scope.atdreports.startDate.setDate($scope.atdreports.startDate.getDate() - 3);
             $scope.atdreports.startDate.setHours(0, 0, 0, 0);
             $scope.atdreports.endDate = new Date();
             $scope.atdreports.endDate.setHours(23, 59, 59, 999);
-
             $scope.atdChartReport.startDate = new Date();
             $scope.atdChartReport.startDate.setDate($scope.atdChartReport.startDate.getDate() - 3);
             $scope.atdChartReport.startDate.setHours(0, 0, 0, 0);
             $scope.atdChartReport.endDate = new Date();
             $scope.atdChartReport.endDate.setHours(23, 59, 59, 999);
-
             $scope.attendancereport = [];
             $scope.attendanceChartReport = [];
             attSearchObj.viewLength = 0;
@@ -426,12 +370,10 @@ angular.module('ebs.controller')
             attSearchObj.sDate = $scope.DateTimeFormat($scope.atdreports.startDate, 'start');
             attSearchObj.eDate = $scope.DateTimeFormat($scope.atdreports.endDate, 'end');
             attSearchObj.searchFor = '';
-
             $scope.viewLength = 0;
             if(!newViewBy){
                 $scope.newViewBy = parseInt(localViewBy);
             }
-
             $http.post("/dash/reports/attendance", attSearchObj)
                 .success(function (res) {
                     allAttendanceRecords = res;
@@ -442,13 +384,11 @@ angular.module('ebs.controller')
                             var date = {};
                             date.date = d.getDate();
                             date.month = d.getMonth();
-
                             if ((d.getDate() == master_date_added.date) && (d.getMonth() == master_date_added.month) && (d.getFullYear() == master_date_added.year)) {
                                 $scope.attendanceChartReport.push(res[i]);
                             }
                         }
                     }
-
                     getMaster_Date_added(new Date());
                     $scope.drawAtdChart();
                 })
@@ -461,14 +401,12 @@ angular.module('ebs.controller')
                     else
                         $window.location.href = '/404';
                 });
-
             loadReportCount(attSearchObj);
             $scope.noAttendance();
         }
         $scope.changeReportDuration = (startDate, endDate, reset) => {
             if(endDate)
                 endDate.setHours(23, 59, 59, 59);
-
             if(!reset) {
                 if(startDate || endDate){
                     let numberOfDays
@@ -484,70 +422,58 @@ angular.module('ebs.controller')
                     }
                     else
                         numberOfDays = 0;
-
                     $scope.attendanceDuration = numberOfDays;
                 }
             }else
                 $scope.attendanceDuration = 0;
         }
-
         $scope.attendanceUser = {};
         $scope.drawAtdChart = function(){
             $scope.attendanceUser = {};
             $scope.attendanceUser.punchIn = 0;
             $scope.attendanceUser.punchOut = 0;
-
             var punchIn = 0;
             var punchIn_1 = 0;
             var punchIn_2 = 0;
             var punchIn_3 = 0;
-
             var punchOut = 0;
             var punchOut_1 = 0;
             var punchOut_2 = 0;
             var punchOut_3 = 0;
-
             var barGraph_In = [];
             barGraph_In[0] = {};
             barGraph_In[0].pIn = 0;
             barGraph_In[0].pIn_1 = 0;
             barGraph_In[0].pIn_2 = 0;
             barGraph_In[0].pIn_3 = 0;
-
             barGraph_In[1] = {};
             barGraph_In[1].pIn = 0;
             barGraph_In[1].pIn_1 = 0;
             barGraph_In[1].pIn_2 = 0;
             barGraph_In[1].pIn_3 = 0;
-
             barGraph_In[2] = {};
             barGraph_In[2].pIn = 0;
             barGraph_In[2].pIn_1 = 0;
             barGraph_In[2].pIn_2 = 0;
             barGraph_In[2].pIn_3 = 0;
-
             var barGraph_Out = [];
             barGraph_Out[0] = {};
             barGraph_Out[0].pIn = 0;
             barGraph_Out[0].pIn_1 = 0;
             barGraph_Out[0].pIn_2 = 0;
             barGraph_Out[0].pIn_3 = 0;
-
             barGraph_Out[1] = {};
             barGraph_Out[1].pIn = 0;
             barGraph_Out[1].pIn_1 = 0;
             barGraph_Out[1].pIn_2 = 0;
             barGraph_Out[1].pIn_3 = 0;
-
             barGraph_Out[2] = {};
             barGraph_Out[2].pIn = 0;
             barGraph_Out[2].pIn_1 = 0;
             barGraph_Out[2].pIn_2 = 0;
             barGraph_Out[2].pIn_3 = 0;
-
             var todayDate = new Date();
             for(var i=0; i<$scope.attendanceChartReport.length; i++){
-
                 if($scope.attendanceChartReport[i].intime[0]){
                     if($scope.attendanceChartReport[i].latitude[0] == 1)
                         punchIn_1++;
@@ -558,7 +484,6 @@ angular.module('ebs.controller')
                     else
                         punchIn++;
                 }
-
                 if($scope.attendanceChartReport[i].outtime[0]){
                     if($scope.attendanceChartReport[i].punch_out_lat[0] == 1)
                         punchOut_1++;
@@ -569,29 +494,20 @@ angular.module('ebs.controller')
                     else
                         punchOut++;
                 }
-
             }
-
             $scope.attendanceUser.punchIn = punchIn + punchIn_1 + punchIn_2 + punchIn_3;
             $scope.attendanceUser.punchOut = punchOut + punchOut_1 + punchOut_2 + punchOut_3;
-
-
             var tempDate = new Date($scope.atdChartReport.endDate);
             var tempDate_1 = new Date($scope.atdChartReport.endDate);
             tempDate_1.setDate(tempDate_1.getDate() - 1)
             var tempDate_2 = new Date($scope.atdChartReport.endDate);
             tempDate_2.setDate(tempDate_2.getDate() - 2)
-
-
             barGraph_In[0].date = $scope.formatDate(tempDate)
             barGraph_In[1].date = $scope.formatDate(tempDate_1)
             barGraph_In[2].date = $scope.formatDate(tempDate_2)
-
             barGraph_Out[0].date = $scope.formatDate(tempDate)
             barGraph_Out[1].date = $scope.formatDate(tempDate_1)
             barGraph_Out[2].date = $scope.formatDate(tempDate_2)
-
-
             //console.log($scope.attendanceChartReport)
             //console.log(allAttendanceRecords)
             for(var i=0; i< allAttendanceRecords.length; i++){
@@ -628,7 +544,6 @@ angular.module('ebs.controller')
                             barGraph_In[2].pIn++;
                     }
                 }
-
                 if(allAttendanceRecords[i].outtime[0]){
                     if((master_date_added.date == d.getDate()) && (master_date_added.month == d.getMonth()) && (master_date_added.year == d.getFullYear())){
                         if(allAttendanceRecords[i].punch_out_lat[0] == 1)
@@ -662,13 +577,9 @@ angular.module('ebs.controller')
                     }
                 }
             }
-
-
             google.charts.load('current', {'packages':['corechart']});
             google.charts.setOnLoadCallback(drawChart);
-
             function drawChart(){
-
                 //........Punch In pie chart......//
                 var punchInData = google.visualization.arrayToDataTable([
                     ['Punch-In', '%'],
@@ -685,8 +596,6 @@ angular.module('ebs.controller')
                     pieHole : '0.3'
                 };
                 var punchInchart = new google.visualization.PieChart(document.getElementById('atd_PunchIn_PieChart'));
-
-
                 // //........Punch Out pie chart....//
                 var punchOutData = google.visualization.arrayToDataTable([
                     ['Punch-Out', '%'],
@@ -696,8 +605,6 @@ angular.module('ebs.controller')
                     ['Device GPS - OFF ('+punchOut_3+')', punchOut_3]
                 ]);
                 var punchOutchart = new google.visualization.PieChart(document.getElementById('atd_PunchOut_PieChart'));
-
-
                 // //.......Punch in bar graph.......//
                 var punchInBarDate = google.visualization.arrayToDataTable([
                     ['Date','Location OK','User Denied Permission','GPS Error','Device GPS - OFF'],
@@ -719,8 +626,6 @@ angular.module('ebs.controller')
                 };
                 var punchInBarChart = new google.visualization.ComboChart(document.getElementById('atd_PunchIn_BarChart'));
                 punchInBarChart.draw(punchInBarDate, punchInBarOptions);
-
-
                 //.......Punch out bar graph.......//
                 var punchOutBarDate = google.visualization.arrayToDataTable([
                     ['Date','Location OK','User Denied Permission','GPS Error','Device GPS - OFF'],
@@ -742,14 +647,12 @@ angular.module('ebs.controller')
                 };
                 var punchOutBarChart = new google.visualization.ComboChart(document.getElementById('atd_PunchOut_BarChart'));
                 punchOutBarChart.draw(punchOutBarDate, punchOutBarOptions);
-
                 if(punchIn || punchIn_1 || punchIn_2 || punchIn_3)
                     punchInchart.draw(punchInData, punchInoptions);
                 else{
                     jQuery.noConflict();
                     $("#atd_PunchIn_PieChart").html("<br><br><h5 style='text-align:center; margin:0px;'>No punch-in</h5><br><br>")
                 }
-
                 if(punchOut || punchOut_1 || punchOut_2 || punchOut_3)
                     punchOutchart.draw(punchOutData, punchInoptions);
                 else{
@@ -758,15 +661,11 @@ angular.module('ebs.controller')
                     var tempHt = $("#atd_PunchIn_PieChart").height();
                     $("#atd_PunchOut_PieChart").height(tempHt);
                 }
-
-
-
                 google.visualization.events.addListener(punchInchart, 'select', function(){
                     $scope.atdModalData = [];
                     $scope.atdLocationErrorCode = '';
                     //console.log(punchInchart.getSelection()[0]);
                     var errorType = punchInchart.getSelection()[0].row;
-
                     if(errorType == 0){
                         //console.log("Location OK")
                         $scope.atdLocationErrorCode = 'LOCATION OK';
@@ -775,7 +674,6 @@ angular.module('ebs.controller')
                                 $scope.atdModalData.push($scope.attendanceChartReport[i]);
                             }
                         }
-
                         $scope.$apply();
                         //console.log($scope.atdModalData)
                     }
@@ -812,20 +710,15 @@ angular.module('ebs.controller')
                         $scope.$apply();
                         //console.log($scope.atdModalData)
                     }
-
                     jQuery.noConflict();
                     $('#atdLocationErrorModal').modal('show');
-
-
                 });
-
                 google.visualization.events.addListener(punchOutchart, 'select', function(){
                     //console.log(punchOutchart.getSelection()[0]);
                     $scope.atdModalData = [];
                     $scope.atdLocationErrorCode = '';
                     //console.log(punchInchart.getSelection()[0]);
                     var errorType = punchOutchart.getSelection()[0].row;
-
                     if(errorType == 0){
                         //console.log("Location OK")
                         $scope.atdLocationErrorCode = 'LOCATION OK';
@@ -834,7 +727,6 @@ angular.module('ebs.controller')
                                 $scope.atdModalData.push($scope.attendanceChartReport[i]);
                             }
                         }
-
                         $scope.$apply();
                         //console.log($scope.atdModalData)
                     }
@@ -871,14 +763,11 @@ angular.module('ebs.controller')
                         $scope.$apply();
                         //console.log($scope.atdModalData)
                     }
-
                     jQuery.noConflict();
                     $('#atdLocationErrorModal').modal('show');
                 });
-
             }
         }
-
         $scope.changeAtdChart = function(dir){
             $scope.attendanceChartReport = [];
             allAttendanceRecords = [];
@@ -887,23 +776,16 @@ angular.module('ebs.controller')
                 tempEndDate.setDate(tempEndDate.getDate() + 1);
                 var tempStartDate = $scope.atdChartReport.startDate;
                 tempStartDate.setDate(tempStartDate.getDate() + 1);
-
                 $scope.atdChartReport.endDate = tempEndDate;
                 $scope.atdChartReport.startDate = tempStartDate;
-
                 getMaster_Date_added(tempEndDate);
-
-
                 attSearchObj.sDate = $scope.DateTimeFormat(tempStartDate, 'start');
                 attSearchObj.eDate = $scope.DateTimeFormat(tempEndDate, 'end');
                 attSearchObj.viewLength = 0;
                 attSearchObj.viewBy =initialViewBy;
                 attSearchObj.searchFor = '';
-
-
                 $http.post("/dash/reports/attendance", attSearchObj)
                     .success(function(res){
-
                         allAttendanceRecords = res;
                         for(i=0; i< res.length; i++){
                             if(res[i].date_added[0]){
@@ -911,7 +793,6 @@ angular.module('ebs.controller')
                                 var date = {};
                                 date.date = d.getDate();
                                 date.month = d.getMonth();
-
                                 if((d.getDate() == master_date_added.date) && (d.getMonth() == master_date_added.month) && (d.getFullYear() == master_date_added.year)){
                                     $scope.attendanceChartReport.push(res[i]);
                                 }
@@ -930,28 +811,20 @@ angular.module('ebs.controller')
                     });
             }
             else{
-
                 var tempEndDate = $scope.atdChartReport.endDate;
                 tempEndDate.setDate(tempEndDate.getDate() - 1);
                 var tempStartDate = $scope.atdChartReport.startDate;
                 tempStartDate.setDate(tempStartDate.getDate() - 1);
-
                 $scope.atdChartReport.endDate = tempEndDate;
                 $scope.atdChartReport.startDate = tempStartDate;
-
                 getMaster_Date_added(tempEndDate);
-
-
                 attSearchObj.sDate = $scope.DateTimeFormat(tempStartDate, 'start');
                 attSearchObj.eDate = $scope.DateTimeFormat(tempEndDate, 'end');
                 attSearchObj.viewLength = 0;
                 attSearchObj.viewBy =initialViewBy;
                 attSearchObj.searchFor = '';
-
-
                 $http.post("/dash/reports/attendance", attSearchObj)
                     .success(function(res){
-
                         allAttendanceRecords = res;
                         for(i=0; i< res.length; i++){
                             if(res[i].date_added[0]){
@@ -959,7 +832,6 @@ angular.module('ebs.controller')
                                 var date = {};
                                 date.date = d.getDate();
                                 date.month = d.getMonth();
-
                                 if((d.getDate() == master_date_added.date) && (d.getMonth() == master_date_added.month) && (d.getFullYear() == master_date_added.year)){
                                     $scope.attendanceChartReport.push(res[i]);
                                 }
@@ -978,7 +850,6 @@ angular.module('ebs.controller')
                     });
             }
         }
-
         $scope.renderAttendanceReport = function () {
             startLoader();
             if ((($scope.atdreports.startDate - $scope.atdreports.endDate) > 0) && ($scope.atdreports.startDate && $scope.atdreports.endDate)){
@@ -991,12 +862,10 @@ angular.module('ebs.controller')
                 attSearchObj.viewLength = 0;
                 attSearchObj.viewBy =initialViewBy;
                 attSearchObj.searchFor = '';
-
                 $scope.viewLength = 0;
                 $scope.newViewBy = localViewBy;
                 if($scope.AttendanceReportSearch.filter != '')
                     attSearchObj.searchFor = $scope.AttendanceReportSearch.filter;
-
                 // $http.post("/dash/reports/attendance", attSearchObj)
                 //     .success(function(response){
                 //         console.log("GetAll Attendance reports-->");
@@ -1053,7 +922,6 @@ angular.module('ebs.controller')
         };
         $scope.calculateDuration = function(inTime, outTime){
             var intime ,outtime;
-
             if(inTime.isArray && outTime.isArray)
             {
                 intime = inTime[0];
@@ -1064,31 +932,23 @@ angular.module('ebs.controller')
                 intime = inTime;
                 outtime = outTime;
             }
-
             if(intime != null && outtime != null){
                 if(outtime != ''){
-
                     var newInTime = new Date(intime);
                     var newOutTime = new Date(outtime);
-
                     if(newInTime == 'Invalid Date' && newOutTime == 'Invalid Date'){
                         var t1 = intime.split(':');
                         var t2 = outtime.split(':');
-
                         var hh1 = parseInt(t1[0]);
                         var hh2 = parseInt(t2[0]);
                         var mm1 = parseInt(t1[1]);
                         var mm2 = parseInt(t2[1]);
-
                         var h1 = hh1*60;
                         var h2 = hh2*60;
-
                         var diff = (h2 + mm2) - (h1 + mm1);
-
                         if(diff >=60){
                             var hh = parseInt(diff / 60);
                             var mm = parseInt(diff - (hh*60));
-
                             return hh+ "h : " +mm+ "m";
                         }
                         else{
@@ -1100,11 +960,9 @@ angular.module('ebs.controller')
                         var t1 = moment(newInTime);
                         var t2 = moment(newOutTime);
                         var diff = moment.duration(t2.diff(t1)).asMinutes();
-
                         if(diff >=60){
                             var hh = parseInt(diff / 60);
                             var mm = parseInt(diff - (hh*60));
-
                             return hh+ "h : " +mm+ "m";
                         }
                         else{
@@ -1112,9 +970,7 @@ angular.module('ebs.controller')
                             return "0h : "+mm+"m";
                         }
                     }
-
                 }
-
                 else{
                     return "User not punched out";
                 }
@@ -1124,39 +980,29 @@ angular.module('ebs.controller')
         {
             var intime = inTime[0];
             var outtime = outTime[0];
-
             if(intime != null && outtime != null){
                 if(outtime != ''){
-
                     var newInTime = new Date(intime);
                     var newOutTime = new Date(outtime);
-
                     if(newInTime == 'Invalid Date' && newOutTime == 'Invalid Date'){
                         var t1 = intime.split(':');
                         var t2 = outtime.split(':');
-
                         var hh1 = parseInt(t1[0]);
                         var hh2 = parseInt(t2[0]);
                         var mm1 = parseInt(t1[1]);
                         var mm2 = parseInt(t2[1]);
-
                         var h1 = hh1*60;
                         var h2 = hh2*60;
-
                         var diff = (h2 + mm2) - (h1 + mm1);
-
                         if(diff >=60){
                             var hh = parseInt(diff / 60);
                             var mm = parseInt(diff - (hh*60));
-
                             // return hh+ "h : " +mm+ "m";
-
                             return $scope.cal(hh);
                         }
                         else{
                             var mm = parseInt(diff);
                             // return "0h : "+mm+"m";
-
                             return $scope.cal(0);
                         }
                     }
@@ -1164,25 +1010,19 @@ angular.module('ebs.controller')
                         var t1 = moment(newInTime);
                         var t2 = moment(newOutTime);
                         var diff = moment.duration(t2.diff(t1)).asMinutes();
-
                         if(diff >=60){
                             var hh = parseInt(diff / 60);
                             var mm = parseInt(diff - (hh*60));
-
                             // return hh+ "h : " +mm+ "m";
-
                             return $scope.cal(hh);
                         }
                         else{
                             var mm = parseInt(diff);
                             // return "0h : "+mm+"m";
-
                             return $scope.cal(0);
                         }
                     }
-
                 }
-
                 else{
                     return "User not punched out";
                 }
@@ -1190,12 +1030,10 @@ angular.module('ebs.controller')
             else{
                 return "User not punched out";
             }
-
             // return $scope.diff;
         };
         $scope.cal = function(hour)
         {
-
             if(hour < 4) {
                 return 'Leave';
             }
@@ -1207,7 +1045,6 @@ angular.module('ebs.controller')
                 return 'Full Day';
             }
         }
-
         /*$scope.formatDate = function(date){
             if(date==undefined || date == '')
                 return ('');
@@ -1220,62 +1057,44 @@ angular.module('ebs.controller')
             var dateOut = dt+" - "+monthNames[d.getMonth()]+" - "+(d.getFullYear());
             return dateOut;
         };*/
-
         $scope.renderMaps_attendance = function(order, flag, i) {
-
             $scope.selectedOrder = '';
             $scope.maps_users = [];
             $scope.mapOrders = [];
             $scope.mapsOrdersAll = [];
             var gmarkers = [];
             var waypts = [];
-
-
             var icons = [];
-
             icons['Attendance'] = 'https://maps.google.com/mapfiles/ms/micons/orange-dot.png';
-
-
             $scope.mapsFilter.to.setHours(23, 59, 59, 59);
             var latlng = new google.maps.LatLng(20.5937, 78.9629);
             var zoomLevel = 4;
-
             $scope.mapsOrdersAll_attendance = order;
             $scope.mapNoLocation = 0;
-
             if(order){
                 if(!flag){
-
                     if (order.latitude[0] != 0 && order.latitude[0] != "" && order.longitude[0] != 0 && order.longitude[0] != ""
                         && order.latitude[0] != "undefined" && order.longitude[0] != "undefined"
                         && order.latitude[0] != 1 && order.latitude[0] != 2 && order.latitude[0] != 3 && order.latitude[0] !=4
                         && order.longitude[0] != 1 && order.longitude[0] != 2 && order.longitude[0] != 3 && order.longitude[0] != 4) {
-
                         latlng = new google.maps.LatLng(order.latitude[0], order.longitude[0]);
                         zoomLevel = 14;
-
                         if (order.itemcode == 'ATD') {
                             order.type = [];
                             order.type[0] = 'Attendance';
-
                             $scope.mapOrders.push(order);
                             //console.log($scope.mapOrders)
                         }
                         else {
                             $scope.mapOrders.push(order);
                         }
-
                         reverseGeocode(geocode_address, latlng, 'ATD');
-
                     }
                     else{
                         $scope.attendance_address = '';
                         $scope.mapNoLocation++;
                     }
-
-
                     function addMarker(m,order){
-
                         var contentString = '<div id="content">'+
                             '<div id="siteNotice">'+
                             '</div>'+
@@ -1292,12 +1111,9 @@ angular.module('ebs.controller')
                             '<td><strong>Date: </strong>' +order.date_added[0] + '</td>' +
                             '</tr>' +
                             '</tr>';
-
-
                         var infowindow = new google.maps.InfoWindow({
                             content: contentString
                         });
-
                         var marker = new google.maps.Marker({
                             position: latlng,
                             map: map,
@@ -1310,9 +1126,7 @@ angular.module('ebs.controller')
                             $scope.$apply();
                         });
                         gmarkers.push(marker);
-
                     }
-
                     var myOptions = {
                         zoom: zoomLevel,
                         center: latlng,
@@ -1322,73 +1136,54 @@ angular.module('ebs.controller')
                         streetViewControl: false,
                         fullscreenControl: false
                     };
-
                     var directionsService = new google.maps.DirectionsService;
                     var directionsDisplay = new google.maps.DirectionsRenderer;
-
                     map = new google.maps.Map(document.getElementById("map_canvas2"), myOptions);
-
                     directionsDisplay.setMap(map);
-
-
                     if((order.latitude[0] != 0 && order.latitude[0] != "" && order.longitude[0] != 0 && order.longitude[0] != ""  && order.latitude[0] != "undefined" && order.longitude[0] != "undefined")){
                         latlng = new google.maps.LatLng(parseFloat($scope.mapOrders[0].latitude[0]), parseFloat($scope.mapOrders[0].longitude[0]));
                         addMarker(i, $scope.mapOrders[0]);
                     }
-
                     var mcOptions = {gridSize: 6, maxZoom: 20};
                     var markerCluster = new MarkerClusterer(map, gmarkers, mcOptions); //clusters the nearby points
                     google.maps.event.trigger(map, 'resize');
-
                     $('a[href="#profile"]').on('shown', function (e) {
                         google.maps.event.trigger(map, 'resize');
                     });
                 }
                 else{
-
                     if (order.punch_out_lat[0] != 0 && order.punch_out_lat[0] != "" && order.punch_out_long[0] != 0 && order.punch_out_long[0] != ""
                         && order.punch_out_lat[0] != "undefined" && order.punch_out_long[0] != "undefined"  && order.punch_out_lat[0] && order.punch_out_long[0]
                         && order.punch_out_lat[0] != 1 && order.punch_out_lat[0] != 2 && order.punch_out_lat[0] != 3 && order.punch_out_lat[0] != 4
                         && order.punch_out_long[0] != 1 && order.punch_out_long[0] != 2 && order.punch_out_long[0] != 3 && order.punch_out_long[0] != 4) {
-
                         latlng = new google.maps.LatLng(order.punch_out_lat[0], order.punch_out_long[0]);
                         zoomLevel = 14;
-
                         if (order.itemcode == 'ATD') {
                             order.type = [];
                             order.type[0] = 'Attendance';
-
                             $scope.mapOrders.push(order);
                             //console.log($scope.mapOrders)
                         }
                         else {
                             $scope.mapOrders.push(order);
                         }
-
                         reverseGeocode(geocode_address, latlng, 'ATD');
                     }
                     else{
                         $scope.mapNoLocation++;
                         $scope.attendance_address = '';
                     }
-
-
                     var myOptions = {
                         zoom: zoomLevel,
                         center: latlng,
                         scaleControl: true,
                         mapTypeId: google.maps.MapTypeId.ROADMAP
                     };
-
                     var directionsService = new google.maps.DirectionsService;
                     var directionsDisplay = new google.maps.DirectionsRenderer;
-
                     map = new google.maps.Map(document.getElementById("map_canvas2"), myOptions);
-
                     directionsDisplay.setMap(map);
-
                     function addMarker(m,order){
-
                         var contentString = '<div id="content">'+
                             '<div id="siteNotice">'+
                             '</div>'+
@@ -1405,12 +1200,9 @@ angular.module('ebs.controller')
                             '<td><strong>Date: </strong>' +order.date_added[0] + '</td>' +
                             '</tr>' +
                             '</tr>';
-
-
                         var infowindow = new google.maps.InfoWindow({
                             content: contentString
                         });
-
                         var marker = new google.maps.Marker({
                             position: latlng,
                             map: map,
@@ -1428,26 +1220,20 @@ angular.module('ebs.controller')
                             $scope.$apply();
                         });
                         gmarkers.push(marker);
-
                     }
-
                     if (order.punch_out_lat[0] != 0 && order.punch_out_lat[0] != "" && order.punch_out_long[0] != 0 && order.punch_out_long[0] != ""  && order.punch_out_lat[0] != "undefined" && order.punch_out_long[0] != "undefined"  && order.punch_out_lat[0] && order.punch_out_long[0]) {
                         latlng = new google.maps.LatLng(parseFloat($scope.mapOrders[0].punch_out_lat[0]), parseFloat($scope.mapOrders[0].punch_out_long[0]));
                         addMarker(i, $scope.mapOrders[0]);
                     }
-
-
                     var mcOptions = {gridSize: 6, maxZoom: 20};
                     var markerCluster = new MarkerClusterer(map, gmarkers, mcOptions); //clusters the nearby points
                     google.maps.event.trigger(map, 'resize');
-
                     $('a[href="#profile"]').on('shown', function (e) {
                         google.maps.event.trigger(map, 'resize');
                     });
                 }
             }
         };
-
         $scope.downloadCSV = function(){
             startLoader();
             var request_object = {
@@ -1456,7 +1242,6 @@ angular.module('ebs.controller')
                 timeout : api_timeout,
                 data : attSearchObj
             };
-
             $http(request_object)
                 .then((count) => {
                 console.log(count);
@@ -1475,18 +1260,15 @@ angular.module('ebs.controller')
                 stopLoader();
             }
             else {
-
                 console.log(attSearchObj);
                 attSearchObj.viewLength = 0;
                 attSearchObj.viewBy = count.data;
-
                 var request_object = {
                     url : "/dash/reports/attendance",
                     method : "POST",
                     timeout : api_timeout,
                     data : attSearchObj
                 };
-
                 $http(request_object)
                     .then((result) => {
                     let _data = result.data;
@@ -1496,11 +1278,8 @@ angular.module('ebs.controller')
                 for (var i = 0; i < _data.length; i++) {
                     output += i + 1;
                     output += ',';
-
                     output += _data[i].orderId;
                     output += ',';
-
-
                     function formatdate(date) {
                         if (!date)
                             return ('');
@@ -1516,11 +1295,9 @@ angular.module('ebs.controller')
                     // var punchin =output.replace('date','Punch-In Date')
                     output += formatdate(_data[i].date_added);
                     output += ',';
-
                     if (_data[i].seller)
                         output += _data[i].seller;
                     output += ',';
-
                     try {
                         if (_data[i].sellername) {
                             if ((_data[i].sellername).toString().indexOf(',') != -1) {
@@ -1532,63 +1309,47 @@ angular.module('ebs.controller')
                     } catch (e) {
                     }
                     output += ',';
-
-
                     if (_data[i].intime)
                         output += _data[i].intime;
                     output += ',';
-
-
                     if (_data[i].outtime)
                         output += _data[i].outtime;
                     output += ',';
-
-
                     if (_data[i].latitude && _data[i].latitude != 'undefined')
                         output += _data[i].latitude;
                     output += ',';
-
                     if (_data[i].longitude && _data[i].longitude != 'undefined')
                         output += _data[i].longitude;
                     output += ',';
-
                     if (_data[i].punch_out_lat && _data[i].punch_out_lat != 'undefined')
                         output += _data[i].punch_out_lat;
                     output += ',';
-
                     if(_data[i].intime && _data[i].outtime)
                     {
                         output += $scope.calculateDuration(_data[i].intime,_data[i].outtime);
                         output += ',';
                     }
-
                     if(_data[i].intime && _data[i].outtime)
                     {
                         output += $scope.calculateDiff(_data[i].intime,_data[i].outtime);
                         output += ',';
                     }
-
                     if (_data[i].punch_out_long && _data[i].punch_out_long != 'undefined')
                         output += _data[i].punch_out_long;
                     output += '\n';
-
                 }
-
                 var blob = new Blob([output], {type : "text/csv;charset=UTF-8"});
                 console.log(blob);
                 window.URL = window.webkitURL || window.URL;
                 var url = window.URL.createObjectURL(blob);
-
                 var d = new Date();
                 var anchor = angular.element('<a/>');
-
                 anchor.attr({
                     href: url,
                     target: '_blank',
                     download: 'Mbj_' + instanceDetails.api_key + '_Attendance_' +d.getDate()+'/'+(d.getMonth()+1)+'/'+d.getFullYear()+'.csv'
                     //download: 'Mbj_' + '_Attendance_' +d.getDate()+'/'+(d.getMonth()+1)+'/'+d.getFullYear()+'.csv'
                 })[0].click();
-
                 stopLoader();
             })
             .catch((error, status) => {
@@ -1612,6 +1373,5 @@ angular.module('ebs.controller')
                 $window.location.href = '/404';
         });
         };
-
         $scope.changeReportView(localViewBy);
     })

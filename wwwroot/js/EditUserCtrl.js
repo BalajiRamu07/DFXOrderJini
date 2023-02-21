@@ -1,29 +1,20 @@
-
-
 angular.module('ebs.controller')
-
 .controller("EditUserCtrl",function ($scope, $routeParams, $location, $http, Settings, $window) {
     console.log("Hello From Edit Users Controller .... !!!!");
     let id = $routeParams.id;
-
     $scope.user = {};
     $scope.user_info = {};
     $scope.nav = {};
-
     $scope.countryCode = [];
-
     let current_status = '';
-
     //... Atmosphere details ....
     $scope.allDesignations = [];
     $scope.allDepartments = [];
     $scope.userRole = [];
     $scope.roleManager = [];
     $scope.sellerNames = [];
-
     //... Atmosphere branches....
     $scope.branches = [];
-
     //.... Plant Codes....
     $scope.getPlantCode = function () {
         $http.post("/dash/suppliers/plantcodes")
@@ -31,7 +22,6 @@ angular.module('ebs.controller')
             if(res && res.data){
             $scope.plant_codes = res.data
         }
-
     })
     };
     $scope.getPlantCode();
@@ -57,32 +47,25 @@ angular.module('ebs.controller')
     //         "days" : 3
     //     }
     // ]
-
     Settings.getUserInfo(user_info => {
         $scope.user_info = user_info;
     });
-
     Settings.getNav(false, nav => {
         $scope.nav = nav;
         $scope.userRole = $scope.nav[4].roles;
     });
-
     $scope.applicationType = Settings.getInstanceDetails('applicationType');
     $scope.warehouseLocation = Settings.getInstanceDetails('inventoryLocation');
-    
     //... Start a loader....
     const startLoader = () => {
         jQuery.noConflict();
         $('.refresh').css("display", "inline");
     }
-    
     const stopLoader = () => {
         jQuery.noConflict();
         $('.refresh').css("display", "none");
     }
-
     $('html, body').animate({scrollTop: '0px'}, 0);
-
     $scope.countryCodeGet = function () {
         $http.get("/country/countryCode")
             .then(res => {
@@ -97,9 +80,7 @@ angular.module('ebs.controller')
                 }
             })
     };
-
     $scope.countryCodeGet();
-
     //... Reload User details....
     const loadUserDetails = id => {
         startLoader();
@@ -125,9 +106,7 @@ angular.module('ebs.controller')
                     $window.location.href = '/404';
             });
     };
-
     $scope.goBackTo = () => $window.history.back();
-
     $scope.getRoleName = function(role){
         let temp = '';
         if(role && $scope.userRole){
@@ -140,7 +119,6 @@ angular.module('ebs.controller')
         }
         return temp;
     };
-
     $scope.refreshSellerNames = function(){
         if(typeof $scope.roleSalesrep == 'object'){
             for(var j = 0; j < $scope.roleSalesrep.length; j++){
@@ -155,7 +133,6 @@ angular.module('ebs.controller')
             }
         }
     }
-
     $http.get("/dash/role/sellers/Salesperson")
         .success(function (salesperson) {
             if(salesperson && salesperson.length){
@@ -163,10 +140,8 @@ angular.module('ebs.controller')
                 for(var i = 0; i < salesperson.length; i++){
                     $scope.roleSalesrep.push({sellername : salesperson[i].sellername, sellerphone : salesperson[i].sellerphone});
                 }
-
                 $scope.salespersonLength = $scope.roleSalesrep.length;
             }
-
             $http.get("/dash/users/managers")
                 .then(response => {
                     console.log("Managers ---> " + response.data.length);
@@ -176,7 +151,6 @@ angular.module('ebs.controller')
                             $scope.roleManager.push(response.data[i]);
                     $scope.refreshSellerNames();
                 });
-
             $http.post("/dash/allBranches")
                 .then(branches => {
                     console.log("Branches ---> "+branches.data.length);
@@ -192,9 +166,6 @@ angular.module('ebs.controller')
             else
                 $window.location.href = '/404';
         })
-
-   
-
     const uploadUserImage = image => {
         if (image.length) {
             if ((image[0].size / 1024) <= 200) {
@@ -203,7 +174,6 @@ angular.module('ebs.controller')
                     let tempObj = {};
                     tempObj.image = reader.result;
                     tempObj.seller = $scope.user.sellerphone;
-                    
                     $http.put("/dash/upload/user/image", tempObj)
                         .then(res => {
                             if(res.data){
@@ -215,7 +185,6 @@ angular.module('ebs.controller')
             }
         }
     }
-
     $scope.updateUser = () => {
         if($scope.user.role){
             switch ($scope.user.role){
@@ -291,7 +260,6 @@ angular.module('ebs.controller')
                 }
             }
         }
-
         $http.put("/dash/user/update/" + (current_status == 'Active' ? 'update' : 'activate') + "/" + $scope.user._id, 
             $scope.user)
                 .then(result => {
@@ -299,12 +267,10 @@ angular.module('ebs.controller')
                         if(current_status == 'Deleted')
                             Settings.success_toast("Success", "User Re-Activation Successful");
                         else Settings.success_toast("Success", "User Details Updated Successful");
-
                         $window.history.back();
                     }else{
                         Settings.fail_toast("Error", "Error activating the user");
                     }
-
                     let image = $scope.userPicture;
                     if (image && image.length) {
                         uploadUserImage(image);
@@ -320,35 +286,28 @@ angular.module('ebs.controller')
                         $window.location.href = '/404';
                 });
     }
-
     $scope.removeBranch = index => $scope.branchIds.splice(index, 1);
-
     $scope.getAtmsDropdowns = function(){ 
         $http.get('/dash/allUsers')
             .success(function (response) {
                 console.log("ALL users count--------->>>"+ response.length)
                 $scope.allGoalUsers = response
             });
-
         $http.get("/dash/userRoles")
             .success(function (response) {
                 console.log("All Users Roles --------->>>" + response.length);
                 $scope.userRole = response;
-
             });
-
         $http.get("/dash/userDesignations")
             .success(function (response) {
                 console.log("All Users Designation --------->>>" + response.length);
                 $scope.allDesignations = response;
             });
-
         $http.get("/dash/userDepartments")
             .success(function(response){
                 console.log("All departments --> " + response.length);
                 if(response.length) $scope.allDepartments = response;
             });
-
             if(!$scope.roleManager.length){
                 var body = {};
                 body.text = '';
@@ -370,7 +329,6 @@ angular.module('ebs.controller')
                 else{
                     body.resort = ''
                 }
-
                 $http.post('/dash/getSellers/roleType',body)
                     .success(function(response){
                         console.log("all managers"+response.length);
@@ -378,21 +336,15 @@ angular.module('ebs.controller')
                     });
             }
     }
-
     if($scope.applicationType=='Atmosphere'){
         $scope.getAtmsDropdowns();
     }
-
     if(id) loadUserDetails(id);
-
-
-    
     $scope.addPlantCodeForFactory = function(role){
         if($scope.user.role == 'Factory' && role == 'Factory') {
             $scope.user.plant_code =  $scope.user.plant_code ? $scope.user.plant_code : [];
         }
     }
-
     $scope.addPlantCodeTagged = function() {
         if($scope.user.role == 'Factory') {
             let elements = document.getElementsByClassName('plantcode');
@@ -413,7 +365,5 @@ angular.module('ebs.controller')
         console.log("remove tab",tab,index)
         if(tab == 'plantcode')
             $scope.user.plant_code.splice(index,1);
-
     }
-
 })

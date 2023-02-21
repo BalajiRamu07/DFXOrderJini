@@ -1,9 +1,7 @@
 /**
  * Created by shreyasgombi on 27/04/20.
  */
-
 var TemplatePrefix = './apps/orderjini/pages/';
-
 var default_location = {};
 default_location['Salesperson'] = '/ui-orders';
 default_location['Dealer'] = '/ui-orders';
@@ -12,8 +10,6 @@ default_location['Fulfiller'] = '/ui-orders';
 default_location['BranchManager'] = '/ui-orders';
 default_location['Portal Access'] = '/ui-orders';
 default_location['WarehouseAdmin'] = '/ui-orders';
-
-
 var app = angular.module('ebs', ['ebs.controller', 'ebs.filters', 'ebs.services', 'ngRoute'])
     .config(function ($routeProvider) {
         //.... Dashboard.....
@@ -24,14 +20,12 @@ var app = angular.module('ebs', ['ebs.controller', 'ebs.filters', 'ebs.services'
                 roles: ['Stockist'],
                 index: 0
             })
-
             .when('/customer/overview', {
                 templateUrl: TemplatePrefix + 'dashboard/customer-dashboard.html',
                 controller: 'CustomerDashboardCtrl',
                 roles: ['Dealer'],
                 index: 0
             })
-
             .when('/', {
                 redirectTo: '/overview'
             })
@@ -63,7 +57,6 @@ var app = angular.module('ebs', ['ebs.controller', 'ebs.filters', 'ebs.services'
                 roles: ['Stockist', 'Salesperson', 'Dealer', 'Manager', 'BranchManager'],
                 index: 3
             })
-
             //.... New Catalog ......
             .when('/new-catalog', {
                 templateUrl: TemplatePrefix + 'catalog/new-product.html',
@@ -177,14 +170,12 @@ var app = angular.module('ebs', ['ebs.controller', 'ebs.filters', 'ebs.services'
                 roles: ['Dealer', 'Salesperson', 'Manager', 'BranchManager'],
                 index: 10
             })
-
             .when('/service/new/ticket/:code', {
                 templateUrl: TemplatePrefix + 'service-complaints/new-complaint.html',
                 controller: 'NewComplaintCtrl',
                 roles: ['Salesperson', 'Manager', 'BranchManager'],
                 index: 10
             })
-
             .when('/service/ticket/details/:id', {
                 templateUrl: TemplatePrefix + 'service-complaints/ticket-details.html',
                 controller: 'TicketDetailsCtrl',
@@ -212,7 +203,6 @@ var app = angular.module('ebs', ['ebs.controller', 'ebs.filters', 'ebs.services'
                 roles: ['Salesperson', 'Stockist', 'Manager'],
                 index: 11
             })
-
             //.... Reports .....
             .when('/reports', {
                 redirectTo: '/reports/0'
@@ -323,7 +313,6 @@ var app = angular.module('ebs', ['ebs.controller', 'ebs.filters', 'ebs.services'
                 roles: ['Stockist', 'Manager', 'BranchManager', 'WarehouseAdmin'],
                 index: 0
             })
-
             //.... Rider Reconciliation report
             .when('/reports/rider/reconciliation', {
                 templateUrl: TemplatePrefix + 'reports/rider_reconciliation.html',
@@ -331,7 +320,6 @@ var app = angular.module('ebs', ['ebs.controller', 'ebs.filters', 'ebs.services'
                 roles: ['Stockist', 'Manager', 'BranchManager', 'WarehouseAdmin'],
                 index: 0
             })
-
             //..... Stocks......
             .when('/stocks', {
                 redirectTo: '/stocks/all'
@@ -342,7 +330,6 @@ var app = angular.module('ebs', ['ebs.controller', 'ebs.filters', 'ebs.services'
                 roles: ['Stockist', 'Manager', 'BranchManager'],
                 index: 12
             })
-
             //..... Archive.....
             .when('/archive', {
                 templateUrl: TemplatePrefix + 'archive/archive.html',
@@ -356,7 +343,6 @@ var app = angular.module('ebs', ['ebs.controller', 'ebs.filters', 'ebs.services'
                 roles: [],
                 index: 14
             })
-
             //...... Invoices....
             .when('/ui-invoices', {
                 templateUrl: TemplatePrefix + 'invoices/invoices.html',
@@ -376,7 +362,6 @@ var app = angular.module('ebs', ['ebs.controller', 'ebs.filters', 'ebs.services'
                 roles: ['Dealer', 'Salesperson', 'Stockist', 'BranchManager'],
                 index: 34
             })
-
             //..... Messages / SMS .....
             .when('/messages', {
                 templateUrl: TemplatePrefix + 'messages/messages.html',
@@ -390,7 +375,6 @@ var app = angular.module('ebs', ['ebs.controller', 'ebs.filters', 'ebs.services'
                 roles: [],
                 index: 7
             })
-
             //...... Settings...
             .when('/settings', {
                 templateUrl: TemplatePrefix + 'settings/settings.html',
@@ -447,7 +431,6 @@ var app = angular.module('ebs', ['ebs.controller', 'ebs.filters', 'ebs.services'
                 roles: [],
                 index: 5
             })
-
             //.... Admin Settings....
             .when('/setting/admin/login', {
                 templateUrl: TemplatePrefix + 'settings/admin/login.html',
@@ -456,14 +439,12 @@ var app = angular.module('ebs', ['ebs.controller', 'ebs.filters', 'ebs.services'
                 roles: [],
                 index: 5
             })
-
             .when('/setting/admin/home', {
                 templateUrl: TemplatePrefix + 'settings/admin/home.html',
                 requireAuth: true,
                 roles: [],
                 index: 5
             })
-
             .when('/setting/admin/menu', {
                 templateUrl: TemplatePrefix + 'settings/admin/menu.html',
                 controller: 'NavCtrl',
@@ -471,7 +452,6 @@ var app = angular.module('ebs', ['ebs.controller', 'ebs.filters', 'ebs.services'
                 roles: [],
                 index: 5
             })
-
             .when('/setting/admin/module', {
                 templateUrl: TemplatePrefix + 'settings/admin/module.html',
                 controller: 'ModuleAdminCtrl',
@@ -479,7 +459,6 @@ var app = angular.module('ebs', ['ebs.controller', 'ebs.filters', 'ebs.services'
                 roles: [],
                 index: 5
             })
-
             .when('/setting/admin/notifications', {
                 templateUrl: TemplatePrefix + 'settings/admin/notification.html',
                 controller: 'NotificationsAdminCtrl',
@@ -487,7 +466,6 @@ var app = angular.module('ebs', ['ebs.controller', 'ebs.filters', 'ebs.services'
                 roles: [],
                 index: 5
             })
-
             .when('/setting/admin/payments', {
                 templateUrl: TemplatePrefix + 'settings/admin/payments.html',
                 controller: 'PaymentsAdminCtrl',
@@ -495,7 +473,6 @@ var app = angular.module('ebs', ['ebs.controller', 'ebs.filters', 'ebs.services'
                 roles: [],
                 index: 5
             })
-
             .when('/setting/admin/tax', {
                 templateUrl: TemplatePrefix + 'settings/admin/tax.html',
                 controller: 'TaxAdminCtrl',
@@ -503,7 +480,6 @@ var app = angular.module('ebs', ['ebs.controller', 'ebs.filters', 'ebs.services'
                 roles: [],
                 index: 5
             })
-
             .when('/setting/admin/billing', {
                 templateUrl: TemplatePrefix + 'settings/admin/billing.html',
                 controller: 'BillingAdminCtrl',
@@ -511,12 +487,10 @@ var app = angular.module('ebs', ['ebs.controller', 'ebs.filters', 'ebs.services'
                 roles: [],
                 index: 5
             })
-
             .when('/setting/admin/404', {
                 templateUrl: TemplatePrefix + 'settings/admin/404.html',
                 index: 5
             })
-
             //.... Cloudinary Setup Settings
             .when('/setting/cloudinary', {
                 templateUrl: TemplatePrefix + 'settings/cloudinary.html',
@@ -538,7 +512,6 @@ var app = angular.module('ebs', ['ebs.controller', 'ebs.filters', 'ebs.services'
                 roles: [],
                 index: 5
             })
-
             //.... Leave ....
             .when('/leave', {
                 templateUrl: TemplatePrefix + 'leave/leave.html',
@@ -546,7 +519,6 @@ var app = angular.module('ebs', ['ebs.controller', 'ebs.filters', 'ebs.services'
                 roles: [],
                 index: 19
             })
-
             //..... Tasks.....
             .when('/tasks', {
                 templateUrl: TemplatePrefix + 'tasks/tasks.html',
@@ -560,7 +532,6 @@ var app = angular.module('ebs', ['ebs.controller', 'ebs.filters', 'ebs.services'
                 roles: ['Salesperson', 'Stockist', 'Manager', 'BranchManager'],
                 index: 28
             })
-
             //...... Maps ......
             .when('/maps', {
                 templateUrl: TemplatePrefix + 'maps/maps.html',
@@ -568,7 +539,6 @@ var app = angular.module('ebs', ['ebs.controller', 'ebs.filters', 'ebs.services'
                 roles: ['Salesperson', 'Stockist', 'Manager', 'Fulfiller', 'BranchManager'],
                 index: 17
             })
-
             //.... Users .....
             .when('/users', {
                 templateUrl: TemplatePrefix + 'users/users.html',
@@ -606,7 +576,6 @@ var app = angular.module('ebs', ['ebs.controller', 'ebs.filters', 'ebs.services'
                 roles: [],
                 index: 0
             })
-
             //.... Enquiry .....
             .when('/enquiry/tracker', {
                 templateUrl: TemplatePrefix + 'enquiry/enquiry.html',
@@ -614,28 +583,24 @@ var app = angular.module('ebs', ['ebs.controller', 'ebs.filters', 'ebs.services'
                 roles: [],
                 index: 18
             })
-
             .when('/enquiry/create', {
                 templateUrl: TemplatePrefix + 'enquiry/new-enquiry.html',
                 controller: 'NewEnquiryCtrl',
                 roles: [],
                 index: 18
             })
-            
             .when('/enquiry/create/:code', {
                 templateUrl: TemplatePrefix + 'enquiry/new-enquiry.html',
                 controller: 'NewEnquiryCtrl',
                 roles: [],
                 index: 18
             })
-            
             .when('/enquiry/details/:id', {
                 templateUrl: TemplatePrefix + 'enquiry/enquiry-details.html',
                 controller: 'EnquiryDetailsCtrl',
                 roles: [],
                 index: 18
             })
-
             .when('/bulk-subscription', {
                 templateUrl: TemplatePrefix + 'orders/bulk_subscription.html',
                 controller: 'NewOrdersCtrl',
@@ -678,32 +643,25 @@ var app = angular.module('ebs', ['ebs.controller', 'ebs.filters', 'ebs.services'
                 roles: [],
                 index: 26
             })
-
             //......Atmosphere.....
-
             .when('/goals', {
                 templateUrl: TemplatePrefix + 'atmosphere/goals.html',
                 controller: 'AtmosphereGoalsCtrl',
                 roles: [],
                 index: 27
             })
-
-
             .when('/atmsDashboard', {
                 templateUrl: TemplatePrefix + 'atmosphere/atmsDashboard.html',
                 controller: 'AtmosphereDashboardCtrl',
                 roles: [],
                 index: 28
             })
-
             .when('/atmsReports', {
                 templateUrl: TemplatePrefix + 'atmosphere/atmosphereReports.html',
                 controller: 'AtmosphereReportsCtrl',
                 roles: [],
                 index: 29
             })
-
-
             //.... Profile Page .....
             .when('/profile', {
                 templateUrl: TemplatePrefix + 'profile/profile.html',
@@ -712,7 +670,6 @@ var app = angular.module('ebs', ['ebs.controller', 'ebs.filters', 'ebs.services'
                 index: 1
             })
     })
-
     app.run(['$rootScope', 'Settings', '$location', function ($rootScope, Settings, $location) {
         $rootScope.$on('$routeChangeStart', function (event, next) {
             //console.log(next.requireAuth);
@@ -785,8 +742,6 @@ var app = angular.module('ebs', ['ebs.controller', 'ebs.filters', 'ebs.services'
             });
         });
     }]);
-
-
     app.config(function (toastrConfig) {
         angular.extend(toastrConfig, {
             allowHtml: false,
@@ -814,7 +769,6 @@ var app = angular.module('ebs', ['ebs.controller', 'ebs.filters', 'ebs.services'
             hideMethod: "fadeOut"
         });
     })
-
     //Change AngularJS Material Theme
     app.config(function ($mdThemingProvider) {
         $mdThemingProvider.theme('default')

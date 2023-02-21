@@ -1,26 +1,18 @@
 /**
  * Created by shreyasgombi on 05/03/20.
  */
-
 angular.module('ebs.controller')
-
-
     .controller("EnquiryCtrl",function ($scope, $routeParams, $http, $location, $window) {
         console.log("Hello From Enquiry Controller .... !!!!");
-
         //.... Enquiries...
         $scope.enquiries = [];
-
         $scope.enquiry_count = 0;
         $scope.enquiry_summary = {total : 0, hot : 0, warm : 0, cold : 0};
-
         //..... Pagination.....
         $scope.viewLength = 0;
         $scope.newViewBy = 10;
-
         let localViewBy = $scope.newViewBy;
         let initialViewBy = 60;
-
         let enquiry_filters = {};
         $scope.enquiry_filters = {};
         $scope.enquiry_filters.startDate = new Date();
@@ -28,30 +20,22 @@ angular.module('ebs.controller')
         $scope.enquiry_filters.startDate.setHours(0, 0, 0, 0);
         $scope.enquiry_filters.endDate = new Date();
         $scope.enquiry_filters.endDate.setHours(23, 59, 59, 59);
-        
-        
         $scope.tab = ($routeParams.tab && $routeParams.tab != "hot") ? (($routeParams.tab == "warm" ? "warm" : ($routeParams.tab == "cold" ? "cold" : "hot"))) : "hot";
-
         let api_timeout = 60000;
-
         const startLoader = () => {
             jQuery.noConflict();
             $('.refresh').css("display", "inline");
         }
-
         const stopLoader = () => {
             jQuery.noConflict();
             $('.refresh').css("display", "none");
         }
-
         $scope.parseData = (viewLength, newViewBy) => parseInt(viewLength) + parseInt(newViewBy);
-        
         const renderQueries = enquiries => {
             stopLoader();
             if(enquiries && enquiries.length)
                 for(let i = 0; i < enquiries.length; i++) $scope.enquiries.push(enquiries[i]);
         }
-
         const loadSummary = callback => {
             let request_object = {
                 url : "/dash/enquiry/summary",
@@ -90,20 +74,15 @@ angular.module('ebs.controller')
                         $window.location.href = '/404';
             })
         };
-
-
         const loadEnquiries = callback => {
             startLoader();
-
             let query = new URLSearchParams();
             query.append("tab",  $scope.tab);
             query.append("skip", enquiry_filters.viewLength || 0);
             query.append("limit", enquiry_filters.viewBy || 10);
-
             if($scope.enquiry_filters.searchBy) query.append("search",  $scope.enquiry_filters.searchBy);
             if($scope.enquiry_filters.startDate) query.append("from",  $scope.enquiry_filters.startDate.toISOString());
             if($scope.enquiry_filters.endDate) query.append("to",  $scope.enquiry_filters.endDate.toISOString());
-
             let request_object = {
                 url : "/dash/enquiry/queries?" + query.toString(),
                 method : "GET",
@@ -132,16 +111,13 @@ angular.module('ebs.controller')
                             $window.location.href = '/404';
                 })
         }
-
         const loadEnquiryCount = () => {
             let query = new URLSearchParams();
             query.append("tab",  $scope.tab);
             query.append("count", 1);
-
             if($scope.enquiry_filters.searchBy) query.append("search",  $scope.enquiry_filters.searchBy);
             if($scope.enquiry_filters.startDate) query.append("from",  $scope.enquiry_filters.startDate.toISOString());
             if($scope.enquiry_filters.endDate) query.append("to",  $scope.enquiry_filters.endDate.toISOString());
-
             let request_object = {
                 url : "/dash/enquiry/queries?" + query.toString(),
                 method : "GET",
@@ -151,7 +127,6 @@ angular.module('ebs.controller')
             $http(request_object)
                 .then(res => {
                     $scope.enquiriesCount(res.data);
-                    
                     }, (error, status) => {
                         console.log(error, status);
                         if(status){
@@ -169,8 +144,6 @@ angular.module('ebs.controller')
                             $window.location.href = '/404';
                 })
         }
-
-
         $scope.enquiriesCount = (response) => {
             if(response){
                 if(response > $scope.newViewBy){
@@ -194,17 +167,12 @@ angular.module('ebs.controller')
                 $scope.viewLength = -1;
             }
         }
-
-
         $scope.navPage = (direction, newViewBy) => {
             var viewLength = $scope.viewLength;
             var viewBy = $scope.newViewBy;
-
-
             if(direction){
                 //console.log(" overallreports NEXT");
                 if(viewLength + viewBy >= $scope.tickets.length){
-
                     if(viewLength + viewBy < $scope.enquiry_count){
                         viewLength += viewBy;
                         // console.log("Fetch more")
@@ -214,7 +182,6 @@ angular.module('ebs.controller')
                         }else{
                             enquiry_filters.viewBy = initialViewBy;
                         }
-
                         startLoader();
                         loadTickets();
                         if(viewLength + viewBy > $scope.enquiry_count){
@@ -236,14 +203,12 @@ angular.module('ebs.controller')
                 else{
                     // console.log("Minus viewby")
                     viewLength += viewBy;
-
                     if(viewLength + viewBy > $scope.enquiry_count){
                         a = viewLength + viewBy - $scope.enquiry_count;
                         viewBy -= a;
                         if(viewLength + viewBy > $scope.enquiries.length){
                             enquiry_filters.viewLength = $scope.enquiries.length;
                             enquiry_filters.viewBy = viewLength + viewBy - $scope.enquiries.length;
-
                             startLoader();
                             loadEnquiries();
                         }
@@ -251,7 +216,6 @@ angular.module('ebs.controller')
                         if(viewLength + viewBy > $scope.enquiries.length){
                             enquiry_filters.viewLength = $scope.enquiries.length;
                             enquiry_filters.viewBy = viewLength + viewBy - $scope.enquiries.length;
-
                             startLoader();
                             loadReport();
                         }
@@ -270,21 +234,17 @@ angular.module('ebs.controller')
                         viewBy += a;
                         a = 0;
                     }
-
                     viewLength -= viewBy;
-
                     $scope.viewLength = viewLength;
                     $scope.newViewBy = viewBy;
                 }
             }
         };
-
         $scope.reloadQueries = () => {
             $scope.enquiries = [];
             loadEnquiries();
             loadEnquiryCount();
         }
-        
         $scope.reloadQueries();
         loadSummary();
     })

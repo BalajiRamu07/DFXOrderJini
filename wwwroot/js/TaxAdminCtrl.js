@@ -1,34 +1,24 @@
 /**
  * Created by shreyasgombi on 08/09/22.
  */
-
-
  angular.module('ebs.controller')
-
  .controller("TaxAdminCtrl", function($scope, $location, $http, $window, Settings){
     console.log("Hello From Admin Settings Tax Controller .... !!!!");
-
     $scope.new_tax = {};
-
     $scope.taxes = [];
-
     $scope.settings = {};
     $scope.settings.tax_setup = false;
-
     const startLoader = () => {
         jQuery.noConflict();
         $('.refresh').css("display", "inline");
     };
-
     const stopLoader = () => {
         jQuery.noConflict();
         $('.refresh').css("display", "none");
     };
-
     let instance_details = Settings.getInstance();
     $scope.settings.currency = instance_details.currency || '₹';
     $scope.settings.country = instance_details.country || 'India';
-
     const fetchTaxes = () => {
         startLoader();
         $http.get("/dash/settings/details/tax")
@@ -55,7 +45,6 @@
                     $window.location.href = '/404';
             });
     }
-
     const fetchTaxSetup = () => {
         startLoader();
         $http.get("/dash/settings/details/taxSetup")
@@ -82,7 +71,6 @@
                     $window.location.href = '/404';
             });
     }
-
     $scope.toggleTaxSetup = enable => {
         $http.put("/dash/settings/tax/enable", {"activate" : enable})
             .then(response => {
@@ -109,29 +97,23 @@
                     $window.location.href = '/404';
             });
     };
-
     const checkDuplicate = name => {
         for(let i = 0; i < $scope.taxes.length; i++) 
             if(name == $scope.taxes[i].name) return false;
             else if(i == $scope.taxes.length - 1) return true;
-
             if(!$scope.taxes.length)
                 return true;
     }
-
     $scope.saveNewTax = () => {
         if($scope.new_tax.name){
             if(checkDuplicate($scope.new_tax.name)){
                 let message = $scope.new_tax.name + ' - CGST : '+($scope.new_tax.cgst ?  $scope.new_tax.cgst+' %' : '0 %')+' || SGST : '+($scope.new_tax.sgst ?  $scope.new_tax.sgst+' %' : '0 %')+' || IGST : '+($scope.new_tax.igst ?  $scope.new_tax.igst+' %' : '0 %');
-
                 Settings.confirmPopup("Confirm", message, result => {
                     if(result){
                         $scope.new_tax.cgst = $scope.new_tax.cgst || 0;
                         $scope.new_tax.sgst = $scope.new_tax.sgst || 0;
                         $scope.new_tax.igst = $scope.new_tax.igst || 0;
-    
                         $scope.new_tax.country = $scope.settings.country;
-    
                         $http.post("/dash/settings/new/tax", $scope.new_tax)
                             .then(response => {
                                 if(response.data && response.data.status == "success"){
@@ -160,18 +142,14 @@
                     }
                 })
             } else Settings.fail_toast("ERROR", "Tax Name Already Exists. Choose a different name");
-            
         } else Settings.fail_toast("ERROR", "Enter all mandatory details");
-
     }
-
     $scope.setDefaultTax = tax => {
         if(tax && tax.name){
             for(let i = 0; i < $scope.taxes.length; i++){
                 $scope.taxes[i].default = false;
                 if(tax.name == $scope.taxes[i].name) $scope.taxes[i].default = true;
             }
-    
             $http.put("/dash/settings/tax/update", $scope.taxes)
                 .then(response => {
                     if(response.data && response.data.status == "success"){
@@ -197,7 +175,6 @@
                 });
         }
     }
-
     $scope.removeTax = index => {
         Settings.confirmPopup("Confirm", 
         "Are you sure?\nPlease Note : Any catalog items assigned with this tax will continue to be assigned with tagged tax values",
@@ -206,7 +183,6 @@
                     let tax_name = $scope.taxes[index].name;
                     $scope.taxes.splice(index, 1);
                     console.log($scope.taxes);
-
                     $http.put("/dash/settings/tax/update", $scope.taxes)
                         .then(response => {
                             if(response.data && response.data.status == "success"){
@@ -233,7 +209,6 @@
                 }
             })
     };
-
     fetchTaxSetup();
     fetchTaxes();
  })

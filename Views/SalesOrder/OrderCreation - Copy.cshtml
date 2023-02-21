@@ -1,13 +1,7 @@
-﻿
-@{
+﻿@{
     ViewData["Title"] = "OrderCreation";
 }
-
 <h1>OrderCreation</h1>
-
-
-
-
     <style>
   #feedback { font-size: 1.4em; }
   #selectable .ui-selecting { background: #FECA40; }
@@ -22,11 +16,9 @@
     $( "#selectable" ).selectable();
   } );
   </script>
-
 <div ng-view="" class="ng-scope" style="">
     <div class="wrapper ng-scope">
         <div class="refresh" style="display: none;"></div>
-
         <!-- ngIf: orderViewTab.tab == 1 --><div class="row page-header ng-scope" ng-if="orderViewTab.tab == 1" style="">
             <div class="col-5">
                 <div class="backtoOrder">
@@ -44,7 +36,6 @@
         <!-- ngIf: orderViewTab.tab == 0 && user.role != 'dealer' -->
         <!-- ngIf: orderViewTab.tab == 1 && customer.Dealercode -->
         <div class="row ng-scope" ng-if="orderViewTab.tab == 1 &amp;&amp; customer.Dealercode" style="">
-
             <div class="col-2" style="padding: 5px">
                 <div class="card" style="text-align: center">
                     <div class="card-body" style="padding: 15px">
@@ -59,94 +50,80 @@
                                 <!-- ngIf: activeItem == $index --><i class="fa fa-check ng-scope" style="color: rgb(0, 123, 255);" ng-if="activeItem == $index" aria-hidden="true"></i><!-- end ngIf: activeItem == $index -->
                                 AYUSH CUSHIONS
                             </p>
-
                             <hr style="width: 150px">
                         </div><!-- end ngRepeat: item in matressName | unique: 'l5' | filter : itemSearch.item --><div ng-repeat="item in matressName | unique: &#39;l5&#39; | filter : itemSearch.item" style="text-align: center" class="ng-scope">
                             <p style="margin: 0px" ng-click="selectedItem($index, item)" class="ng-binding" role="button" tabindex="0">
                                 <!-- ngIf: activeItem == $index -->
                                 BLOCKS
                             </p>
-
                             <hr style="width: 150px">
                         </div><!-- end ngRepeat: item in matressName | unique: 'l5' | filter : itemSearch.item --><div ng-repeat="item in matressName | unique: &#39;l5&#39; | filter : itemSearch.item" style="text-align: center" class="ng-scope">
                             <p style="margin: 0px" ng-click="selectedItem($index, item)" class="ng-binding" role="button" tabindex="0">
                                 <!-- ngIf: activeItem == $index -->
                                 CHIP FOAM SHEETS
                             </p>
-
                             <hr style="width: 150px">
                         </div><!-- end ngRepeat: item in matressName | unique: 'l5' | filter : itemSearch.item --><div ng-repeat="item in matressName | unique: &#39;l5&#39; | filter : itemSearch.item" style="text-align: center" class="ng-scope">
                             <p style="margin: 0px" ng-click="selectedItem($index, item)" class="ng-binding" role="button" tabindex="0">
                                 <!-- ngIf: activeItem == $index -->
                                 LATEX LIKE FOAM SHEETS
                             </p>
-
                             <hr style="width: 150px">
                         </div><!-- end ngRepeat: item in matressName | unique: 'l5' | filter : itemSearch.item --><div ng-repeat="item in matressName | unique: &#39;l5&#39; | filter : itemSearch.item" style="text-align: center" class="ng-scope">
                             <p style="margin: 0px" ng-click="selectedItem($index, item)" class="ng-binding" role="button" tabindex="0">
                                 <!-- ngIf: activeItem == $index -->
                                 MF CUSHIONS
                             </p>
-
                             <hr style="width: 150px">
                         </div><!-- end ngRepeat: item in matressName | unique: 'l5' | filter : itemSearch.item --><div ng-repeat="item in matressName | unique: &#39;l5&#39; | filter : itemSearch.item" style="text-align: center" class="ng-scope">
                             <p style="margin: 0px" ng-click="selectedItem($index, item)" class="ng-binding" role="button" tabindex="0">
                                 <!-- ngIf: activeItem == $index -->
                                 MF ROLLS
                             </p>
-
                             <hr style="width: 150px">
                         </div><!-- end ngRepeat: item in matressName | unique: 'l5' | filter : itemSearch.item --><div ng-repeat="item in matressName | unique: &#39;l5&#39; | filter : itemSearch.item" style="text-align: center" class="ng-scope">
                             <p style="margin: 0px" ng-click="selectedItem($index, item)" class="ng-binding" role="button" tabindex="0">
                                 <!-- ngIf: activeItem == $index -->
                                 MF SHEETS
                             </p>
-
                             <hr style="width: 150px">
                         </div><!-- end ngRepeat: item in matressName | unique: 'l5' | filter : itemSearch.item --><div ng-repeat="item in matressName | unique: &#39;l5&#39; | filter : itemSearch.item" style="text-align: center" class="ng-scope">
                             <p style="margin: 0px" ng-click="selectedItem($index, item)" class="ng-binding" role="button" tabindex="0">
                                 <!-- ngIf: activeItem == $index -->
                                 PUF CUSHIONS
                             </p>
-
                             <hr style="width: 150px">
                         </div><!-- end ngRepeat: item in matressName | unique: 'l5' | filter : itemSearch.item --><div ng-repeat="item in matressName | unique: &#39;l5&#39; | filter : itemSearch.item" style="text-align: center" class="ng-scope">
                             <p style="margin: 0px" ng-click="selectedItem($index, item)" class="ng-binding" role="button" tabindex="0">
                                 <!-- ngIf: activeItem == $index -->
                                 PUF CUSHIONS TOUCH
                             </p>
-
                             <hr style="width: 150px">
                         </div><!-- end ngRepeat: item in matressName | unique: 'l5' | filter : itemSearch.item --><div ng-repeat="item in matressName | unique: &#39;l5&#39; | filter : itemSearch.item" style="text-align: center" class="ng-scope">
                             <p style="margin: 0px" ng-click="selectedItem($index, item)" class="ng-binding" role="button" tabindex="0">
                                 <!-- ngIf: activeItem == $index -->
                                 PUF DUSTERS
                             </p>
-
                             <hr style="width: 150px">
                         </div><!-- end ngRepeat: item in matressName | unique: 'l5' | filter : itemSearch.item --><div ng-repeat="item in matressName | unique: &#39;l5&#39; | filter : itemSearch.item" style="text-align: center" class="ng-scope">
                             <p style="margin: 0px" ng-click="selectedItem($index, item)" class="ng-binding" role="button" tabindex="0">
                                 <!-- ngIf: activeItem == $index -->
                                 PUF ROLLS
                             </p>
-
                             <hr style="width: 150px">
                         </div><!-- end ngRepeat: item in matressName | unique: 'l5' | filter : itemSearch.item --><div ng-repeat="item in matressName | unique: &#39;l5&#39; | filter : itemSearch.item" style="text-align: center" class="ng-scope">
                             <p style="margin: 0px" ng-click="selectedItem($index, item)" class="ng-binding" role="button" tabindex="0">
                                 <!-- ngIf: activeItem == $index -->
                                 PUF SHEETS
                             </p>
-
                             <hr style="width: 150px">
                         </div><!-- end ngRepeat: item in matressName | unique: 'l5' | filter : itemSearch.item --><div ng-repeat="item in matressName | unique: &#39;l5&#39; | filter : itemSearch.item" style="text-align: center" class="ng-scope">
                             <p style="margin: 0px" ng-click="selectedItem($index, item)" class="ng-binding" role="button" tabindex="0">
                                 <!-- ngIf: activeItem == $index -->
                                 PUF SHEETS TOUCH
                             </p>
-
                             <hr style="width: 150px">
                         </div><!-- end ngRepeat: item in matressName | unique: 'l5' | filter : itemSearch.item -->
-
                     </div>
                 </div>
             </div>
@@ -159,13 +136,10 @@
                         </div>
                         <br>
                         <!-- ngRepeat: item in matressGrades | unique: 'grade' | filter : itemSearch.grade --><div ng-repeat="item in matressGrades | unique: &#39;grade&#39; | filter : itemSearch.grade" class="ng-scope">
-
                             <p style="margin: 0px" ng-click="selectedGrade(item.grade)" class="ng-binding" role="button" tabindex="0">
                                 <!-- ngIf: activeGrade == item.grade && activeGrade --><i class="fa fa-check ng-scope" style="color: rgb(0, 123, 255);" ng-if="activeGrade == item.grade &amp;&amp; activeGrade" aria-hidden="true"></i><!-- end ngIf: activeGrade == item.grade && activeGrade -->
                                 GLG
                             </p>
-
-
                             <!-- <div class="row" style="text-align: center">
                                  <div class="col-1" style="padding: 0px">
                                      <i class="fa fa-check" style=" color:#007bff;" ng-if="activeGrade == item.grade && activeGrade" aria-hidden="true"></i>
@@ -174,16 +148,12 @@
                                      <p style="margin: 0px" ng-click="selectedGrade(item.grade)">{{item.grade}}</p>
                                  </div>
                              </div>-->
-
                             <hr style="width: 150px">
                         </div><!-- end ngRepeat: item in matressGrades | unique: 'grade' | filter : itemSearch.grade --><div ng-repeat="item in matressGrades | unique: &#39;grade&#39; | filter : itemSearch.grade" class="ng-scope">
-
                             <p style="margin: 0px" ng-click="selectedGrade(item.grade)" class="ng-binding" role="button" tabindex="0">
                                 <!-- ngIf: activeGrade == item.grade && activeGrade -->
                                 IFO
                             </p>
-
-
                             <!-- <div class="row" style="text-align: center">
                                  <div class="col-1" style="padding: 0px">
                                      <i class="fa fa-check" style=" color:#007bff;" ng-if="activeGrade == item.grade && activeGrade" aria-hidden="true"></i>
@@ -192,16 +162,12 @@
                                      <p style="margin: 0px" ng-click="selectedGrade(item.grade)">{{item.grade}}</p>
                                  </div>
                              </div>-->
-
                             <hr style="width: 150px">
                         </div><!-- end ngRepeat: item in matressGrades | unique: 'grade' | filter : itemSearch.grade --><div ng-repeat="item in matressGrades | unique: &#39;grade&#39; | filter : itemSearch.grade" class="ng-scope">
-
                             <p style="margin: 0px" ng-click="selectedGrade(item.grade)" class="ng-binding" role="button" tabindex="0">
                                 <!-- ngIf: activeGrade == item.grade && activeGrade -->
                                 REX
                             </p>
-
-
                             <!-- <div class="row" style="text-align: center">
                                  <div class="col-1" style="padding: 0px">
                                      <i class="fa fa-check" style=" color:#007bff;" ng-if="activeGrade == item.grade && activeGrade" aria-hidden="true"></i>
@@ -210,16 +176,12 @@
                                      <p style="margin: 0px" ng-click="selectedGrade(item.grade)">{{item.grade}}</p>
                                  </div>
                              </div>-->
-
                             <hr style="width: 150px">
                         </div><!-- end ngRepeat: item in matressGrades | unique: 'grade' | filter : itemSearch.grade --><div ng-repeat="item in matressGrades | unique: &#39;grade&#39; | filter : itemSearch.grade" class="ng-scope">
-
                             <p style="margin: 0px" ng-click="selectedGrade(item.grade)" class="ng-binding" role="button" tabindex="0">
                                 <!-- ngIf: activeGrade == item.grade && activeGrade -->
                                 SRE
                             </p>
-
-
                             <!-- <div class="row" style="text-align: center">
                                  <div class="col-1" style="padding: 0px">
                                      <i class="fa fa-check" style=" color:#007bff;" ng-if="activeGrade == item.grade && activeGrade" aria-hidden="true"></i>
@@ -228,11 +190,9 @@
                                      <p style="margin: 0px" ng-click="selectedGrade(item.grade)">{{item.grade}}</p>
                                  </div>
                              </div>-->
-
                             <hr style="width: 150px">
                         </div><!-- end ngRepeat: item in matressGrades | unique: 'grade' | filter : itemSearch.grade -->
                     </div>
-
                 </div>
             </div><!-- end ngIf: matressGrades.length -->
             <!-- ngIf: matressDensity.length --><div class="col-2 ng-scope" style="padding: 5px;" ng-if="matressDensity.length">
@@ -248,7 +208,6 @@
                                 <!-- ngIf: activeDensity == item.density && activeDensity --><i class="fa fa-check ng-scope" style="color: rgb(0, 123, 255);" ng-if="activeDensity == item.density &amp;&amp; activeDensity" aria-hidden="true"></i><!-- end ngIf: activeDensity == item.density && activeDensity -->
                                 023D
                             </p>
-
                             <!-- <div class="row" style="text-align: center">
                                  <div class="col-1" style="padding: 0px">
                                      <i class="fa fa-check" style=" color:#007bff;" ng-if="activeDensity == item.density && activeDensity" aria-hidden="true"></i>
@@ -257,14 +216,12 @@
                                      <p style="margin: 0px" ng-click="selectedDensity(item.density)">{{item.density}}</p>
                                  </div>
                              </div>-->
-
                             <hr style="width: 150px">
                         </div><!-- end ngRepeat: item in matressDensity | unique: 'density' | filter : itemSearch.density --><div ng-repeat="item in matressDensity | unique: &#39;density&#39; | filter : itemSearch.density" class="ng-scope">
                             <p style="margin: 0px" ng-click="selectedDensity(item)" class="ng-binding" role="button" tabindex="0">
                                 <!-- ngIf: activeDensity == item.density && activeDensity -->
                                 028D
                             </p>
-
                             <!-- <div class="row" style="text-align: center">
                                  <div class="col-1" style="padding: 0px">
                                      <i class="fa fa-check" style=" color:#007bff;" ng-if="activeDensity == item.density && activeDensity" aria-hidden="true"></i>
@@ -273,14 +230,12 @@
                                      <p style="margin: 0px" ng-click="selectedDensity(item.density)">{{item.density}}</p>
                                  </div>
                              </div>-->
-
                             <hr style="width: 150px">
                         </div><!-- end ngRepeat: item in matressDensity | unique: 'density' | filter : itemSearch.density --><div ng-repeat="item in matressDensity | unique: &#39;density&#39; | filter : itemSearch.density" class="ng-scope">
                             <p style="margin: 0px" ng-click="selectedDensity(item)" class="ng-binding" role="button" tabindex="0">
                                 <!-- ngIf: activeDensity == item.density && activeDensity -->
                                 032D
                             </p>
-
                             <!-- <div class="row" style="text-align: center">
                                  <div class="col-1" style="padding: 0px">
                                      <i class="fa fa-check" style=" color:#007bff;" ng-if="activeDensity == item.density && activeDensity" aria-hidden="true"></i>
@@ -289,14 +244,12 @@
                                      <p style="margin: 0px" ng-click="selectedDensity(item.density)">{{item.density}}</p>
                                  </div>
                              </div>-->
-
                             <hr style="width: 150px">
                         </div><!-- end ngRepeat: item in matressDensity | unique: 'density' | filter : itemSearch.density --><div ng-repeat="item in matressDensity | unique: &#39;density&#39; | filter : itemSearch.density" class="ng-scope">
                             <p style="margin: 0px" ng-click="selectedDensity(item)" class="ng-binding" role="button" tabindex="0">
                                 <!-- ngIf: activeDensity == item.density && activeDensity -->
                                 040D
                             </p>
-
                             <!-- <div class="row" style="text-align: center">
                                  <div class="col-1" style="padding: 0px">
                                      <i class="fa fa-check" style=" color:#007bff;" ng-if="activeDensity == item.density && activeDensity" aria-hidden="true"></i>
@@ -305,14 +258,12 @@
                                      <p style="margin: 0px" ng-click="selectedDensity(item.density)">{{item.density}}</p>
                                  </div>
                              </div>-->
-
                             <hr style="width: 150px">
                         </div><!-- end ngRepeat: item in matressDensity | unique: 'density' | filter : itemSearch.density --><div ng-repeat="item in matressDensity | unique: &#39;density&#39; | filter : itemSearch.density" class="ng-scope">
                             <p style="margin: 0px" ng-click="selectedDensity(item)" class="ng-binding" role="button" tabindex="0">
                                 <!-- ngIf: activeDensity == item.density && activeDensity -->
                                 050D
                             </p>
-
                             <!-- <div class="row" style="text-align: center">
                                  <div class="col-1" style="padding: 0px">
                                      <i class="fa fa-check" style=" color:#007bff;" ng-if="activeDensity == item.density && activeDensity" aria-hidden="true"></i>
@@ -321,15 +272,11 @@
                                      <p style="margin: 0px" ng-click="selectedDensity(item.density)">{{item.density}}</p>
                                  </div>
                              </div>-->
-
                             <hr style="width: 150px">
                         </div><!-- end ngRepeat: item in matressDensity | unique: 'density' | filter : itemSearch.density -->
-
                     </div>
-
                 </div>
             </div><!-- end ngIf: matressDensity.length -->
-
             <div class="col-2">
                 <!-- ngIf: activeDensity --><div class="row-2 ng-scope" style="padding: 5px;" ng-if="activeDensity">
                     <div class="card" style="text-align: center ">
@@ -345,7 +292,6 @@
                             <h6 style="color:#007bff ;text-align: center">
                                 <p style="display: inline-block;border-radius: 60px;box-shadow: 0px 0px 2px #888;padding: 0.4em 0.4em ;color:#007bff ;border-color:#007bff ">4</p>  &nbsp; Select Size
                             </h6>
-
                             <!-- ngIf: custOrder.primary_UOM != 'KG' --><p ng-if="custOrder.primary_UOM != &#39;KG&#39;" style="margin: 0px;text-align: left" class="ng-binding ng-scope">Length (Inch)</p><!-- end ngIf: custOrder.primary_UOM != 'KG' -->
                             <!-- ngIf: custOrder.primary_UOM != 'KG' --><select ng-if="custOrder.primary_UOM != &#39;KG&#39;" class="form-control ng-valid ng-scope ng-dirty ng-valid-parse ng-touched" ng-model="custOrder.leng" ng-change="customLen()" tabindex="0" aria-invalid="false" style="">
                                 <option value="">Select</option>
@@ -359,7 +305,6 @@
                             <!-- ngIf: custOrder.primary_UOM != 'KG' && custLen -->
                             <!-- ngIf: custOrder.primary_UOM != 'KG' --><br ng-if="custOrder.primary_UOM != &#39;KG&#39;" class="ng-scope"><!-- end ngIf: custOrder.primary_UOM != 'KG' -->
                             <p style="margin: 0px;text-align: left" class="ng-binding">Width (Inch)</p>
-
                             <select class="form-control ng-valid ng-dirty ng-valid-parse ng-touched" ng-model="custOrder.width" ng-change="customWidth()" tabindex="0" aria-invalid="false" style="">
                                 <option value="">Select</option>
                                 <!-- ngIf: config.custom_options -->
@@ -369,7 +314,6 @@
                             </select>
                             <br>
                             <!-- ngIf: custWidth -->
-
                             <br>
                             <!-- ngIf: custOrder.primary_UOM != 'BLOCKS' --><p style="margin: 0px;text-align: left" ng-if="custOrder.primary_UOM != &#39;BLOCKS&#39;" class="ng-binding ng-scope">Thickness (MM)</p><!-- end ngIf: custOrder.primary_UOM != 'BLOCKS' -->
                             <!-- ngIf: duroThickness.length && custOrder.primary_UOM != 'BLOCKS' --><select class="form-control ng-valid ng-scope ng-dirty ng-valid-parse ng-touched" ng-if="duroThickness.length &amp;&amp; custOrder.primary_UOM != &#39;BLOCKS&#39;" ng-model="custOrder.thickness" ng-change="customThickness()" tabindex="0" aria-invalid="false" style="">
@@ -414,19 +358,15 @@
                                     </label>
                                 </div>
                             </div><!-- end ngIf: short_code_selected.Primary != 'KG' && short_code_selected.Primary != 'BLOCKS' -->
-
                             <br>
                             <div style="text-align: center" ng-click="addToCart()" role="button" tabindex="0">
                                 <button class="btn btn-primary" ng-disabled="((custOrder.leng &amp;&amp; custOrder.leng &gt; 0) || (custOrder.width &amp;&amp; custOrder.width &gt; 0)) &amp;&amp; custOrder.thickness &amp;&amp; !custOrder.quantity" type="submit" aria-disabled="false">Add to cart</button>
                             </div>
-
                         </div>
                         <br>
                     </div>
-
                 </div><!-- end ngIf: checkInputsQuantity() -->
             </div>
-
             <div class="col-4" style="padding: 5px">
                 <div class="card">
                     <div class="card-body" style="padding: 15px">
@@ -435,7 +375,6 @@
                             <div class="col-md-6">
                                 <p style="color: grey;margin: 0px">Customer Name</p>
                                 <p class="ng-binding">A A BEDDING COMPANY</p>
-
                                 <p style="color: grey;margin:0px">Billing Address</p>
                                 <p class="ng-binding">
                                     New No.1/198A, Sengadu, Thottam, Sangoothipalayam, Kaniyur, Coimbatore
@@ -444,7 +383,6 @@
                             <div class="col-md-6">
                                 <p style="color: grey;margin: 0px">Customer Code</p>
                                 <p class="ng-binding">105514</p>
-
                                 <p style="color: grey;margin:0px">Shipping To Code</p>
                                 <p class="ng-binding">
                                     N/A

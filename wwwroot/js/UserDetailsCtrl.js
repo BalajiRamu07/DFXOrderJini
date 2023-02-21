@@ -1,12 +1,7 @@
-
-
 angular.module('ebs.controller')
-
 .controller("UserDetailsCtrl",function ($scope, $http, $routeParams, Settings, $location, $window) {
     let id = $routeParams.id;
-
     console.log("Hello From User Details Controller .... !!!! - ", id);
-
     ///.... User object....
     $scope.user = {};
     $scope.device_details = {};
@@ -15,27 +10,22 @@ angular.module('ebs.controller')
     $scope.user_info = {};
     $scope.nav = {};
     //... Load all devices user has logged in....
-
     Settings.getNav(false, nav => {
         $scope.nav = nav;
         $scope.user_roles = nav[4].roles;
     });
-
     Settings.getUserInfo(user_details => {
         $scope.user_info = user_details;
     });
-
     //... Start a loader....
     const startLoader = () => {
         jQuery.noConflict();
         $('.refresh').css("display", "inline");
     }
-    
     const stopLoader = () => {
         jQuery.noConflict();
         $('.refresh').css("display", "none");
     }
-
     const loadDevices = id => {
         $http.get("/dash/devices/list/" + id)
             .then(devices => {
@@ -76,8 +66,6 @@ angular.module('ebs.controller')
                     $window.location.href = '/404';
             });
     }
-
-
     const loadManagers = () => {
         $http.get("/dash/users/managers")
             .then(response => {
@@ -88,7 +76,6 @@ angular.module('ebs.controller')
                 }
             });
     }
-
     //... Setup notification object
     const setUpNotification = () => {
         if($scope.user){
@@ -182,7 +169,6 @@ angular.module('ebs.controller')
             }
         }
     };
-
     //... Reload User details....
     const loadUserDetails = id => {
         startLoader();
@@ -192,7 +178,6 @@ angular.module('ebs.controller')
                 console.log(user_details);
                 if(user_details && user_details.data){
                     $scope.user = user_details.data;
-
                     setUpNotification();
                     loadDevices(user_details.data.sellerid || user_details.data.email);
                     loadManagers();
@@ -209,7 +194,6 @@ angular.module('ebs.controller')
                     $window.location.href = '/404';
             });
     };
-
     $scope.deleteUserDevice = (device) => {
         if(device){
             Settings.confirmPopup("CONFIRM", 
@@ -231,7 +215,6 @@ angular.module('ebs.controller')
             });
         }
     };
-
     $scope.removeUser = () => {
         Settings.confirmPopup("Confirm", "Are you sure, you want to delete user "+ $scope.user.sellername +" ?", result => {
             if(result) {
@@ -254,7 +237,6 @@ angular.module('ebs.controller')
             }
         })
     }
-
     const updateUserNotification = (notification, index) => {
         $http.put("/dash/user/notification/update/" + id, notification)
             .then(update => {
@@ -280,7 +262,6 @@ angular.module('ebs.controller')
                     $window.location.href = '/404';
             });
     }
-
     $scope.toggleNotification = (index, type) => {
         console.log(index, type);
         console.log($scope.user.notifications[index]);
@@ -306,9 +287,7 @@ angular.module('ebs.controller')
                 break;
             }
         }
-        
     };
-
     $scope.resendEmail = () => {
         Settings.confirmPopup("Confirm","Are you sure you want to resend welcome email?", result => {
             if (result) {
@@ -321,7 +300,6 @@ angular.module('ebs.controller')
             }
         })
     }
-
     $scope.getRoleName = role => {
         let temp = '';
         if(role){
@@ -337,7 +315,5 @@ angular.module('ebs.controller')
         }
         return temp;
     };
-    
     if(id) loadUserDetails(id);
-
 })

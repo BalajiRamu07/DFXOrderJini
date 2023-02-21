@@ -8,18 +8,14 @@
     $(".settings-close").click(function() {
       $("#right-sidebar,#theme-settings").removeClass("open");
     });
-
     $(".navbar-nav .nav-item.color-setting").on("click", function() {
       $("#right-sidebar").removeClass("open");
       $("#theme-settings").toggleClass("open");
     });
-
-
     //background constants
     var navbar_classes = "navbar-danger navbar-success navbar-warning navbar-dark navbar-light navbar-primary navbar-info navbar-pink";
     var sidebar_classes = "sidebar-light sidebar-dark";
     var $body = $("body");
-
     //sidebar backgrounds
     $("#sidebar-light-theme").on("click", function() {
       $body.removeClass(sidebar_classes);
@@ -33,8 +29,6 @@
       $(".sidebar-bg-options").removeClass("selected");
       $(this).addClass("selected");
     });
-
-
     //Navbar Backgrounds
     $(".tiles.primary").on("click", function() {
       $(".navbar").removeClass(navbar_classes);

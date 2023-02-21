@@ -1,30 +1,22 @@
 angular.module('ebs.controller')
-
     .controller("BilledReportCtrl", function ($scope, $http, Settings, $window) {
         console.log("Hello From Items not billed Report Controller .... !!!!");
-
         //.... User details....
         $scope.user = {};
-
         //..... Pagination.....
         $scope.viewLength = 0;
         $scope.newViewBy = 10;
-
         //.... Other View Values....
         $scope.newViewBy1 = {};
         $scope.newViewBy1.view = 10;
-
         $scope.reportTabName = "Items Not Billed";
-
         $scope.reportTabId = 9;
         $scope.tab = 8;
         $scope.showReports = true;
         $scope.sku_count = 0;
-
         let localViewBy = $scope.newViewBy;
         let initialViewBy = 60;
         let instanceDetails =  Settings.getInstance();
-
         $scope.itemCategories = [];
         $scope.skureport = [];
         //.... Reports Filter.....
@@ -35,27 +27,20 @@ angular.module('ebs.controller')
         $scope.skuReportFilter.startDate.setHours(0, 0, 0, 0);
         $scope.skuReportFilter.endDate = new Date();
         $scope.skuReportFilter.endDate.setHours(23, 59, 59, 59);
-
         $scope.skuReportFilter.dealer = {};
         $scope.skuReportFilter.dealer.Dealercode = '0'
         $scope.skuReportFilter.category = {};
         $scope.skuReportFilter.category.Manufacturer = '0';
-
-
         const api_timeout = 600000;
-
         let skuSearchObj = {};
         let itemSearchBy = ['itemCode', 'Product', 'Manufacturer', 'subCategory','subSubCategory'];
-
         $scope.skuDuration = Settings.daysDifference($scope.skuReportFilter.startDate , $scope.skuReportFilter.endDate);
         $scope.parseData = (viewLength, newViewBy) => parseInt(viewLength) + parseInt(newViewBy);
         $scope.DateTimeFormat = (date, when) => Settings.dateFilterFormat(date, when);
-
         const startLoader = () => {
             jQuery.noConflict();
             $('.refresh').css("display", "inline");
         }
-
         const stopLoader = () => {
             jQuery.noConflict();
             $('.refresh').css("display", "none");
@@ -75,7 +60,6 @@ angular.module('ebs.controller')
                     .success(function (category) {
                         console.log(category);
                         $scope.itemCategories = category;
-
                         $scope.itemCategories = $scope.itemCategories.filter(function (obj) {
                             return obj._id !== 'DEFAULT';
                         });
@@ -126,26 +110,22 @@ angular.module('ebs.controller')
                         $window.location.href = '/404';
                 });
         }
-
         $scope.openFilterClear = () => {
             $scope.skuReportFilter.startDate = '';
             $scope.skuReportFilter.endDate = '';
             $scope.skuReportFilter.category = {};
             $scope.skuReportFilter.dealer = {};
-
             $scope.skuReportFilter.startDate = new Date();
             $scope.skuReportFilter.startDate.setDate($scope.skuReportFilter.startDate.getDate() - 7);
             $scope.skuReportFilter.startDate.setHours(0, 0, 0, 0);
             $scope.skuReportFilter.endDate = new Date();
             $scope.skuReportFilter.endDate.setHours(23, 59, 59, 59);
         }
-
         $scope.navPage = (direction, newViewBy) => {
             var viewLength = $scope.viewLength;
             var viewBy = $scope.newViewBy;
             if(direction){
                 // console.log("NEXT");
-
                 if(viewLength + viewBy >= $scope.skureport.length){
                     if(viewLength + viewBy < $scope.sku_count){
                         viewLength += viewBy;
@@ -162,7 +142,6 @@ angular.module('ebs.controller')
                         skuSearchObj.dealercode = $scope.skuReportFilter.dealer.Dealercode;
                         skuSearchObj.searchFor = $scope.skuReportFilter.filter;
                         skuSearchObj.searchBy = itemSearchBy;
-
                         startLoader();
                         loadReport(skuSearchObj);
                         if(viewLength + viewBy > $scope.sku_count){
@@ -184,7 +163,6 @@ angular.module('ebs.controller')
                 else{
                     // console.log("Minus viewby")
                     viewLength += viewBy;
-
                     if(viewLength + viewBy > $scope.sku_count){
                         a = viewLength + viewBy - $scope.sku_count;
                         viewBy -= a;
@@ -197,10 +175,8 @@ angular.module('ebs.controller')
                             skuSearchObj.dealercode = $scope.skuReportFilter.dealer.Dealercode;
                             skuSearchObj.searchFor = $scope.skuReportFilter.filter;
                             skuSearchObj.searchBy = itemSearchBy;
-
                             startLoader();
                             loadReport(skuSearchObj);
-
                         }
                     }else{
                         if(viewLength + viewBy >  $scope.skureport.length){
@@ -212,10 +188,8 @@ angular.module('ebs.controller')
                             skuSearchObj.dealercode = $scope.skuReportFilter.dealer.Dealercode;
                             skuSearchObj.searchFor = $scope.skuReportFilter.filter;
                             skuSearchObj.searchBy = itemSearchBy;
-
                             startLoader();
                             loadReport(skuSearchObj);
-
                         }
                     }
                     $scope.newViewBy = viewBy;
@@ -232,33 +206,25 @@ angular.module('ebs.controller')
                         viewBy += a;
                         a = 0;
                     }
-
                     viewLength -= viewBy;
-
                     $scope.viewLength = viewLength;
                     $scope.newViewBy = viewBy;
                 }
             }
         }
-
         $scope.changeReportView = (newViewBy) => {
             startLoader();
             $scope.newViewBy1.view = newViewBy || 10;
             $scope.newViewBy = parseInt(newViewBy || 10);
-
             $scope.skuReportFilter.dealer = {};
             $scope.skuReportFilter.dealer.Dealercode = '0';
-
-
             if(!$scope.skuReportFilter.category) {
                 $scope.skuReportFilter.category = {};
                 $scope.skuReportFilter.category.Manufacturer = '0';
             }
-
             if($scope.skuReportFilter.startDate && $scope.skuReportFilter.endDate){
                 if (($scope.skuReportFilter.startDate - $scope.skuReportFilter.endDate) > 0){
                     Settings.alertPopup("WARNING", "Invalid Date Range set.");
-
                     $scope.skuReportFilter.startDate = new Date();
                     $scope.skuReportFilter.startDate.setDate($scope.skuReportFilter.startDate.getDate() - 7);
                     $scope.skuReportFilter.startDate.setHours(0, 0, 0, 0);
@@ -266,8 +232,6 @@ angular.module('ebs.controller')
                     $scope.skuReportFilter.endDate.setHours(23, 59, 59, 59);
                 }
             }
-
-
             skuSearchObj.viewLength = 0;
             if($scope.newViewBy > initialViewBy ){
                 skuSearchObj.viewBy = $scope.newViewBy;
@@ -280,21 +244,17 @@ angular.module('ebs.controller')
             skuSearchObj.dealercode = $scope.skuReportFilter.dealer.Dealercode;
             skuSearchObj.searchFor = $scope.skuReportFilter.filter;
             skuSearchObj.searchBy = itemSearchBy;
-
             $scope.viewLength = 0;
             if(!newViewBy){
                 $scope.newViewBy = parseInt(localViewBy);
             }
-
             startLoader();
             loadReport(skuSearchObj);
             loadReportCount(skuSearchObj);
         }
-
         $scope.changeReportDuration = (startDate, endDate, reset) =>{
             if (endDate)
                 endDate.setHours(23, 59, 59, 59);
-
             if (!reset) {
                 if (startDate || endDate) {
                     if (startDate && endDate) {
@@ -309,7 +269,6 @@ angular.module('ebs.controller')
                     }
                     else
                         var skuDuration = 0;
-
                 }
             }
         }
@@ -321,7 +280,6 @@ angular.module('ebs.controller')
                 else if(response <= $scope.newViewBy){
                     $scope.sku_count = response;
                     $scope.newViewBy = response;
-
                 }
                 else{
                     $scope.skureport = [];
@@ -337,7 +295,6 @@ angular.module('ebs.controller')
                 $scope.viewLength = -1;
             }
         }
-
         $scope.downloadCSV = function(){
             startLoader();
             var request_object = {
@@ -346,7 +303,6 @@ angular.module('ebs.controller')
                 timeout : api_timeout,
                 data : skuSearchObj
             };
-
             $http(request_object)
                 .then((count) => {
                 if(!count.data){
@@ -364,27 +320,22 @@ angular.module('ebs.controller')
                     stopLoader();
                 }
                 else {
-
                     skuSearchObj.viewLength = 0;
                     skuSearchObj.viewBy = count.data;
-
                     var request_object = {
                         url : "/dash/reports/sku",
                         method : "POST",
                         timeout : api_timeout,
                         data : skuSearchObj
                     };
-
                     $http(request_object)
                         .then((result) => {
                         let _data = result.data;
-                        
                         var output = 'id,ItemCode,Product,Description,Category,SubCategory';
                         output += '\n'
                         for (var i = 0; i < _data.length; i++) {
                             output += i + 1;
                             output += ',';
-
                             if (_data[i].itemCode)
                                 output += _data[i].itemCode;
                             output += ',';
@@ -436,24 +387,19 @@ angular.module('ebs.controller')
                                 console.log(e)
                             }
                             output += '\n';
-
                         }
-
                         var blob = new Blob([output], {type : "text/csv;charset=UTF-8"});
                         console.log(blob);
                         window.URL = window.webkitURL || window.URL;
                         var url = window.URL.createObjectURL(blob);
-
                         var d = new Date();
                         var anchor = angular.element('<a/>');
-
                         anchor.attr({
                             href: url,
                             target: '_blank',
                             download: 'Mbj_' + instanceDetails.api_key + '_SKU_' +d.getDate()+'/'+(d.getMonth()+1)+'/'+d.getFullYear()+'.csv'
                             //download: 'Mbj_' + '_SKU__' +d.getDate()+'/'+(d.getMonth()+1)+'/'+d.getFullYear()+'.csv'
                         })[0].click();
-
                         stopLoader();
                     })
                     .catch((error, status) => {
@@ -477,7 +423,6 @@ angular.module('ebs.controller')
                     $window.location.href = '/404';
             });
         }
-
         loadCategories();
         $scope.changeReportView(localViewBy);
     })

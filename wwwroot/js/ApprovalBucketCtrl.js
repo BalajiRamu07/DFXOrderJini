@@ -1,7 +1,4 @@
 angular.module('ebs.controller')
-
-
-
     .controller("ApprovalBucketCtrl",function ($scope, $filter, $http,Settings, $modal, $window, toastr, $interval,$sce,$mdDialog) {
         console.log("Hello From  ApprovalBucket Controller .... !!!!");
         $scope.allRequests=[];
@@ -17,9 +14,6 @@ angular.module('ebs.controller')
         $scope.requestSearch = {};
         $scope.userRole='';
         $scope.adminRole='';
-
-
-
         var viewBy = {};
         viewBy.items = 10;
         var initialViewBy = 60;
@@ -27,7 +21,6 @@ angular.module('ebs.controller')
         $scope.viewLength = 0;
         var requestSearchObj = {};
         var requestSearchBy = ['requestID', 'customerName', 'branchName', 'raisedBy','type'];
-
         requestSearchObj.viewLength = 0;
         requestSearchObj.viewBy = initialViewBy;
         requestSearchObj.searchBy = [];
@@ -44,7 +37,6 @@ angular.module('ebs.controller')
             $scope.userRole=user_details.sellerObject.levelOfManager;
             // console.log($scope.approvedBy);
         });
-
         $scope.getAllRequest=function(){
             // console.log(requestSearchObj);
             $http.post("/dash/assets/searchRequests",requestSearchObj)
@@ -62,9 +54,7 @@ angular.module('ebs.controller')
                 else
                     $window.location.href = '/404';
             });
-
         }
-
         $scope.getMasterRequest=function(){
             $http.get("/dash/assets/allRequests/data")
                 .success(function (res) {
@@ -97,7 +87,6 @@ angular.module('ebs.controller')
                         console.log(res);
                         // $scope.request_count=res;
                         $scope.transactionCount(res);
-
                         // if(res){
                         //     $scope.openRequests=res;
                         //     // console.log("Open Requests");
@@ -112,10 +101,7 @@ angular.module('ebs.controller')
                     else
                         $window.location.href = '/404';
                 });
-
-
         }
-
         $scope.getOpenRequest=function(){
             $http.get("/dash/assets/openRequests")
                 .success(function (res) {
@@ -134,7 +120,6 @@ angular.module('ebs.controller')
                 else
                     $window.location.href = '/404';
             });
-
         }
         $scope.getOpenRequest();
         $scope.getAllStatus=function(){
@@ -144,7 +129,6 @@ angular.module('ebs.controller')
                     if(res){
                         $scope.allStatus=res.obj;
                         console.log($scope.allStatus);
-
                     }
                 }).error(function(error, status){
                 console.log(error, status);
@@ -155,10 +139,8 @@ angular.module('ebs.controller')
                 else
                     $window.location.href = '/404';
             });
-
         }
         $scope.getAllStatus();
-
         $scope.viewRequest=function (request){
             $scope.requestDetails=request;
             // console.log($scope.requestDetails);
@@ -207,13 +189,10 @@ angular.module('ebs.controller')
             console.log("approve request...");
             console.log(request);
             var body={};
-
             if($scope.userRole!='department' && $scope.adminRole!='Admin'){
-
                     body.factoryApprovedBy=$scope.approvedBy;
                     body.factoryApprovedDate=new Date();
                     body.status='Approved';
-
             }
             else if($scope.userRole!='department' && $scope.adminRole=='Admin'){
                 body.factoryApprovedBy='Admin';
@@ -222,7 +201,6 @@ angular.module('ebs.controller')
                 body.factoryApprovedDate=new Date();
                 body.adminApproval=true;
                 body.status='Approved';
-
             }
             else{
                 body.departmentApprovedBy=$scope.approvedBy;
@@ -240,19 +218,14 @@ angular.module('ebs.controller')
                         console.log(response);
                         if(response=='success'){
                          Settings.successPopup('Success', 'Status Updated successfully');
-
 //                          Settings.success_toast("SUCCESS",'Status Updated successfully');
-
                             // $scope.requestDetails.items.status=body.status;
                             $scope.getAllRequestCount();
                             $scope.getOpenRequest();
                             $scope.getAllRequest();
                             $scope.getMasterRequest();
-
                         }
-
                         //$scope.all();
-
                         // Settings.success_toast($scope.getfulfillersName(fulfiller)+ " assigned to " + order.orderId);
                     })
                     .error(function(error, status){
@@ -265,7 +238,6 @@ angular.module('ebs.controller')
                             $window.location.href = '/404';
                     });
             }
-
         }
         $scope.rejectRequest=function (request){
             // console.log("reject request...");
@@ -285,17 +257,12 @@ angular.module('ebs.controller')
                         if(response=='success'){
 //                            Settings.success_toast('Status Updated successfully');
                              Settings.successPopup('Success', 'Status Updated successfully');
-
                             $scope.getOpenRequest();
                             $scope.getAllRequest();
                             $scope.getAllRequestCount();
                             $scope.getMasterRequest();
-
-
                         }
-
                         //$scope.all();
-
                         // Settings.success_toast($scope.getfulfillersName(fulfiller)+ " assigned to " + order.orderId);
                     })
                     .error(function(error, status){
@@ -323,14 +290,10 @@ angular.module('ebs.controller')
                         console.log(response);
                         if(response=='success'){
                          Settings.successPopup('Success', 'Status Updated successfully');
-
                             $scope.getUpdatedItems();
                             $scope.getAllRequest();
-
                         }
-
                         //$scope.all();
-
                         // Settings.success_toast($scope.getfulfillersName(fulfiller)+ " assigned to " + order.orderId);
                     })
                     .error(function(error, status){
@@ -342,22 +305,15 @@ angular.module('ebs.controller')
                         else
                             $window.location.href = '/404';
                     });
-
             }
             // body.itemCode
-
-
         }
-
         $scope.getUpdatedItems=function(){
             $http.get("/dash/assets/request/"+$scope.requestDetails.requestID)
                 .success(function (response) {
                     // console.log("Update -->" + response);
                     $scope.requestDetails=response[0];
-
-
                     //$scope.all();
-
                     // Settings.success_toast($scope.getfulfillersName(fulfiller)+ " assigned to " + order.orderId);
                 })
                 .error(function(error, status){
@@ -369,20 +325,17 @@ angular.module('ebs.controller')
                     else
                         $window.location.href = '/404';
                 });
-
         }
         $scope.searchRequestData=function(){
             // console.log($scope.requestSearch.filter);
             if($scope.requestSearch.filter.length>=3){
                 requestSearchObj.viewLength = 0;
                 requestSearchObj.viewBy = initialViewBy;
-
                 $scope.viewLength = 0;
                 $scope.newViewBy = viewBy.items;
                 $scope.allRequests = [];
                 requestSearchObj.searchFor = $scope.requestSearch.filter;
                 requestSearchObj.searchBy = requestSearchBy;
-
                 $http.post("/dash/assets/searchRequests",requestSearchObj)
                     .success(function (res) {
                         // console.log(res);
@@ -413,7 +366,6 @@ angular.module('ebs.controller')
                     else
                         $window.location.href = '/404';
                 });
-
             }
             else if($scope.requestSearch.filter.length==0){
                 $scope.allRequests=$scope.allRequestMaster;
@@ -438,7 +390,6 @@ angular.module('ebs.controller')
                 });
                 // $scope.getAllRequestCount();
             }
-
         }
         var a = 0;
         $scope.navPage = function(tab, direction){
@@ -456,7 +407,6 @@ angular.module('ebs.controller')
             if(direction){
                 $scope.cBack = "incomplete"
                 // console.log("NEXT");
-
                 if(viewLength + viewBy >= allItems.length){
                     // console.log("idhar")
                     if(viewLength + viewBy < allItemsLength){
@@ -483,15 +433,10 @@ angular.module('ebs.controller')
                             else
                                 $window.location.href = '/404';
                         });
-
                         // jQuery.noConflict();
                         // $('.refresh').css("display", "inline");
-
-
                         // jQuery.noConflict();
                         // $('.refresh').css("display", "none");
-
-
                     }
                     else{
                         //console.log("Out of data")
@@ -505,7 +450,6 @@ angular.module('ebs.controller')
                 else{
                     console.log("Minus viewby")
                     viewLength += viewBy;
-
                     if(viewLength + viewBy > allItemsLength){
                         a = viewLength + viewBy - allItemsLength;
                         viewBy -= a;
@@ -528,9 +472,7 @@ angular.module('ebs.controller')
                         viewBy += a;
                         a = 0;
                     }
-
                     viewLength -= viewBy;
-
                     $scope.viewLength = viewLength;
                     $scope.newViewBy = viewBy;
                 }
@@ -562,7 +504,4 @@ angular.module('ebs.controller')
                 $scope.viewLength = -1;
             }
         };
-
-
-
     });

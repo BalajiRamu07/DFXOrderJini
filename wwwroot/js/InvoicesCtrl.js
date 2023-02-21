@@ -1,15 +1,11 @@
 /**
  * Created by shreyasgombi on 05/03/20.
  */
-
 angular.module('ebs.controller')
-
     .controller("InvoicesCtrl",function ($scope, $filter, $http, $window, Settings ,$location) {
         console.log("Hello From Invoices Controller .... !!!!");
-
         var invoiceSearchObj = {};
         var initialViewBy = 60;
-
         $scope.newViewBy = 10;
         $scope.viewLength = 0;
         var localViewBy = $scope.newViewBy;
@@ -19,44 +15,34 @@ angular.module('ebs.controller')
         $scope.invoiceClients = [];
         $scope.invoice.items = [];
         var instanceDetails =  Settings.getInstance();
-
         $scope.razorPayModeStatus = false;
         instanceDetails.paymentModes.map(mode => {
             if(mode.name == 'Razorpay'){
                 $scope.razorPayModeStatus = mode.active;
             }
         })
-
         $scope.user = {};
         Settings.getUserInfo(user => {
             $scope.user = user;
         })
-
         Settings.getNav(false, function(nav){
             $scope.nav = nav;
             instanceDetails =  Settings.getInstance();
             $scope.coID = instanceDetails.coID;
         });
-
         var invoiceSearchBy = ['salesperson','customername','invoiceId'];
-
         $scope.refreshInvoices = function(){
             if($scope.invoiceSearch.startDate && $scope.invoiceSearch.endDate){
                 if (($scope.invoiceSearch.startDate - $scope.invoiceSearch.endDate) > 0){
                     Settings.alertPopup("WARNING", "Start date cannot be greater than End date.");
-
                     $scope.invoiceSearch.startDate = new Date();
                     $scope.invoiceSearch.startDate.setDate($scope.invoiceSearch.startDate.getDate() - 7);
                     $scope.invoiceSearch.startDate.setHours(0, 0, 0, 0);
                     $scope.invoiceSearch.endDate = new Date();
                     $scope.invoiceSearch.endDate.setHours(23, 59, 59, 59);
-
                 }
-
             }
-
             $scope.DateTimeFormat = function (date_added, when) {
-
                 if (date_added) {
                     //This is to format the date in dd-mm-yy hh:mm:ss format, also padding 0's if values are <10 using above function
                     var date = new Date(date_added);
@@ -64,13 +50,11 @@ angular.module('ebs.controller')
                     else if (when == 'end') date.setHours(23, 59, 59, 999);
                     var dformat = [date.getFullYear(), (date.getMonth() + 1).padLeft(), date.getDate().padLeft()].join('-') + ' '
                         + [date.getHours().padLeft(), date.getMinutes().padLeft(), date.getSeconds().padLeft()].join(':');
-
                     return (dformat);
                 }
                 else
                     return 0;
             };
-
             $scope.viewLength = 0;
             invoiceSearchObj.viewLength = 0;
             invoiceSearchObj.sDate = $scope.DateTimeFormat($scope.invoiceSearch.startDate, 'start');
@@ -81,7 +65,6 @@ angular.module('ebs.controller')
             $scope.newViewBy = parseInt(localViewBy);
             $scope.invoiceReport = [];
             $scope.invoiceDealerPaidAmt = [];
-
             jQuery.noConflict();
             $('.refresh').css("display", "inline");
                 if($scope.user.role == "Manager"){
@@ -107,7 +90,6 @@ angular.module('ebs.controller')
                                     }
                                 }
                             }
-
                             if(response[i].invoiceDetails && response[i].invoiceDetails.total)
                             totalAmount += response[i].invoiceDetails.total;
                             if(response[i].invoiceDetails && response[i].invoiceDetails.payment){
@@ -118,12 +100,9 @@ angular.module('ebs.controller')
                                 }
                             }
                         }
-
-
                         $scope.invoiceReport = response;
                         $scope.invoice_total = totalAmount;
                         $scope.invoice_due_amt = totalAmount;
-
                         if($scope.invoiceDealerPaidAmt.length){
                             for(var i=0; i<$scope.invoiceDealerPaidAmt.length; i++){
                                 $scope.invoice_due_amt = parseFloat($scope.invoice_due_amt) -  parseFloat($scope.invoiceDealerPaidAmt[i].total_paid_amt);
@@ -151,7 +130,6 @@ angular.module('ebs.controller')
             $http.post("/dash/fetch/invoices",invoiceSearchObj).success(function (response) {
                 if(response && response.length){
                     $scope.invoiceReport = response;
-
                     var totalAmount = 0;
                     $scope.invoice_paid_amt = 0;
                     $scope.invoice_due_amt = 0;
@@ -162,7 +140,6 @@ angular.module('ebs.controller')
                         let todaysDate = $scope.dateFormatedays(new Date());
                         let  myArray = response[i].date
                         let invoiceDate  = myArray.split(" ");
-
                     if(response[i].dealername && response[i].dealername.PaymentTerms) {
                         $scope.diffDays = parseInt((Date.parse(todaysDate) - Date.parse(invoiceDate[0])) / (1000 * 60 * 60 * 24), 10);
                         if( $scope.diffDays > response[i].dealername.PaymentTerms ){
@@ -171,7 +148,6 @@ angular.module('ebs.controller')
                             response[i].displayRed = false;
                         }
                     }
-
                         if( response[i].payment){
                             if(response[i].payment.length ){
                                 var last = response[i].payment[response[i].payment.length - 1];
@@ -183,7 +159,6 @@ angular.module('ebs.controller')
                     $scope.invoiceReport = response;
                     $scope.invoice_total = totalAmount;
                     $scope.invoice_due_amt = totalAmount;
-
                     if($scope.invoiceDealerPaidAmt.length){
                         for(var i=0; i<$scope.invoiceDealerPaidAmt.length; i++){
                             $scope.invoice_due_amt = parseFloat($scope.invoice_due_amt) -  parseFloat($scope.invoiceDealerPaidAmt[i].total_paid_amt);
@@ -207,11 +182,9 @@ angular.module('ebs.controller')
                 });
                 }
         };
-
         $scope.item = {};
         $scope.addInvoiceTab = function (flag) {
             if (flag) {
-
                 $scope.addInvoice1 = false;
             }
             else {
@@ -228,8 +201,6 @@ angular.module('ebs.controller')
                 $scope.displayloader = false;
             }
         };
-
-
         const loadInvoices = invoiceSearchObj => {
             $http.post("/dash/fetch/invoices", invoiceSearchObj)
                 .then(res => {
@@ -244,7 +215,6 @@ angular.module('ebs.controller')
                     else
                         $window.location.href = '/404';
                 });
-
         $http.post("/dash/fetch/invoices/count", invoiceSearchObj)
             .success(function(res) {
                 $scope.transactionCount(res);
@@ -259,35 +229,26 @@ angular.module('ebs.controller')
                     $window.location.href = '/404';
             });
         }
-
-
         $scope.clearFilter = function(){
             $scope.multipleInvoices = [];
             $scope.viewLength = 0;
             $scope.newViewBy = parseInt(localViewBy);
-
             invoiceSearchObj.viewLength = 0;
             invoiceSearchObj.viewBy = initialViewBy;
             invoiceSearchObj.searchFor = '';
             invoiceSearchObj.searchBy = [];
             invoiceSearchObj.dealercode = '';
-
             $scope.invoiceSearch.filter = '';
             $scope.invoiceSearch.idFilter = '';
             $scope.invoiceSearch.startDate = '';
             $scope.invoiceSearch.endDate = '';
-
             $scope.invoiceReport = [];
             $scope.invoiceGetDealer = [];
             $scope.refreshInvoices();
-
             loadInvoices(invoiceSearchObj);
-            
             $scope.showInvoiceFilter = false;
         }
-
         $scope.searchDealer = function(text){
-
             if(text.length >= 3 && text){
                 $scope.displayloader = false;
                 $http.get("/dash/stores/search/"+text)
@@ -298,10 +259,8 @@ angular.module('ebs.controller')
                                 console.log('searchDealer 1',res)
                                 $scope.searchDealerCount = res.length;
                                 $scope.newDealers = res;
-
                                 $scope.viewLength = 0;
                                 $scope.newViewBy = localViewBy;
-
                                 if ( $scope.searchDealerCount < localViewBy) {
                                     $scope.newViewBy = $scope.searchDealerCount;
                                 }
@@ -316,20 +275,16 @@ angular.module('ebs.controller')
                                 $(".dealerDropdown").css('display', 'none')
                             }
                         }else{
-
                             $scope.searchDealerCount = $scope.dealer_count;
                             $scope.newDealers = $scope.serviceClients;
-
                             $scope.viewLength = 0;
                             $scope.newViewBy = localViewBy;
-
                             if ( $scope.searchDealerCount < localViewBy) {
                                 $scope.newViewBy = $scope.searchDealerCount;
                             }
                             jQuery.noConflict();
                             $(".dealerDropdown").css('display', 'none');
                         }
-
                     })
                     .error(function(error, status){
                         console.log(error, status);
@@ -347,51 +302,39 @@ angular.module('ebs.controller')
                 }else {
                     $scope.displayloader = false;
                 }
-
                 $scope.searchDealerCount = $scope.dealer_count;
                 $scope.newDealers = $scope.serviceClients;
-
                 $scope.viewLength = 0;
                 $scope.newViewBy = localViewBy;
-
                 if ( $scope.searchDealerCount < localViewBy) {
                     $scope.newViewBy = $scope.searchDealerCount;
                 }
-
                 jQuery.noConflict();
                 $(".dealerDropdown").css('display', 'none')
             }
             // console.log('reslast',$scope.newDealers);
         };
-
-    
         var a = 0;
         $scope.navPage = function(tab, direction){
             var viewLength = $scope.viewLength;
             var viewBy = $scope.newViewBy;
-
             if(direction){
                 console.log("NEXT");
                 if(viewLength + viewBy >= $scope.invoiceReport.length){
                     if(viewLength + viewBy < $scope.invoice_count){
                         viewLength += viewBy;
-
                         invoiceSearchObj.viewLength = viewLength;
                         invoiceSearchObj.viewBy = initialViewBy;
                         invoiceSearchObj.sDate = $scope.DateTimeFormat($scope.invoiceSearch.startDate, 'start');
                         invoiceSearchObj.eDate = $scope.DateTimeFormat($scope.invoiceSearch.endDate, 'end');
                         invoiceSearchObj.searchFor = ($scope.invoiceSearch.filter ? $scope.invoiceSearch.filter : $scope.invoiceSearch.idFilter );
                         invoiceSearchObj.searchBy = invoiceSearchBy;
-
                         jQuery.noConflict();
                         $('.refresh').css("display", "inline");
                         $http.post("/dash/fetch/invoices",invoiceSearchObj).success(function (response) {
-
                             for(var i=0; i<response.length; i++){
                                 $scope.invoiceReport.push(response[i]);
                             }
-
-
                             if(viewLength + viewBy > $scope.invoice_count){
                                 a = viewLength + viewBy - $scope.invoice_count;
                                 viewBy -= a;
@@ -408,7 +351,6 @@ angular.module('ebs.controller')
                                 else
                                     $window.location.href = '/404';
                             });
-
                         jQuery.noConflict();
                         $('.refresh').css("display", "none");
                     }
@@ -424,7 +366,6 @@ angular.module('ebs.controller')
                 else{
                     //console.log("Minus viewby")
                     viewLength += viewBy;
-
                     if(viewLength + viewBy > $scope.invoice_count){
                         a = viewLength + viewBy - $scope.invoice_count;
                         viewBy -= a;
@@ -443,16 +384,12 @@ angular.module('ebs.controller')
                         viewBy += a;
                         a = 0;
                     }
-
                     viewLength -= viewBy;
-
                     $scope.viewLength = viewLength;
                     $scope.newViewBy = viewBy;
                 }
             }
         };
-
-
         $scope.clearInvoices = function(){
             $scope.invoice = {};
             $scope.addInvoice3 = {};
@@ -466,7 +403,6 @@ angular.module('ebs.controller')
             $scope.invoicedealer = {};
             $scope.displayloader = false;
         };
-
         $scope.formatDate = function(date){
             if(date==undefined || date == '')
                 return ('');
@@ -479,7 +415,6 @@ angular.module('ebs.controller')
             var dateOut = dt+" - "+monthNames[d.getMonth()]+" - "+(d.getFullYear());
             return dateOut;
         }
-
         $scope.generateInvoiceNumber = function(callback){
             const zeroPad = (num, places) => String(num).padStart(places, '0');
             var invoiceNumber = instanceDetails.invoiceID ?instanceDetails.invoiceID : 'INV';
@@ -489,7 +424,6 @@ angular.module('ebs.controller')
             var financialYear  = year+'-'+(parseInt(year)+1);
             // console.log(financialYear)
             var id
-
             $http.post("/dash/settings/invoice/set/id", {id : 'INV'})
                 .success(function(res){
                     console.log(res)
@@ -510,37 +444,28 @@ angular.module('ebs.controller')
                         $window.location.href = '/404';
                 });
         }
-
         //formate date
         $scope.dateFormate = function(date){
             return dformat = [date.getFullYear(), (date.getMonth() + 1) < 10 ? ('0' + (date.getMonth() + 1)) : (date.getMonth() + 1), date.getDate() < 10 ? '0' + date.getDate() : date.getDate()].join('-') + ' '
                 + [date.getHours(), date.getMinutes(), date.getSeconds()].join(':');
         }
-
         $scope.dateFormatedays = function(date){
             return dformat = [date.getFullYear(), (date.getMonth() + 1) < 10 ? ('0' + (date.getMonth() + 1)) : (date.getMonth() + 1), date.getDate() < 10 ? '0' + date.getDate() : date.getDate()].join('-') + ' ';
         }
-
         // invoice dealer searchable
         $scope.selectDealerInvoice = function(dealer){
             $scope.invoiceDealerPaidAmt = [];
-
             if(dealer){
                 jQuery.noConflict();
                 $('.refresh').css("display", "inline");
-
                 invoiceSearchObj.viewLength = 0;
                 invoiceSearchObj.viewBy = initialViewBy;
-
                 $scope.viewLength = 0;
                 $scope.newViewBy = localViewBy;
-
                 invoiceSearchObj.searchFor = '';
                 invoiceSearchObj.searchBy = invoiceSearchBy;
                 invoiceSearchObj.dealercode = dealer.Dealercode;
-
                 $scope.invoiceGetDealer =[];
-
                 $http.post("/dash/fetch/invoices", invoiceSearchObj).success(function (res) {
                     $scope.invoiceSearch.filter = dealer.DealerName;
                     $scope.invoiceReport = [];
@@ -568,7 +493,6 @@ angular.module('ebs.controller')
                         $scope.invoice_paid_amt = 0;
                         $scope.invoice_due_amt =  $scope.invoice_total;
                     }
-
                     $scope.invoiceReport = res;
                     $scope.transactionCount(res.length);
                 })
@@ -581,7 +505,6 @@ angular.module('ebs.controller')
                     else
                         $window.location.href = '/404';
                 });
-
                 $http.post("/dash/fetch/invoices/count", invoiceSearchObj)
                     .success(function(res) {
                         $scope.transactionCount(res);
@@ -598,32 +521,25 @@ angular.module('ebs.controller')
                 jQuery.noConflict();
                 $('.refresh').css("display", "none");
             }
-
             jQuery.noConflict();
             $(".dealerDropdown").css('display', 'none');
             $('#deviceSearchBar').val('');
         };
-
         //invoices tab 34
         $scope.createInvoices = function(res){
             if (res.customername) {
                 if (res.items.length) {
-
             var date = new Date();
             $scope.tempObj = {};
             $scope.tempObj = res;
-
             if(!res.date){
                 $scope.tempObj.date = $scope.dateFormate(date);
             }else{
                 var date = res.date;
                 $scope.tempObj.date = $scope.dateFormate(date);
             }
-
             $scope.tempObj.seller = res.seller ? res.seller : $scope.user.seller;
             $scope.tempObj.salesperson = res.salesperson ? res.salesperson : $scope.user.username;
-
-
             $scope.generateInvoiceNumber(function(id){
                 $scope.tempObj.invoiceId = id;
                         if(id){
@@ -642,11 +558,8 @@ angular.module('ebs.controller')
                             else
                                 $window.location.href = '/404';
                         });
-
                         }
                     })
-
-
                 } else {
                     Settings.alertPopup("ERROR", "Please Enter Items");
                 }
@@ -657,8 +570,6 @@ angular.module('ebs.controller')
             $scope.invoice.items = [];
             $scope.refreshInvoices();
         }
-
-
         $scope.addInvoice3 = {}
         $scope.saveInvoices = function(){
             if(Object.keys($scope.addInvoice3).length && $scope.addInvoice3.invoiceProduct !=''  && $scope.addInvoice3.invoiceProduct != undefined ){
@@ -673,14 +584,10 @@ angular.module('ebs.controller')
                 }else{
                     Settings.alertPopup("ERROR", "Please Enter Price");
                 }
-
             }else{
                 Settings.alertPopup("ERROR", "Please Enter Items");
             }
-
         }
-
-
         $scope.addInvoiceMrp = function(data){
             $scope.invoice.total = 0;
             $scope.invoice.totalQty = 0;
@@ -690,14 +597,11 @@ angular.module('ebs.controller')
             for(var i = 0; i < $scope.invoice.items.length; i++){
                 $scope.invoice.total  += $scope.invoice.items[i].invoiceMrp * $scope.invoice.items[i].quantity;
                 $scope.invoice.totalQty = parseFloat($scope.invoice.totalQty) + parseFloat($scope.invoice.items[i].quantity)
-
             }
             return $scope.invoice.total;
             $scope.invoice.items = [];
             $scope.item.Product = '';
         }
-
-
         $scope.invoicedealer = {};
         // invoice dealer prefilled
         $scope.selectInvoice = function(details){
@@ -706,17 +610,11 @@ angular.module('ebs.controller')
             $scope.invoice.customername = details.DealerName;
             $scope.invoice.customer_code = details.Dealercode || 0;
             $scope.invoicedealer.dealer = details.DealerName;
-
-
-
             jQuery.noConflict();
             $(".dealerDropdown").css('display', 'none');
             // $('#invoiceDealerSearchBar').val('');
         }
         //end
-
-
-
         // /Apply invoice filter
         $scope.invoiceGetDealer = [];
         $scope.invoiceSearchFilter = function(data)
@@ -724,20 +622,13 @@ angular.module('ebs.controller')
             if(data){
                 jQuery.noConflict();
                 $('.refresh').css("display", "inline");
-
-
                 invoiceSearchObj.viewLength = 0;
                 invoiceSearchObj.viewBy = initialViewBy;
-
                 $scope.viewLength = 0;
                 $scope.newViewBy = localViewBy;
-
                 invoiceSearchObj.searchFor = data;
                 invoiceSearchObj.searchBy = invoiceSearchBy;
-
-
                 $scope.invoiceGetDealer =[];
-
                 $http.post("/dash/fetch/invoices", invoiceSearchObj).success(function (response) {
                     $scope.invoiceGetDealer = response;
                     jQuery.noConflict();
@@ -752,7 +643,6 @@ angular.module('ebs.controller')
                         else
                             $window.location.href = '/404';
                     });
-
                 $http.post("/dash/fetch/invoices/count", invoiceSearchObj)
                     .success(function(res) {
                         $scope.transactionCount(res);
@@ -766,13 +656,9 @@ angular.module('ebs.controller')
                         else
                             $window.location.href = '/404';
                     });
-
-
                 $scope.showInvoiceFilter = true;
-
                 if($scope.invoiceSearch.idFilter == '')
                     $scope.showInvoiceFilter = false;
-
                 setTimeout(function(){
                     $('.refresh').css("display", "none");
                 }, 2000);
@@ -780,19 +666,14 @@ angular.module('ebs.controller')
                 $scope.invoiceGetDealer =[];
                 $scope.clearFilter();
             }
-
         };
-
         $scope.invoiceGetDealer = [];
-
         //.... Invoice Customer Search Filter.....
         $scope.invoiceDealerSearchFilter = function(data) {
             //... Show Refresh ....
             jQuery.noConflict();
             $('.refresh').css("display", "inline");
-
             $scope.invoiceGetDealer = [];
-
             if(data){
                 $http.get("/dash/stores/search/" + data)
                     .then(res => {
@@ -809,12 +690,9 @@ angular.module('ebs.controller')
                         else
                             $window.location.href = '/404';
                     });
-
                 $scope.showInvoiceFilter = true;
-
                 if($scope.invoiceSearch.filter == '')
                     $scope.showInvoiceFilter = false;
-
                 setTimeout(function(){
                     $('.refresh').css("display", "none");
                 }, 2000);
@@ -823,9 +701,7 @@ angular.module('ebs.controller')
                 $scope.clearFilter();
             }
         };
-
         $scope.refreshInvoices();
-
         /*=======delete selected items for invoice=====*/
         $scope.deleteSelectedItems = function(index,data){
             $scope.addInvoice3 = {};
@@ -837,7 +713,6 @@ angular.module('ebs.controller')
                 }
             });
         }
-
         $scope.multipleInvoices = [];
         $scope.multipleInvoice = function (invoice,value) {
             // console.log("invoice multiple ", invoice, value)
@@ -850,7 +725,6 @@ angular.module('ebs.controller')
                 }
             }
         }
-
         $scope.invoiceProceedToPayment = function(){
             console.log('proceed to pay')
             if($scope.multipleInvoices.length){
@@ -861,13 +735,11 @@ angular.module('ebs.controller')
                     totalInvoiceAmt += i.total;
                     invoiceIds.push(i.invoiceId);
                 })
-                
                 dataObj.amount = totalInvoiceAmt;
                 dataObj.invoiceIds = invoiceIds;
                 $scope.makeRazorpayPayment(dataObj, $scope.multipleInvoices)
             }
         }
-
         $scope.makeRazorpayPayment = function (data, newOrder) {
             console.log("razor pay");
             console.log('Amt : ', data.amount);
@@ -911,7 +783,6 @@ angular.module('ebs.controller')
                                 orderInv.itemcode = 'OTS';
                                 orderInv.medicine = 'RazorPay'
                                 orderInv.date_added = dateform;
-
                                 $http.post("/razorpay/payment/verify", orderInv).then(function (res) {
                                     if (res.data) {
                                         console.log(res.data);
@@ -928,16 +799,13 @@ angular.module('ebs.controller')
                                         orderInv.refund_status = paymentData.refund_status;
                                         orderInv.vpa = paymentData.vpa;
                                         orderInv.wallet = paymentData.wallet;
-                                        
                                         /*
                                        Post order and Put payment details into orders collection
                                          */
-
                                        if($scope.multipleInvoices.length){
                                             for(let i=0; i< $scope.multipleInvoices.length; i++){
                                                 $scope.tempObj = {};
                                                 console.log('$scope.user', $scope.user);
-                                                
                                                 $scope.tempObj.invoiceId = $scope.multipleInvoices[i].invoiceId;
                                                 $scope.tempObj.Payment = {
                                                     'paid_Amt': $scope.multipleInvoices[i].total,
@@ -951,7 +819,6 @@ angular.module('ebs.controller')
                                                     'sellername': $scope.user.username ? $scope.user.username : 'Portal',
                                                     'sellerphone': $scope.user.sellerphone ? $scope.user.sellerphone : 'Portal',
                                                 }
-        
                                                 $http.post("/dash/invoice/updatePayment",$scope.tempObj)
                                                 .success(function(response) {
                                                     //  Settings.success_toast("SUCCESS", "Payment Recorded Successfully!");
@@ -969,7 +836,6 @@ angular.module('ebs.controller')
                                                 });
                                             }
                                        }
-
                                        let invPayment = [];
                                        invPayment.push(orderInv);
                                        $http.post("/dash/orders/" + orderInv.orderId, invPayment)
@@ -1005,12 +871,10 @@ angular.module('ebs.controller')
                 }
             })
         }
-
         /*==========taxable items/ change gst=========*/
         $scope.changeGSTForInvoiceItems = function(order, gst){
             $scope.invoice.total = 0;
             $scope.invoice.totalQty = 0;
-
             if(gst){
                 $scope.invoice.items.quantity = order.quantity;
                 for(var i=0; i< $scope.invoice.items.length; i++){
@@ -1022,12 +886,10 @@ angular.module('ebs.controller')
                     $scope.invoice.items[i].cgst = ($scope.invoice.items[i].taxableMrp * gst.cgst) / 100;
                     $scope.invoice.items[i].sgst = ($scope.invoice.items[i].taxableMrp * gst.sgst) / 100;
                     $scope.invoice.items[i].igst = ($scope.invoice.items[i].taxableMrp * gst.igst) / 100;
-
                 }
             }else{
                 $scope.invoice.items.quantity = order.quantity;
                 for(var i=0; i< $scope.invoice.items.length; i++){
-
                     $scope.invoice.items[i].cgst = 0;
                     $scope.invoice.items[i].sgst = 0;
                     $scope.invoice.items[i].igst = 0;
@@ -1037,12 +899,9 @@ angular.module('ebs.controller')
                     $scope.invoice.items[i].taxableMrp =
                         (($scope.invoice.items[i].quantity  * $scope.invoice.items[i].invoiceMrp) /
                         (100 + $scope.invoice.items[i].cgst + $scope.invoice.items[i].sgst + $scope.invoice.items[i].igst)) * 100;
-
-
                 }
             }
         }
-
         // invoice dealer searchable
         $scope.selectInvoiceNumber = function(details){
             $scope.invoiceReport = [];
@@ -1060,24 +919,18 @@ angular.module('ebs.controller')
             }
             $scope.invoiceReport.push(details);
             $scope.transactionCount($scope.invoiceReport.length);
-
             jQuery.noConflict();
             $(".userDropdown").css('display', 'none');
             $('#deviceSearchBar').val('');
-
         };
-
         /*user search and dropdown*/
         $scope.searchInvoiceUser = function(text){
-
-
             if(text.length >= 2 && text){
                 $http.get("/dash/user/search/"+text)
                     .success(function(res){
                         if(res) {
                             $scope.roleSalesrep = res;
                         }
-
                         jQuery.noConflict();
                         $(".userDropdown").css('display', 'block')
                     })
@@ -1094,19 +947,15 @@ angular.module('ebs.controller')
                 jQuery.noConflict();
                 $(".userDropdown").css('display', 'none')
             }
-
             // console.log('reslast',$scope.newDealers);
         };
-
         $scope.selectInvoiceUser = function(details){
             $scope.invoice.salesperson = details.sellername;
             $scope.invoice.seller = details.sellerphone;
-
             jQuery.noConflict();
             $(".userDropdown").css('display', 'none')
             $('#invoiceSearchBar').val('');
         };
-
         //invoice dealer details prfilled
         $scope.selectItem = function(search){
             if(search){
@@ -1130,24 +979,16 @@ angular.module('ebs.controller')
             jQuery.noConflict();
             $(".productDropdown").css('display', 'none');
         };
-
         $scope.selectBankName = function(temp){
             $scope.paymentInv.bankName = temp;
-
-
             jQuery.noConflict();
             $(".userDropdown").css('display', 'none');
             $('#invoiceSearchBar1').val('');
         };
-
-
-
         $scope.fetchinvoicedata = function(id){
             var body = {};
             body.id = id;
-
             var url = encodeURIComponent(id)
-
             $http.post("/dash/fetchInvoice/"+url).success(function(response){
                 $scope.invoicedetails1 = response;
                 if($scope.invoicedetails1){
@@ -1169,9 +1010,7 @@ angular.module('ebs.controller')
                         $window.location.href = '/404';
                 });
         }
-
         //invoices tab 34
-
         $scope.selectInvoiceItem = function(item){
             $scope.addInvoice3.invoiceProduct = item.Product;
             $scope.item.Product = item.Product;
@@ -1182,12 +1021,10 @@ angular.module('ebs.controller')
             $scope.addInvoice3.igst = item.IGST;
             $scope.addInvoice3.sgst = item.SGST;
             $scope.addInvoice3.quantity = 1;
-
             jQuery.noConflict();
             $(".productDropdown").css('display', 'none');
         };
         //end
-
         $scope.transactionCount = function(response) {
             if(response){
                 if(response > $scope.newViewBy){
@@ -1211,7 +1048,6 @@ angular.module('ebs.controller')
                 $scope.viewLength = -1;
             }
         };
-
         $http.post("/dash/fetch/invoices/count", invoiceSearchObj)
             .success(function(res) {
                 $scope.transactionCount(res);
@@ -1227,7 +1063,6 @@ angular.module('ebs.controller')
             });
         //
         // $scope.invoiceForm();
-
         $http.get("/dash/memberDetail").success(function(response){
             $scope.memberdetails = response;
         })
@@ -1240,21 +1075,16 @@ angular.module('ebs.controller')
                 else
                     $window.location.href = '/404';
             });
-
         if( !$scope.invoiceSearch.startDate && !$scope.invoiceSearch.endDate ){
             $scope.showInvoiceFilter = false;
         }else{
             $scope.showInvoiceFilter = true;
         }
-
-
         $scope.fetchDetails = function (invoice){
             var url = encodeURIComponent(invoice)
             $location.path('/invoice-details/'+ url);
         }
-
         $scope.pointingOrderDetails = function (orderId){
             $location.path('/order-details/'+ orderId);
         }
-
     })

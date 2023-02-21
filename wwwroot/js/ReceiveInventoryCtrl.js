@@ -1,48 +1,35 @@
 /**
  * Created by shreyasgombi on 27/09/22.
  */
-
  angular.module('ebs.controller')
     .controller("ReceiveInventoryCtrl",function ($scope, $routeParams, $http, Settings, $location, $window) {
         console.log("Hello From Receive Inventory Controller .... !!!!");
-
         $scope.tab = "quantity";
-
         $scope.tab = ($routeParams.tab && $routeParams.tab != "quantity") ? ($routeParams.tab ? $routeParams.tab : "quantity") : "quantity";
-
         $scope.receive_items = {};
         $scope.receive_items.item_search = "";
         $scope.receive_items.location = "";
-
         $scope.locations = [{"name" : "DEFAULT", "type" : "Real Location"}];
-
         //... Current Inventory Stats.....
         $scope.current_inventory = [];
-
         //.... Serial Based Scanning....
         $scope.serial_items = [];
         //.... Miscellaneous Items....
         $scope.misc_items = [];
-
         //... Miscellaneous item scan....
         $scope.misc_item = {};
-
         $scope.user_details = {};
-
         Settings.getUserInfo(user_details => {
             $scope.user_details = user_details;
         })
-
         const startLoader = () => {
             jQuery.noConflict();
             $('.refresh').css("display", "inline");
         }
-
         const stopLoader = () => {
             jQuery.noConflict();
             $('.refresh').css("display", "none");
         }
-
         const fetchLocations = () => {
             startLoader();
             $http.get("/dash/settings/details/inventoryLocation")
@@ -53,21 +40,17 @@
                     }
                 })
         };
-
         $scope.fetchInventory = () => {
             if($scope.item_details && $scope.item_details.itemCode){
                 startLoader();
                 $scope.current_inventory = [];
                 let query = new URLSearchParams();
-
                 if($scope.tab) query.append("tab", $scope.tab);
                 if($scope.receive_items.item_search) {
                     if($scope.receive_items.item_search.itemCode) query.append("item", $scope.receive_items.item_search.itemCode);
                     else query.append("item", $scope.receive_items.item_search);
                 }
-
                 if($scope.receive_items.location) query.append("location", $scope.receive_items.location);
-
                 $http.get("/dash/inventory/search?" + query.toString())
                     .then(inventory => {
                         stopLoader();
@@ -108,7 +91,6 @@
                     })
             }
         }
-
         $scope.searchItem = () => {
             if($scope.receive_items.item_search){
                 startLoader();
@@ -117,7 +99,6 @@
                         stopLoader();
                         if(items.data && items.data.length){
                             $scope.inventory_search = items.data;
-                            
                             if(items.data.length == 1){
                                 if(items.data[0].cloudinaryURL && items.data[0].cloudinaryURL != "undefined"){
                                     if(typeof items.data[0].cloudinaryURL == "string"){
@@ -156,7 +137,6 @@
                     })
             }
         };
-
         $scope.selectItem = item => {
             if(item.cloudinaryURL && item.cloudinaryURL != "undefined"){
                 if(typeof item.cloudinaryURL == "string"){
@@ -177,11 +157,9 @@
                     "image" : "appimages/product_image_not_available.png"
                 }];
             }
-
             $scope.item_details = item;
             $scope.fetchInventory();
         }
-
         $scope.scanItem =  () => {
             if($scope.receive_items.scan_items){
                 if(JSON.stringify($scope.serial_items).indexOf($scope.receive_items.scan_items) == -1){
@@ -197,7 +175,6 @@
                 }else Settings.fail_toast("Error", "Scanned Item Already Exists");
             }else Settings.fail_toast("Error", "Enter the Serial Number / Unique Code");
         };
-
         const receiveInventory = items => {
             startLoader();
             $http.put("/dash/inventory/items/receive?tab=" + $scope.tab, items)
@@ -221,7 +198,6 @@
                         $window.location.href = '/404';
                 })
         }
-
         $scope.addToList = () => {
             if($scope.misc_item.itemCode && $scope.misc_item.Product && $scope.misc_item.receive && $scope.receive_items.location){
                 if(JSON.stringify($scope.misc_items).indexOf($scope.misc_item.itemCode) == -1 && 
@@ -236,7 +212,6 @@
                 }else Settings.fail_toast("Error", "Scanned Item Already Exists");
             }
         }
-
         $scope.receiveInventory = () => {
             if($scope.tab == "quantity"){
                 console.log("Receive Inventory ---> ", $scope.current_inventory);
@@ -244,7 +219,6 @@
                     let receive_items = [];
                     receive_items = $scope.current_inventory.filter(el => el.receive && el.receive > 0);
                     console.log(receive_items);
-    
                     if(receive_items.length){
                         Settings.confirmPopup("Confirm", "Are you sure?\nNote that this will update the inventory data.",
                         result => {
@@ -273,21 +247,16 @@
                         });
                 }
             }
-            
         }
-
         if($scope.user_details.role == "Admin"){
             fetchLocations();
         }
-
         if($scope.tab != "miscellaneous"){
             if($routeParams.item && $routeParams.item != 'undefined'){
                 $scope.receive_items.item_search = $routeParams.item;
                 $scope.searchItem();
             }
         }
-        
-
         $scope.reset = () => {
             $scope.current_inventory = [];
             $scope.receive_items.item_search = '';
@@ -295,6 +264,5 @@
             $scope.misc_item = {};
             $scope.misc_items = [];
         }
-
         console.log($scope.receive_items);
     })

@@ -1,5 +1,4 @@
 angular.module('ebs.controller')
-
     .controller("CheckStatusCtrl",function ($scope, $filter, $http,Settings, $modal, $window, toastr, $interval,$sce,$mdDialog) {
         console.log("Hello From  CheckStatusCtrl Controller .... !!!!");
         $scope.request = [];
@@ -18,20 +17,16 @@ angular.module('ebs.controller')
          $scope.qtyTotal=0;
          $scope.amountTotal=0;
         console.log($scope.instanceDetails);
-
         Settings.getUserInfo(function(user_details) {
             $scope.user = user_details;
             console.log("User details");
             console.log($scope.user);
         });
-
-
         $scope.getRequest=function(requestID){
             console.log("get request using request id"+requestID)
             console.log(requestID.length);
             $scope.requestID = requestID;
             if(requestID.length == 7 || requestID.length == 8){
-
                 $http.get("/dash/assets/request/"+requestID)
                     .success(function (res) {
                         console.log(res);
@@ -42,7 +37,6 @@ angular.module('ebs.controller')
                                 $scope.awaitingApproval=false;
                                 $scope.qtyTotal=0;
                                 $scope.amountTotal=0;
-
                                 $scope.requestItems = res[0].items
                                 // console.log($scope.requestItems);
                                 if($scope.requestItems.length){
@@ -52,11 +46,8 @@ angular.module('ebs.controller')
                                     }
                                     // console.log($scope.qtyTotal);
                                     // console.log($scope.amountTotal);
-
-
                                 }
                                 $scope.showBtn();
-
                             }
                             else{
                                 $scope.request = [];
@@ -64,13 +55,11 @@ angular.module('ebs.controller')
                                 $scope.awaitingApproval=true;
                                 $scope.requestItems = [];
                             }
-
                         }
                         else{
                             $scope.request = [];
                             $scope.dataFound = true;
                             $scope.awaitingApproval=false;
-
                             $scope.requestItems = [];
                         }
                     }).error(function(error, status){
@@ -82,13 +71,8 @@ angular.module('ebs.controller')
                     else
                         $window.location.href = '/404';
                 });
-
             }
-
-
         }
-
-
         $scope.getAllStatus=function(){
             $http.get("/dash/assets/allRequest/status")
                 .success(function (res) {
@@ -96,7 +80,6 @@ angular.module('ebs.controller')
                     if(res){
                         $scope.allStatus=res.obj;
                         console.log($scope.allStatus);
-
                     }
                 }).error(function(error, status){
                 console.log(error, status);
@@ -107,10 +90,8 @@ angular.module('ebs.controller')
                 else
                     $window.location.href = '/404';
             });
-
         }
         $scope.getAllStatus();
-
         $scope.changeQTY = function (request,value) {
             console.log("return receive request...");
             console.log(request);
@@ -119,7 +100,6 @@ angular.module('ebs.controller')
             $scope.selectedItem = request;
             $scope.totalQTY = request.Qty;
             $scope.newQTY = 0;
-
             console.log(" Total Received Qty -" + $scope.selectedItem.totreceivedQty)
             console.log(" Total Returned Qty -" + $scope.selectedItem.totreturnQty);
             if($scope.selectedItem.totreceivedQty){
@@ -131,17 +111,10 @@ angular.module('ebs.controller')
             else if($scope.selectedItem.totreceivedQty && $scope.selectedItem.totreturnQty){
                 $scope.totalQTY = request.Qty - ($scope.selectedItem.totreceivedQty+$scope.selectedItem.totreturnQty);
             }
-
-
         }
-
-
         $scope.returnReceiveQTY = function (quantity,btnVal){
             console.log(quantity);
             console.log(btnVal);
-
-
-
             if(btnVal == 'Return'){
                 var body = {};
                 body.returnDetails = {}
@@ -152,7 +125,6 @@ angular.module('ebs.controller')
                 Settings.getUserInfo(function(user_details){
                     body.returnDetails.returnedUser = user_details.username ? user_details.username : 'Admin';
                 });
-
                 if(body){
                     $http.put("/dash/assets/itemStatus/receiveReturn", body)
                         .success(function (response) {
@@ -164,16 +136,10 @@ angular.module('ebs.controller')
                                 $scope.getRequest($scope.requestID);
                                 $scope.hideModal();
                                 $scope.showBtn();
-
-
                                 // document.getElementById('returnReceiveModal').style.display='none';
                                 // document.getElementsByClassName('modal-backdrop').na)
-
-
                             }
-
                             //$scope.all();
-
                             // Settings.success_toast($scope.getfulfillersName(fulfiller)+ " assigned to " + order.orderId);
                         })
                         .error(function(error, status){
@@ -186,8 +152,6 @@ angular.module('ebs.controller')
                                 $window.location.href = '/404';
                         });
                 }
-
-
             }
             else if(btnVal == 'Receive'){
                 var body = {};
@@ -196,16 +160,12 @@ angular.module('ebs.controller')
                 body.receivedDetails.receivedDate = new Date();
                 body.requestID =  $scope.requestID;
                 body.itemCode = $scope.selectedItem.itemCode
-
                 Settings.getUserInfo(function(user_details){
                     // console.log("inside if");
                     // console.log(user_details);
                     body.receivedDetails.receivedUser =user_details.username ? user_details.username : 'Admin';
-
                     // console.log($scope.approvedBy);
                 });
-
-
                 if(body){
                     $http.put("/dash/assets/itemStatus/receiveReturn", body)
                         .success(function (response) {
@@ -213,18 +173,13 @@ angular.module('ebs.controller')
                             if(response=='success'){
 //                                Settings.success_toast('Item Received successfully');
                                 Settings.successPopup('Success', 'Item Received successfully');
-
                                 $scope.getAllStatus();
                                 $scope.getRequest($scope.requestID);
                               //  document.getElementById('returnReceiveModal').style.display='none';
-
-
                                 $scope.hideModal();
                                 $scope.showBtn();
                             }
-
                             //$scope.all();
-
                             // Settings.success_toast($scope.getfulfillersName(fulfiller)+ " assigned to " + order.orderId);
                         })
                         .error(function(error, status){
@@ -237,13 +192,8 @@ angular.module('ebs.controller')
                                 $window.location.href = '/404';
                         });
                 }
-
             }
-
-
         }
-
-
         $scope.expandSelected=function(person){
             $scope.requestItems.forEach(function(val){
                 val.expanded=false;
@@ -252,20 +202,14 @@ angular.module('ebs.controller')
             console.log(person);
             $scope.returnDetails = person.returnDetails;
             $scope.receivedDetails = person.receivedDetails;
-
-
         }
-
-
         $scope.hideModal = function (){
             let modal = document.getElementById('returnReceiveModal');
             let modalDismiss = modal.querySelector('[data-dismiss]');
             let backdrop = document.querySelector('.modal-backdrop');
-
             modal.classList.remove('show');
             backdrop.removeEventListener('click', $scope.hideModal.bind($scope));
             modalDismiss.removeEventListener('click', $scope.hideModal.bind($scope));
-
             setTimeout(function(){
                 modal.style.display = 'none';
                 modal.removeAttribute('aria-modal');
@@ -276,8 +220,6 @@ angular.module('ebs.controller')
                 backdrop.remove();
             }, 200);
         }
-
-
         $scope.showBtn = function () {
             console.log("show btn function");
             console.log($scope.requestItems);
@@ -305,7 +247,6 @@ angular.module('ebs.controller')
                            $scope.requestItems[i].showReturnBtn = true;
                            $scope.requestItems[i].showReceiveBtn = true;
                        }
-
                    }
                }
                if($scope.requestItems[i].returnDetails){
@@ -328,17 +269,6 @@ angular.module('ebs.controller')
                        }
                    }
                }
-
-
-
            }
         }
-
-
-
-
-
-
-
-
     });

@@ -1,102 +1,75 @@
 angular.module('ebs.controller')
-
     .controller("MeetingsReportCtrl", function ($scope, $http, Settings, $window) {
         console.log("Hello From Meetings Report Controller .... !!!!");
-
         //.... User details....
         $scope.user = {};
-
         //..... Pagination.....
         $scope.viewLength = 0;
         $scope.newViewBy = 10;
-
         //.... Other View Values....
         $scope.newViewBy1 = {};
         $scope.newViewBy1.view = 10;
-
         $scope.reportTabName = "Meetings";
-
         $scope.reportTabId = 8;
         $scope.tab = 8;
         $scope.showReports = true;
         $scope.meeting_count = 0;
-
         let localViewBy = $scope.newViewBy;
         let initialViewBy = 60;
         let instanceDetails =  Settings.getInstance();
         const api_timeout = 600000;
-
         //.... Reports Filter.....
         $scope.mtgreport = {};
-
         //.... Set Filter Dates to last 7 days....
         $scope.mtgreport.startDate = new Date();
         $scope.mtgreport.startDate.setDate($scope.mtgreport.startDate.getDate() - 7);
         $scope.mtgreport.startDate.setHours(0, 0, 0, 0);
         $scope.mtgreport.endDate = new Date();
         $scope.mtgreport.endDate.setHours(23, 59, 59, 59);
-
         $scope.meetingsReportSearch = {};
         $scope.meetingsReportSearch.filter = '';
         let meetingSearchObj = {};
         let topDealerSearchBy = ['dealername','sellername'];
         $scope.meetingreport = [];
-
         $scope.meetingDuration = Settings.daysDifference($scope.mtgreport.startDate , $scope.mtgreport.endDate);
-
         $scope.parseData = (viewLength, newViewBy) => parseInt(viewLength) + parseInt(newViewBy);
-
         $scope.DateTimeFormat = (date, when) => Settings.dateFilterFormat(date, when);
-
         $scope.openFilterClear = () => {
             $scope.mtgreport.startDate = '';
             $scope.mtgreport.endDate = '';
-
             $scope.mtgreport.startDate = new Date();
             $scope.mtgreport.startDate.setDate($scope.mtgreport.startDate.getDate() - 7);
             $scope.mtgreport.startDate.setHours(0, 0, 0, 0);
             $scope.mtgreport.endDate = new Date();
             $scope.mtgreport.endDate.setHours(23, 59, 59, 59);
-
         };
-
         $scope.clearFilter = () => {
             //.... Meetings Report...
             meetingSearchObj.viewLength = 0;
             meetingSearchObj.viewBy = initialViewBy;
-
             $scope.viewLength = 0;
             $scope.newViewBy = localViewBy;
-
             if($scope.meetingsReportSearch.filter){
                 meetingSearchObj.searchFor = $scope.meetingsReportSearch.filter;
                 meetingSearchObj.searchBy = topDealerSearchBy;
             }
-
             $scope.meetingreport = [];
-
             $scope.showMeetingFilter = true;
-
             if($scope.meetingsReportSearch.filter == '')
                 $scope.showMeetingFilter = false;
-
             $scope.changeReportView();
         }
-
         const startLoader = () => {
             jQuery.noConflict();
             $('.refresh').css("display", "inline");
         }
-
         const stopLoader = () => {
             jQuery.noConflict();
             $('.refresh').css("display", "none");
         }
-
         const loadReport = (meetingSearchObj) => {
             $http.post("/dash/reports/meeting", meetingSearchObj)
                 .success(function(response){
-
                     for(let i = 0; i < response.length; i++){
                         $scope.meetingreport.push(response[i]);
                     }
@@ -125,14 +98,12 @@ angular.module('ebs.controller')
                         $window.location.href = '/404';
                 });
         }
-
         $scope.navPage = (direction, newViewBy) => {
             $scope.newViewBy = parseInt(newViewBy);
             var viewLength = $scope.viewLength;
             var viewBy = $scope.newViewBy;
             if(direction){
                 // console.log("NEXT");
-
                 if(viewLength + viewBy >= $scope.meetingreport.length){
                     if(viewLength + viewBy < $scope.meeting_count){
                         viewLength += viewBy;
@@ -147,10 +118,8 @@ angular.module('ebs.controller')
                         meetingSearchObj.eDate = $scope.DateTimeFormat($scope.mtgreport.endDate, 'end');
                         meetingSearchObj.searchFor = $scope.meetingsReportSearch.filter;
                         meetingSearchObj.searchBy = topDealerSearchBy;
-
                         startLoader();
                         loadReport(meetingSearchObj);
-
                         if(viewLength + viewBy > $scope.meeting_count){
                             a = viewLength + viewBy - $scope.meeting_count;
                             viewBy -= a;
@@ -170,7 +139,6 @@ angular.module('ebs.controller')
                 else{
                     // console.log("Minus viewby")
                     viewLength += viewBy;
-
                     if(viewLength + viewBy > $scope.meeting_count){
                         a = viewLength + viewBy - $scope.meeting_count;
                         viewBy -= a;
@@ -181,10 +149,8 @@ angular.module('ebs.controller')
                             meetingSearchObj.eDate = $scope.DateTimeFormat($scope.mtgreport.endDate, 'end');
                             meetingSearchObj.searchFor = $scope.meetingsReportSearch.filter;
                             meetingSearchObj.searchBy = topDealerSearchBy;
-
                             startLoader();
                             loadReport(meetingSearchObj);
-
                         }
                     }else{
                         if(viewLength + viewBy > $scope.meetingreport.length){
@@ -194,10 +160,8 @@ angular.module('ebs.controller')
                             meetingSearchObj.eDate = $scope.DateTimeFormat($scope.mtgreport.endDate, 'end');
                             meetingSearchObj.searchFor = $scope.meetingsReportSearch.filter;
                             meetingSearchObj.searchBy = topDealerSearchBy;
-
                             startLoader();
                             loadReport(meetingSearchObj);
-
                         }
                     }
                     $scope.newViewBy = viewBy;
@@ -214,35 +178,27 @@ angular.module('ebs.controller')
                         viewBy += a;
                         a = 0;
                     }
-
                     viewLength -= viewBy;
-
                     $scope.viewLength = viewLength;
                     $scope.newViewBy = viewBy;
                 }
             }
         }
-
         $scope.changeReportView = (newViewBy) => {
             startLoader();
             $scope.newViewBy1.view = newViewBy;
             $scope.newViewBy = parseInt(newViewBy);
-
             //$scope.reportTabName = $scope.nav[18].tab;
-
             if($scope.mtgreport.startDate && $scope.mtgreport.endDate){
                 if (($scope.mtgreport.startDate - $scope.mtgreport.endDate) > 0){
                     Settings.alertPopup("WARNING", "Start date cannot be greater than End date.");
-
                     $scope.mtgreport.startDate = new Date();
                     $scope.mtgreport.startDate.setDate($scope.mtgreport.startDate.getDate() - 30);
                     $scope.mtgreport.startDate.setHours(0, 0, 0, 0);
                     $scope.mtgreport.endDate = new Date();
                     $scope.mtgreport.endDate.setHours(23, 59, 59, 59);
-
                 }
             }
-
             meetingSearchObj.viewLength = 0;
             if($scope.newViewBy > initialViewBy ){
                 meetingSearchObj.viewBy = $scope.newViewBy;
@@ -253,22 +209,18 @@ angular.module('ebs.controller')
             meetingSearchObj.eDate = $scope.DateTimeFormat($scope.mtgreport.endDate, 'end');
             meetingSearchObj.searchFor = $scope.meetingsReportSearch.filter;
             meetingSearchObj.searchBy = topDealerSearchBy;
-
             $scope.viewLength = 0;
             $scope.meetingreport = [];
             if(!newViewBy){
                 $scope.newViewBy = parseInt(localViewBy);
             }
-
             startLoader();
             loadReport(meetingSearchObj);
             loadReportCount(meetingSearchObj);
         }
-
         $scope.changeReportDuration = (startDate, endDate, reset) =>{
             if (endDate)
                 endDate.setHours(23, 59, 59, 59);
-
             if (!reset) {
                 if (startDate || endDate) {
                     if (startDate && endDate) {
@@ -286,7 +238,6 @@ angular.module('ebs.controller')
                 }
             }
         }
-
         $scope.reportsTransactionCount = (response) => {
             if(response){
                 if(response > $scope.newViewBy){
@@ -295,7 +246,6 @@ angular.module('ebs.controller')
                 else if(response <= $scope.newViewBy){
                     $scope.meeting_count = response;
                     $scope.newViewBy = response;
-
                 }
                 else{
                     $scope.meetingreport = [];
@@ -310,7 +260,6 @@ angular.module('ebs.controller')
                 $scope.meeting_count = 0;
                 $scope.viewLength = -1;
             }
-
         }
         $scope.downloadCSV = function(){
             startLoader();
@@ -320,7 +269,6 @@ angular.module('ebs.controller')
                 timeout : api_timeout,
                 data : meetingSearchObj
             };
-
             $http(request_object)
                 .then((count) => {
                 console.log(count);
@@ -339,18 +287,15 @@ angular.module('ebs.controller')
                 stopLoader();
             }
             else {
-
                 console.log(meetingSearchObj);
                 meetingSearchObj.viewLength = 0;
                 meetingSearchObj.viewBy = count.data;
-
                 var request_object = {
                     url : "/dash/reports/meeting",
                     method : "POST",
                     timeout : api_timeout,
                     data : meetingSearchObj
                 };
-
                 $http(request_object)
                     .then((result) => {
                     let _data = result.data;
@@ -363,7 +308,6 @@ angular.module('ebs.controller')
                     output += ',';
                     output += _data[i].orderId;
                     output += ',';
-
                     function formatdate(date) {
                         if (!date)
                             return ('');
@@ -375,12 +319,9 @@ angular.module('ebs.controller')
                             dt = "0" + dt;
                         return (dt + "-" + monthNames[d.getMonth()] + "-" + (d.getFullYear()));
                     }
-
-
                     var dateformat = formatdate(_data[i].date_added[j]);
                     output += dateformat;
                     output += ',';
-
                     if (_data[i].date_added)
                         function formattime(date) {
                             if (date == undefined || date == '')
@@ -391,14 +332,11 @@ angular.module('ebs.controller')
                                 dt = "0" + dt;
                             return (d.getHours()) + ":" + (d.getMinutes());
                         }
-
                     var dateformat = formattime(_data[i].date_added[i]);
                     output += dateformat;
                     output += ',';
-
                     output += _data[i].dealercode;
                     output += ',';
-
                     try {
                         if (_data[i].dealername) {
                             if (_data[i].dealername) {
@@ -412,15 +350,12 @@ angular.module('ebs.controller')
                     } catch (e) {
                     }
                     output += ',';
-
                     if (_data[i].dealerphone)
                         output += _data[i].dealerphone;
                     output += ',';
-
                     if (_data[i].seller)
                         output += _data[i].seller;
                     output += ',';
-
                     try {
                         if (_data[i].sellername) {
                             if ((_data[i].sellername).toString().indexOf(',') != -1) {
@@ -432,19 +367,15 @@ angular.module('ebs.controller')
                     } catch (e) {
                     }
                     output += ',';
-
                     if (_data[i].stockistname)
                         output += _data[i].stockistname;
                     output += ',';
-
                     if (_data[i].stockistarea)
                         output += _data[i].stockistarea;
                     output += ',';
-
                     //output += _data[i].medicine;
                       output += _data[i].medicine[j];
                     output += ',';
-
                     var comment = '';
                     try {
                         comment = _data[i].comment[(_data[i].comment.length) - 1].comment;
@@ -461,15 +392,12 @@ angular.module('ebs.controller')
                     } catch (e) {
                     }
                     output += ',';
-
                     if (_data[i].rating)
                         output += _data[i].rating;
                     output += ',';
-
                     if (_data[i].type)
                         output += _data[i].type;
                     output += ',';
-
                     function formatdate(date) {
                         if (!date)
                             return ('');
@@ -481,12 +409,9 @@ angular.module('ebs.controller')
                             dt = "0" + dt;
                         return (dt + "-" + monthNames[d.getMonth()] + "-" + (d.getFullYear()));
                     }
-
                     var dateformat = formatdate(_data[i].date);
                     output += dateformat;
                     output += ',';
-
-
                     try {
                         if (_data[i].Address) {
                             if ((_data[i].Address).toString().indexOf(',') != -1) {
@@ -499,8 +424,6 @@ angular.module('ebs.controller')
                         console.log(e)
                     }
                     output += ',';
-
-
                     if (_data[i].latitude != 'undefined')
                         output += _data[i].latitude;
                     output += ',';
@@ -509,22 +432,18 @@ angular.module('ebs.controller')
                     output += '\n';
                     }
                 }
-
                 var blob = new Blob([output], {type : "text/csv;charset=UTF-8"});
                 console.log(blob);
                 window.URL = window.webkitURL || window.URL;
                 var url = window.URL.createObjectURL(blob);
-
                 var d = new Date();
                 var anchor = angular.element('<a/>');
-
                 anchor.attr({
                     href: url,
                     target: '_blank',
                     download: 'Mbj_' + instanceDetails.api_key + '_Meetings_' +d.getDate()+'/'+(d.getMonth()+1)+'/'+d.getFullYear()+'.csv'
                     //download: 'Mbj_' + '_Meetings_' +d.getDate()+'/'+(d.getMonth()+1)+'/'+d.getFullYear()+'.csv'
                 })[0].click();
-
                 stopLoader();
             })
             .catch((error, status) => {
@@ -548,6 +467,5 @@ angular.module('ebs.controller')
                 $window.location.href = '/404';
         });
         };
-
         $scope.changeReportView(localViewBy);
     })

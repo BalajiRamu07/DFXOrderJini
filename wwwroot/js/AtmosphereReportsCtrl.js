@@ -1,8 +1,6 @@
 angular.module('ebs.controller')
-
     .controller("AtmosphereReportsCtrl",function ($scope, $filter, $http,Settings, $modal, $window, toastr, $interval,$sce,$mdDialog) {
         console.log("Hello From AtmosphereReportCtrl Controller .... !!!!");
-
         //ATMOSPHERE DECLARATIONS
         $scope.allGoals = [];
         $scope.reportGoals = [];
@@ -18,7 +16,6 @@ angular.module('ebs.controller')
         $scope.goalsevaluation=[];
         $scope.goalssearch={};
         $scope.goalssearchwithemployee={}
-
         $scope.goalSearch.filter = '';
         var goalSearchObj = {};
         var resortfilter={};
@@ -46,10 +43,8 @@ angular.module('ebs.controller')
         $scope.assignUI = [];
         $scope.allPerformance = [];
         $scope.managerSelectedList = [];
-
         $scope.reportsGoalSearch = {};
         // $scope.reportsGoalSearch.filter = '';
-
         var reportsGoalSearchObj = {};
         // $scope.pageNumber=0;
         var reportsNcNrObj = {};
@@ -63,7 +58,6 @@ angular.module('ebs.controller')
         $scope.colleaguesReportSearch.filter = '';
         var colleaguesSearchBy = ['sellername','EMPLOYEE_ID','DEPARTMENT','role','Designation','Supervisor_Code','Supervisor_Name','Supervisor_Designation','Assistant_Manager_Code','Assistant_Manager_Name','Assistant_Manager_Designation','Manager_Code','Manager_Name','Manager_Designation'];
         $scope.colleaguesReportFilter = {};
-
         $scope.atmsIndividualReport = {};
         var individualReportSearchObj = {};
         var atmsdashboardSearch={}
@@ -83,7 +77,6 @@ angular.module('ebs.controller')
         viewBy.scoreCard = 12;
         var scoreCardSearchBy = ['sellername'];
         $scope.showdepartments=false;
-
         var reportsDashboardSearchObj = {};
         $scope.reportsDashboardSearch = {};
         $scope.reportsDashboardSearch.filter = '';
@@ -92,7 +85,6 @@ angular.module('ebs.controller')
         var atmsUsersSearchObj = {};
         $scope.atmsUsersSearch = {};
         $scope.atmsUsersSearch.filter = '';
-
         $scope.branchName = ''
         $scope.atmsDasboard ={};
         $scope.atms_Dashboard_filter = {}
@@ -102,18 +94,14 @@ angular.module('ebs.controller')
         $scope.distinctperformance=[];
         $scope.atmsTabs = [];
         $scope.enabledReports = []
-
         $scope.individualReport_count = 0;
-
         //End of Atmosphere Declarations
-
         $scope.viewLength = 0;
         $scope.newViewBy = 10;
         var localViewBy = $scope.newViewBy;
         var initialViewBy = 60;
         var sellerSearchBy = ['sellername','sellerphone','role','email','userStatus', 'appVersion','EMPLOYEE_ID','Resort'];
         $scope.atmsTabName = "Atmosphere Reports";
-
         Settings.getNav(true, function(nav){
             console.log("nav -=>", nav)
             $scope.atmsTabs = [];
@@ -130,7 +118,6 @@ angular.module('ebs.controller')
             console.log("$scope.enabledReports", $scope.enabledReports);
             $scope.nav = nav;
         })
-
         if($scope.nav[29].cols){
             for(var k=0;k<$scope.nav[29].cols.length;k++) {
                 if ($scope.nav[29].cols[k].flag == true) {
@@ -139,15 +126,11 @@ angular.module('ebs.controller')
             }
             console.log('$scope.atmsTabs = [];',$scope.atmsTabs)
         }
-
         $scope.atmsReportView = function(id, name,newViewBy){
-
             console.log("id, name, newviewyb -=-=-=->", id, name, newViewBy)
             $scope.atmsTabName = name;
             $scope.atmsTab = id;
             $scope.newViewBy = parseInt(newViewBy);
-    
-    
             if(id == 0){
                 $scope.showATMSReports = false;
                 $scope.atmsTabName = "Atmosphere Reports";
@@ -156,7 +139,6 @@ angular.module('ebs.controller')
                 $scope.showATMSReports = true;
                 $scope.atmsTab = 1;
                 $scope.atmsTabName = "Goals Report";
-    
                 $scope.viewLength = 0;
                 $scope.newViewBy = viewBy.reportsGoals;
                 /* $scope.showGoalFilter = false;
@@ -174,8 +156,6 @@ angular.module('ebs.controller')
                 $scope.reportsGoalSearch.allDepartment = '';
                 $scope.reportsGoalSearch.evaluationBy = '';
                 $scope.reportsGoalSearch.allFrequency = '';
-    
-    
                 reportsGoalSearchObj.viewLength = 0;
                 reportsGoalSearchObj.viewBy = initialViewBy;
                 reportsGoalSearchObj.searchBy = $scope.reportsGoalSearch.filter;
@@ -184,26 +164,19 @@ angular.module('ebs.controller')
                 reportsGoalSearchObj.allFrequency = '';
                 reportsGoalSearchObj.evaluationBy = '';
                 reportsGoalSearchObj.role = '';
-    
-    
                 $scope.reportGoals = [];
                 // $scope.tempGoals = []
-    
                 $http.post("/dash/goals", reportsGoalSearchObj)
                     .success($scope.renderGoals);
-    
                 $http.post('/dash/reportAllGoals', reportsGoalSearchObj)
                     .success(function (response) {
                         $scope.reportALLGoals = response; // --- dropdowns after department
                     })
-    
                 $http.post('/dash/goals/count', reportsGoalSearchObj)
                     .success(function (response) {
                         console.log("Goals count--------->>>", response);
                         $scope.atmsReportTransactionCount(response, 1)
                     });
-    
-    
             }
             if(id == 2){
                 $scope.showATMSReports = true;
@@ -211,7 +184,6 @@ angular.module('ebs.controller')
                 $scope.atmsTabName = "Colleagues Report";
                 $scope.reportsAllColleagues = [];
                 $scope.atmsColleagues = [];
-    
                 $scope.showColleaguesFilter =false;
                 $scope.atmsFilter2 = false;
                 $scope.colleaguesReportSearch.filter ='';
@@ -234,8 +206,6 @@ angular.module('ebs.controller')
                             // console.log("Department.....")
                             // console.log(res)
                             $scope.reportsAllColleagues = res;
-                            
-
                             jQuery.noConflict();
                             $('.refresh').css("display", "none");
                         });
@@ -254,7 +224,6 @@ angular.module('ebs.controller')
                 if(!newViewBy){
                     $scope.newViewBy = parseInt(localViewBy);
                 }
-    
                 $http.post("/dash/reports/atms/sellers", colleaguesSearchObj)
                     .success(function (res){
                         console.log('response -=>> ', res);
@@ -265,20 +234,16 @@ angular.module('ebs.controller')
                 //     .success(function(res){
                 //         $scope.reportsAllColleagues = res;
                 //     });
-    
                 $http.get("/dash/usersResorts")
                     .success(function (res) {
                         $scope.usersResorts = res;
                     });
-    
-    
                 $http.post("/dash/colleagues/count", colleaguesSearchObj)
                     .success(function (res) {
                         /* console.log("colleagues count");
                          console.log(res)*/
                         $scope.atmsReportTransactionCount(res, 2);
                     })
-    
             }
             if(id == 3){
                 $scope.showATMSReports = true;
@@ -288,15 +253,12 @@ angular.module('ebs.controller')
                 $scope.performanceResorts = []; // push resorts from performance
                 $scope.performanceDepartments = []; // push dept from performance
                 $scope.performanceRole = []; // push role from performance
-    
                 $scope.dashboardFiltersTag = false
-    
                 $scope.viewLength = 0;
                 $scope.newViewBy = viewBy.reportsGoals;
                 $scope.showDashBoardFilter = false;
                 $scope.atmsFilter3 = false;
                 $scope.reportsDashboardSearch = {}
-    
                 reportsDashboardSearchObj.viewLength = 0;
                 reportsDashboardSearchObj.viewBy = initialViewBy;
                 reportsDashboardSearchObj.searchBy = [];
@@ -307,14 +269,11 @@ angular.module('ebs.controller')
                 reportsDashboardSearchObj.role = '';
                 reportsDashboardSearchObj.from = '';
                 reportsDashboardSearchObj.end = '';
-    
                 $scope.temp_groups = [];
                 $scope.reportDashboard_count = 0;
-    
                 $scope.reportsDashboardSearch.startDate = '';
                 $scope.reportsDashboardSearch.endDate = new Date();
                 $scope.reportsDashboardSearch.endDate.setHours(23, 59, 59, 59);
-    
                 $http.post("/dash/dashBoard/reports", reportsDashboardSearchObj)
                     .success(function(res_dashboard)
                     {
@@ -333,41 +292,33 @@ angular.module('ebs.controller')
                 $scope.searchColleagueBody = {};
                 if($scope.user.sellerObject)
                     $scope.searchColleagueBody.resort = $scope.user.sellerObject.Resort;
-    
                 $scope.showIndividualReportFilter =false;
                 $scope.atmsFilter4 = false;
                 $scope.individualReportSearch.filter ='';
                 individualReportSearchObj.viewLength = 0;
                 individualReportSearchObj.viewBy = initialViewBy;
-    
                 individualReportSearchObj.searchFor = [];
                 individualReportSearchObj.searchBy = '';
                 individualReportSearchObj.department ='';
                 individualReportSearchObj.colleauge_code ='';
                 individualReportSearchObj.startDate ='';
                 individualReportSearchObj.endDate ='';
-    
                 $scope.individualReportFilter.all_Department ='';
                 $scope.individualReportFilter.all_Colleague_Code ='';
                 $scope.individualReportFilter.startDate ='';
                 $scope.individualReportFilter.endDate = new Date();
                 $scope.individualReportFilter.endDate.setHours(23, 59, 59, 59);
-    
                 $scope.viewLength = 0;
                 if(!newViewBy){
                     $scope.newViewBy = parseInt(localViewBy);
                 }
-    
                 $http.post("/dash/reports/atms/individual", individualReportSearchObj)
                     .success($scope.renderIndividualReports);
-
                 $scope.atmsReportTransactionCount($scope.atmsIndividualReport.length, 4);
-    
             }
             if(id == 5){
                 console.log("atmsReportView--------->>>")
                 $scope.atmsReportsDuration = 0;
-    
                 $scope.showATMSReports = true;
                 $scope.atmsTab = 5;
                 $scope.atmsTabName = "NC/NR Report";
@@ -380,7 +331,6 @@ angular.module('ebs.controller')
                 $scope.reportsNcNr.endDate = new Date();
                 $scope.reportsNcNr.endDate.setHours(23, 59, 59, 59);
                 $scope.reportsNcNr.allDepartment = '';
-    
                 reportsNcNrObj.viewLength = 0;
                 reportsNcNrObj.viewBy = initialViewBy;
                 reportsNcNrObj.searchBy = [];
@@ -392,21 +342,15 @@ angular.module('ebs.controller')
                 $scope.tempAllPerformanceReports = [];
                 $scope.atmsReportTransactionCount($scope.allPerformanceReports.length, 5);
             }
-    
         }
-
-
         $scope.renderGoals = function (goals_list) {
-
             var goalResort = {};
             console.log("Render Goals-->" , goals_list.length);
-    
             if($scope.allGoals.length != 0) {
                 for(var i=0; i<goals_list.length; i++) {
                     $scope.allGoals.push(goals_list[i]);
                 }
             }
-    
             else {
                 $scope.allGoals = goals_list;
             }
@@ -420,17 +364,14 @@ angular.module('ebs.controller')
             }
             else{
                 goalResort.resort = '';
-    
             }
             $scope.reportGoals = $scope.allGoals;
-    
             $http.post('/dash/allGoals/resorts',goalResort)
                 .success(function (response) {
                     console.log("All Goals reosrts--------->>>" + response.length);
                     $scope.goalsResort = response; // -- resort dropdown with all the data for goals report
                 });
         };
-
         $scope.renderIndividualReports = function (data) {
             console.log("Render Individual Reports-->");
             console.log(data);
@@ -438,11 +379,9 @@ angular.module('ebs.controller')
             $scope.allIndividualReportData = data;
             $scope.atmsReportTransactionCount(data.length, 4);
         };
-
         $scope.parseData = function(viewLength, newViewBy){
             return parseInt(viewLength) + parseInt(newViewBy);
         }
-
         //pagination for all ATMS reports
         $scope.atmsReportsPage =  function(tab, direction, newViewBy){
             console.log("newViewBy reportspage--=>>", tab, direction, newViewBy)
@@ -453,7 +392,6 @@ angular.module('ebs.controller')
                     var viewBy = $scope.newViewBy;
                     if(direction){
                         // console.log("NEXT");
-
                         if(viewLength + viewBy >= $scope.reportGoals.length){
                             if(viewLength + viewBy < $scope.reportGoals_count){
                                 viewLength += viewBy;
@@ -462,15 +400,12 @@ angular.module('ebs.controller')
                                 reportsGoalSearchObj.viewBy = initialViewBy;
                                 reportsGoalSearchObj.searchFor = $scope.reportsGoalSearch.filter;
                                 reportsGoalSearchObj.searchBy = goalSearchBy;
-
                                 $http.post("/dash/goals",reportsGoalSearchObj)
                                     .success(function(response){
                                         console.log(response);
-
                                         for(var i=0; i<response.length; i++){
                                             $scope.reportGoals.push(response[i]);
                                         }
-
                                         if(viewLength + viewBy > $scope.reportGoals_count){
                                             a = viewLength + viewBy - $scope.reportGoals_count;
                                             viewBy -= a;
@@ -478,7 +413,6 @@ angular.module('ebs.controller')
                                         }
                                         $scope.viewLength = viewLength;
                                     })
-
                             }
                             else{
                                 // console.log("Out of data")
@@ -492,21 +426,17 @@ angular.module('ebs.controller')
                         else{
                             // console.log("Minus viewby")
                             viewLength += viewBy;
-
                             if(viewLength + viewBy > $scope.reportGoals_count){
                                 a = viewLength + viewBy - $scope.reportGoals_count;
                                 viewBy -= a;
-
                                 if(viewLength + viewBy > $scope.reportGoals.length){
                                     reportsGoalSearchObj.viewLength = $scope.reportGoals.length ;
                                     reportsGoalSearchObj.viewBy = viewLength + viewBy - $scope.reportGoals.length;
                                     reportsGoalSearchObj.searchFor = $scope.reportsGoalSearch.filter;
                                     reportsGoalSearchObj.searchBy = goalSearchBy;
-
                                     $http.post("/dash/goals",reportsGoalSearchObj)
                                         .success(function(response){
                                             console.log(response);
-
                                             for(var i=0; i<response.length; i++){
                                                 $scope.reportGoals.push(response[i]);
                                             }
@@ -514,18 +444,15 @@ angular.module('ebs.controller')
                                             console.log('response',response.length)
                                         })
                                 }
-
                             }else{
                                 if(viewLength + viewBy > $scope.reportGoals.length){
                                     reportsGoalSearchObj.viewLength = $scope.reportGoals.length ;
                                     reportsGoalSearchObj.viewBy = viewLength + viewBy - $scope.reportGoals.length;
                                     reportsGoalSearchObj.searchFor = $scope.reportsGoalSearch.filter;
                                     reportsGoalSearchObj.searchBy = goalSearchBy;
-
                                     $http.post("/dash/goals",reportsGoalSearchObj)
                                         .success(function(response){
                                             console.log(response);
-
                                             for(var i=0; i<response.length; i++){
                                                 $scope.reportGoals.push(response[i]);
                                             }
@@ -534,7 +461,6 @@ angular.module('ebs.controller')
                             }
                             $scope.newViewBy = viewBy;
                             $scope.viewLength = viewLength;
-
                         }
                     }
                     else{
@@ -547,22 +473,16 @@ angular.module('ebs.controller')
                                 viewBy += a;
                                 a = 0;
                             }
-
                             viewLength -= viewBy;
-
                             $scope.viewLength = viewLength;
                             $scope.newViewBy = viewBy;
                         }
                     }
-
                     break;
-
                 case 2:
                     var viewLength = $scope.viewLength;
                     var viewBy = $scope.newViewBy;
-
                     if(direction){
-
                         if(viewLength + viewBy >= $scope.atmsColleagues.length){
                             if(viewLength + viewBy < $scope.colleagues_count){
                                 viewLength += viewBy;
@@ -570,17 +490,12 @@ angular.module('ebs.controller')
                                 colleaguesSearchObj.viewBy = initialViewBy;
                                 colleaguesSearchObj.searchFor = $scope.colleaguesReportSearch.filter;
                                 colleaguesSearchObj.searchBy = colleaguesSearchBy;
-
-
                                 $http.post("/dash/reports/atms/sellers",colleaguesSearchObj)
                                     .success(function(response){
-
-
                                         for(var i=0; i<response.length; i++){
                                             $scope.atmsColleagues.push(response[i]);
                                             console.log( $scope.atmsColleagues);
                                         }
-
                                         if(viewLength + viewBy > $scope.colleagues_count){
                                             a = viewLength + viewBy - $scope.colleagues_count;
                                             viewBy -= a;
@@ -588,7 +503,6 @@ angular.module('ebs.controller')
                                         }
                                         $scope.viewLength = viewLength;
                                     })
-
                             }
                             else{
                                 // console.log("Out of data")
@@ -601,7 +515,6 @@ angular.module('ebs.controller')
                         }
                         else{
                             viewLength += viewBy;
-
                             if(viewLength + viewBy > $scope.colleagues_count){
                                 a = viewLength + viewBy - $scope.colleagues_count;
                                 viewBy -= a;
@@ -610,17 +523,12 @@ angular.module('ebs.controller')
                                     colleaguesSearchObj.viewBy = viewLength + viewBy - $scope.atmsColleagues.length;
                                     colleaguesSearchObj.searchFor = $scope.colleaguesReportSearch.filter;
                                     colleaguesSearchObj.searchBy = colleaguesSearchBy;
-
-
                                     $http.post("/dash/reports/atms/sellers",colleaguesSearchObj)
                                         .success(function(response){
-
-
                                             for(var i=0; i<response.length; i++){
                                                 $scope.atmsColleagues.push(response[i]);
                                                 console.log( $scope.atmsColleagues);
                                             }
-
                                         })
                                 }
                             }else {
@@ -629,17 +537,12 @@ angular.module('ebs.controller')
                                     colleaguesSearchObj.viewBy = viewLength + viewBy - $scope.atmsColleagues.length;
                                     colleaguesSearchObj.searchFor = $scope.colleaguesReportSearch.filter;
                                     colleaguesSearchObj.searchBy = colleaguesSearchBy;
-
-
                                     $http.post("/dash/reports/atms/sellers",colleaguesSearchObj)
                                         .success(function(response){
-
-
                                             for(var i=0; i<response.length; i++){
                                                 $scope.atmsColleagues.push(response[i]);
                                                 console.log( $scope.atmsColleagues);
                                             }
-
                                         })
                                 }
                             }
@@ -648,7 +551,6 @@ angular.module('ebs.controller')
                         }
                     }
                     else{
-
                         if(viewLength < viewBy){
                             // console.log("NO DATA")
                         }
@@ -657,22 +559,16 @@ angular.module('ebs.controller')
                                 viewBy += a;
                                 a = 0;
                             }
-
                             viewLength -= viewBy;
-
                             $scope.viewLength = viewLength;
                             $scope.newViewBy = viewBy;
                         }
                     }
-
                     break;
-
                 case 3:
                     var viewLength = $scope.viewLength;
                     var viewBy = $scope.newViewBy;
-
                     if(direction){
-
                         if(viewLength + viewBy >= $scope.temp_groups2.length){
                             if(viewLength + viewBy < $scope.reportDashboard_count){
                                 viewLength += viewBy;
@@ -680,20 +576,14 @@ angular.module('ebs.controller')
                                 reportsDashboardSearchObj.viewBy = initialViewBy;
                                 reportsDashboardSearchObj.searchFor = $scope.reportsDashboardSearch.filter;
                                 reportsDashboardSearchObj.searchBy = colleaguesSearchBy;
-
-
                                 $http.post("/dash/dashBoard/reports",reportsDashboardSearchObj)
                                     .success(function(response){
-
-
                                         for(var i=0; i<response.length; i++){
                                             $scope.temp_groups2.push(response[i]);
                                             console.log( $scope.temp_groups);
                                         }
-
                                         $scope.groupReportsFunc(response);
                                         // $scope.atmsReportTransactionCount(response,3)
-
                                         if(viewLength + viewBy > $scope.reportDashboard_count){
                                             a = viewLength + viewBy - $scope.reportDashboard_count;
                                             viewBy -= a;
@@ -701,7 +591,6 @@ angular.module('ebs.controller')
                                         }
                                         $scope.viewLength = viewLength;
                                     })
-
                             }
                             else{
                                 // console.log("Out of data")
@@ -714,7 +603,6 @@ angular.module('ebs.controller')
                         }
                         else{
                             viewLength += viewBy;
-
                             if(viewLength + viewBy > $scope.reportDashboard_count){
                                 a = viewLength + viewBy - $scope.reportDashboard_count;
                                 viewBy -= a;
@@ -723,20 +611,14 @@ angular.module('ebs.controller')
                                     reportsDashboardSearchObj.viewBy = viewLength + viewBy - $scope.temp_groups2.length;
                                     reportsDashboardSearchObj.searchFor = $scope.reportsDashboardSearch.filter;
                                     reportsDashboardSearchObj.searchBy = colleaguesSearchBy;
-
-
                                     $http.post("/dash/dashBoard/reports",reportsDashboardSearchObj)
                                         .success(function(response){
-
-
                                             for(var i=0; i<response.length; i++){
                                                 $scope.temp_groups2.push(response[i]);
                                                 console.log( $scope.temp_groups);
                                             }
-
                                             $scope.groupReportsFunc(response);
                                             // $scope.atmsReportTransactionCount(response,3)
-
                                         })
                                 }
                             }else {
@@ -745,19 +627,13 @@ angular.module('ebs.controller')
                                     reportsDashboardSearchObj.viewBy = viewLength + viewBy - $scope.temp_groups2.length;
                                     reportsDashboardSearchObj.searchFor = $scope.reportsDashboardSearch.filter;
                                     reportsDashboardSearchObj.searchBy = colleaguesSearchBy;
-
-
                                     $http.post("/dash/dashBoard/reports",colleaguesSearchObj)
                                         .success(function(response){
-
-
                                             for(var i=0; i<response.length; i++){
                                                 $scope.temp_groups2.push(response[i]);
                                             }
-
                                             $scope.groupReportsFunc(response);
                                             // $scope.atmsReportTransactionCount(response,3)
-
                                         })
                                 }
                             }
@@ -766,7 +642,6 @@ angular.module('ebs.controller')
                         }
                     }
                     else{
-
                         if(viewLength < viewBy){
                             // console.log("NO DATA")
                         }
@@ -775,21 +650,15 @@ angular.module('ebs.controller')
                                 viewBy += a;
                                 a = 0;
                             }
-
                             viewLength -= viewBy;
-
                             $scope.viewLength = viewLength;
                             $scope.newViewBy = viewBy;
                         }
                     }
-
                     break;
-
                 case 4:
-
                     var viewLength = $scope.viewLength;
                     var viewBy = $scope.newViewBy;
-
                     if(direction){
                         if(viewLength + viewBy >= $scope.atmsIndividualReport.length){
                             if(viewLength + viewBy < $scope.individualReport_count){
@@ -800,17 +669,12 @@ angular.module('ebs.controller')
                                 // individualReportSearchObj.startDate = $scope.DateTimeFormat($scope.individualReportFilter.endDate, 'end');
                                 individualReportSearchObj.searchFor = $scope.individualReportSearch.filter;
                                 individualReportSearchObj.searchBy = individualReportSearchBy;
-
-
                                 $http.post("/dash/reports/atms/individual",individualReportSearchObj)
                                     .success(function(response){
-
-
                                         for(var i=0; i<response.length; i++){
                                             $scope.atmsIndividualReport.push(response[i]);
                                             //console.log( $scope.individualReportFilter);
                                         }
-
                                         if(viewLength + viewBy > $scope.individualReport_count){
                                             a = viewLength + viewBy - $scope.individualReport_count;
                                             viewBy -= a;
@@ -818,7 +682,6 @@ angular.module('ebs.controller')
                                         }
                                         $scope.viewLength = viewLength;
                                     })
-
                             }
                             else{
                                 // console.log("Out of data")
@@ -832,7 +695,6 @@ angular.module('ebs.controller')
                         else{
                             // console.log("Minus viewby")
                             viewLength += viewBy;
-
                             if(viewLength + viewBy > $scope.individualReport_count){
                                 a = viewLength + viewBy - $scope.individualReport_count;
                                 viewBy -= a;
@@ -843,17 +705,12 @@ angular.module('ebs.controller')
                                     // colleaguesSearchObj.eDate = $scope.DateTimeFormat($scope.sellerReportFilter.endDate, 'end');
                                     individualReportSearchObj.searchFor = $scope.individualReportSearch.filter;
                                     individualReportSearchObj.searchBy = individualReportSearchBy;
-
-
                                     $http.post("/dash/reports/atms/individual",individualReportSearchObj)
                                         .success(function(response){
-
-
                                             for(var i=0; i<response.length; i++){
                                                 $scope.atmsIndividualReport.push(response[i]);
                                                 console.log( $scope.atmsIndividualReport);
                                             }
-
                                         })
                                 }
                             }else {
@@ -864,8 +721,6 @@ angular.module('ebs.controller')
                                     // colleaguesSearchObj.eDate = $scope.DateTimeFormat($scope.sellerReportFilter.endDate, 'end');
                                     individualReportSearchObj.searchFor = $scope.individualReportSearch.filter;
                                     individualReportSearchObj.searchBy = individualReportSearchBy;
-
-
                                     $http.post("/dash/reports/atms/individual",individualReportSearchObj)
                                         .success(function(response){
                                             for(var i=0; i<response.length; i++){
@@ -883,7 +738,6 @@ angular.module('ebs.controller')
                         console.log(viewLength);
                         console.log(viewBy);
                         console.log($scope.individualReport_count);
-
                         if(viewLength < viewBy){
                             // console.log("NO DATA")
                         }
@@ -892,22 +746,17 @@ angular.module('ebs.controller')
                                 viewBy += a;
                                 a = 0;
                             }
-
                             viewLength -= viewBy;
-
                             $scope.viewLength = viewLength;
                             $scope.newViewBy = viewBy;
                         }
                     }
-
                     break;
-
                 case 5:
                     var viewLength = $scope.viewLength;
                     var viewBy = $scope.newViewBy;
                     if(direction){
                         // console.log("NEXT");
-
                         if(viewLength + viewBy >= $scope.allPerformanceReports.length){
                             if(viewLength + viewBy < $scope.ncNr_count){
                                 viewLength += viewBy;
@@ -916,15 +765,12 @@ angular.module('ebs.controller')
                                 reportsNcNrObj.viewBy = initialViewBy;
                                 reportsNcNrObj.searchFor = $scope.reportsNcNr.filter;
                                 reportsNcNrObj.searchBy = goalSearchBy;
-
                                 $http.post("/dash/ncNReports",reportsNcNrObj)
                                     .success(function(response){
                                         console.log(response);
-
                                         for(var i=0; i<response.length; i++){
                                             if(response[i].NR != 0 || response[i].sumValueNc != 0) $scope.allPerformanceReports.push(response[i]);
                                         }
-
                                         if(viewLength + viewBy > $scope.ncNr_count){
                                             a = viewLength + viewBy - $scope.ncNr_count;
                                             viewBy -= a;
@@ -932,7 +778,6 @@ angular.module('ebs.controller')
                                         }
                                         $scope.viewLength = viewLength;
                                     })
-
                             }
                             else{
                                 // console.log("Out of data")
@@ -946,21 +791,17 @@ angular.module('ebs.controller')
                         else{
                             // console.log("Minus viewby")
                             viewLength += viewBy;
-
                             if(viewLength + viewBy > $scope.ncNr_count){
                                 a = viewLength + viewBy - $scope.ncNr_count;
                                 viewBy -= a;
-
                                 if(viewLength + viewBy > $scope.allPerformanceReports.length){
                                     reportsNcNrObj.viewLength = $scope.allPerformanceReports.length ;
                                     reportsNcNrObj.viewBy = viewLength + viewBy - $scope.reportGoals.length;
                                     reportsNcNrObj.searchFor = $scope.reportsNcNr.filter;
                                     reportsNcNrObj.searchBy = goalSearchBy;
-
                                     $http.post("/dash/ncNReports",reportsNcNrObj)
                                         .success(function(response){
                                             console.log(response);
-
                                             for(var i=0; i<response.length; i++){
                                                 if(response[i].NR != 0 || response[i].sumValueNc != 0) $scope.allPerformanceReports.push(response[i]);
                                             }
@@ -968,18 +809,15 @@ angular.module('ebs.controller')
                                             console.log('response',response.length)
                                         })
                                 }
-
                             }else{
                                 if(viewLength + viewBy > $scope.allPerformanceReports.length){
                                     reportsNcNrObj.viewLength = $scope.allPerformanceReports.length ;
                                     reportsNcNrObj.viewBy = viewLength + viewBy - $scope.allPerformanceReports.length;
                                     reportsNcNrObj.searchFor = $scope.reportsNcNr.filter;
                                     reportsNcNrObj.searchBy = goalSearchBy;
-
                                     $http.post("/dash/ncNReports",reportsNcNrObj)
                                         .success(function(response){
                                             console.log(response);
-
                                             for(var i=0; i<response.length; i++){
                                                 if(response[i].NR != 0 || response[i].sumValueNc != 0) $scope.allPerformanceReports.push(response[i]);
                                             }
@@ -988,7 +826,6 @@ angular.module('ebs.controller')
                             }
                             $scope.newViewBy = viewBy;
                             $scope.viewLength = viewLength;
-
                         }
                     }
                     else{
@@ -1001,19 +838,14 @@ angular.module('ebs.controller')
                                 viewBy += a;
                                 a = 0;
                             }
-
                             viewLength -= viewBy;
-
                             $scope.viewLength = viewLength;
                             $scope.newViewBy = viewBy;
                         }
                     }
-
                     break;
             }
-
         }
-
         $scope.atmsReportTransactionCount = function (response,tab) {
             if(tab == 1){
                 console.log("response report goals : count:",response, tab);
@@ -1041,7 +873,6 @@ angular.module('ebs.controller')
                     $scope.viewLength = -1;
                 }
             }
-    
             if(tab == 2)
             {
                 // console.log("top user report  ",response);
@@ -1052,7 +883,6 @@ angular.module('ebs.controller')
                     else if(response <= $scope.newViewBy){
                         $scope.colleagues_count = response;
                         $scope.newViewBy = response;
-    
                     }
                     else{
                         $scope.atmsColleagues = [];
@@ -1105,7 +935,6 @@ angular.module('ebs.controller')
                     else if(response <= $scope.newViewBy){
                         $scope.individualReport_count = response;
                         $scope.newViewBy = response;
-    
                     }
                     else{
                         $scope.atmsIndividualReport = [];
@@ -1121,7 +950,6 @@ angular.module('ebs.controller')
                     $scope.viewLength = -1;
                 }
             }
-    
             if(tab == 5)
             {
                 console.log("response goals : count:");
@@ -1151,9 +979,7 @@ angular.module('ebs.controller')
                 }
             }
         }
-
         $scope.atmsToggleFilter = function(flag, tab){
-
             switch(tab){
                 case 1 :
                     if(flag)
@@ -1161,29 +987,24 @@ angular.module('ebs.controller')
                     else
                         $scope.atmsFilter1 = false;
                     break;
-
                 case 2 :
                     if(flag)
                         $scope.atmsFilter2 = true;
                     else
                         $scope.atmsFilter2 = false;
                     break;
-
                 case 3 :
                     if(flag)
                         $scope.atmsFilter3 = true;
                     else
                         $scope.atmsFilter3 = false;
                     break;
-
                 case 4 :
                     if(flag)
                         $scope.atmsFilter4 = true;
                     else
                         $scope.atmsFilter4 = false;
                     break;
-
-
                 case 5 :
                     if(flag)
                         $scope.atmsFilter5 = true;
@@ -1192,12 +1013,9 @@ angular.module('ebs.controller')
                     break;
             }
         }
-
-
         $scope.atmsRefreshReports = function(id){
             jQuery.noConflict();
             $('.refresh').css("display", "inline");
-
             switch (id) {
                 case 0:
                     $scope.atmsReportView(0);
@@ -1222,12 +1040,8 @@ angular.module('ebs.controller')
                 $('.refresh').css("display", "none");
             }, 2000)
         }
-
-
-
         $scope.atmsClearReportFilter = function(tab){
             switch(tab) {
-
                 //CLear goals filter
                 case 1:
                     $scope.viewLength = 0;
@@ -1245,8 +1059,6 @@ angular.module('ebs.controller')
                     $scope.reportsGoalSearch.allDepartment = '';
                     $scope.reportsGoalSearch.evaluationBy = '';
                     $scope.reportsGoalSearch.allFrequency = '';
-
-
                     reportsGoalSearchObj.viewLength = 0;
                     reportsGoalSearchObj.viewBy = initialViewBy;
                     reportsGoalSearchObj.searchBy = [];
@@ -1255,30 +1067,20 @@ angular.module('ebs.controller')
                     reportsGoalSearchObj.allFrequency = '';
                     reportsGoalSearchObj.evaluationBy = '';
                     reportsGoalSearchObj.role = '';
-
-
                     $scope.reportGoals = [];
                     //   $scope.tempGoals = []
-
                     console.log(reportsGoalSearchObj);
-
                     $http.post("/dash/goals", reportsGoalSearchObj)
                         .success($scope.renderGoals);
-
                     $http.post('/dash/goals/count', reportsGoalSearchObj)
                         .success(function (response) {
                             console.log("Goals count--------->>>")
                             console.log(response)
                             $scope.atmsReportTransactionCount(response, 1)
                         });
-
                     //  $scope.showGoalFilter = false;
-
                     break;
-
-
                 case 2:
-
                     $scope.viewLength = 0;
                     $scope.newViewBy = localViewBy;
                     $scope.colleaguesReportSearch.filter = '';
@@ -1294,16 +1096,12 @@ angular.module('ebs.controller')
                         $scope.colleaguesReportFilter.allResort = '';
                         colleaguesSearchObj.resort = '';
                     }
-
                     $scope.atmsColleagues = [];
-
-
                     // $http.post("/dash/reports/atms/sellers", colleaguesSearchObj)
                     //     .success(function(response){
                     //         $scope.atmsColleagues = response;
                     //
                     //     })
-
                     $http.post("/dash/colleagues/count", colleaguesSearchObj)
                         .success(function (res) {
                             $scope.atmsReportTransactionCount(res, 2);
@@ -1314,18 +1112,13 @@ angular.module('ebs.controller')
                             jQuery.noConflict();
                             $('.refresh').css("display", "none");
                         });
-
                     $http.get("/dash/usersResorts")
                         .success(function (res) {
                             $scope.usersResorts = res;
                         });
-
                     $scope.showColleaguesFilter = false;
-
                     break;
-
                 case 3:
-
                     $scope.viewLength = 0;
                     $scope.newViewBy = localViewBy;
                     $scope.reportsDashboardSearch.filter = '';
@@ -1335,11 +1128,7 @@ angular.module('ebs.controller')
                     reportsGoalSearchObj.viewBy = initialViewBy;
                     reportsGoalSearchObj.searchBy = [];
                     reportsGoalSearchObj.searchFor = '';
-
-
                     $scope.temp_groups2 = [];
-
-
                     $http.post("/dash/dashBoard/reports", reportsGoalSearchObj)
                     .success(function(response){
                     $scope.temp_groups = response;
@@ -1347,13 +1136,9 @@ angular.module('ebs.controller')
                     $scope.groupReportsFunc(response);
                     // $scope.atmsReportTransactionCount(response,3)
                     })*/
-
                     // $scope.showIndividualReportFilter = false;
-
                     break;
-
                 case 4:
-
                     $scope.viewLength = 0;
                     $scope.newViewBy = localViewBy;
                     $scope.individualReportSearch.filter = '';
@@ -1361,9 +1146,7 @@ angular.module('ebs.controller')
                     individualReportSearchObj.viewBy = initialViewBy;
                     individualReportSearchObj.searchBy = [];
                     individualReportSearchObj.searchFor = '';
-
                     $scope.atmsIndividualReport = [];
-
                     $http.post("/dash/reports/atms/individual", individualReportSearchObj)
                         .success(function(response){
                             if(response){
@@ -1380,25 +1163,19 @@ angular.module('ebs.controller')
                                     }
                                 }
                             }
-
                         })
-
                     $scope.showIndividualReportFilter = false;
-
                     break;
-
                 case 5:
                     reportsNcNrObj.viewLength = 0;
                     reportsNcNrObj.viewBy = initialViewBy;
                     reportsNcNrObj.searchBy = [];
                     reportsNcNrObj.searchFor = '';
                     // reportsNcNrObj.dept = '';
-
                     $scope.allPerformanceReports = [];
                     // $scope.tempAllPerformanceReports = [];
                     $scope.reportsNcNr.filter = '';
                     // $scope.reportsNcNr.allDepartment = '';
-
                     $http.post("/dash/ncNReports",reportsNcNrObj)
                         .success(function(res_evaluation)
                         {
@@ -1411,7 +1188,6 @@ angular.module('ebs.controller')
                             // $scope.tempAllPerformanceReports = res_evaluation
                             $scope.atmsReportTransactionCount($scope.allPerformanceReports.length, 5)
                         })
-
                     /*$http.post('/dash/performance/count', reportsNcNrObj)
                     .success(function (response) {
                     console.log("Performance count--------->>>")
@@ -1423,14 +1199,10 @@ angular.module('ebs.controller')
                     }
                     $scope.atmsReportTransactionCount(tempArray.length, 5)
                     });*/
-
                     $scope.showNcNrFilter = false;
-
                     break;
             }
-
         }
-
         $scope.atmsclearSearch = function(id){
             if(id == 1){
                 $scope.reportsGoalSearch.filter = '';
@@ -1439,26 +1211,20 @@ angular.module('ebs.controller')
             }
             if(id==2){
                 $scope.colleaguesReportSearch.filter = '';
-
                 colleaguesSearchObj.searchFor = '';
                 $scope.atmsReportFilter(2);
             }
-
         }
-
-
         $scope.atmsReportFilter = function(id,tag){
             if(id == 1){
                 reportsGoalSearchObj.viewLength = 0;
                 reportsGoalSearchObj.viewBy = initialViewBy;
                 $scope.viewLength = 0;
                 $scope.newViewBy = localViewBy;
-
                 if($scope.reportsGoalSearch.filter){
                     reportsGoalSearchObj.searchFor = $scope.reportsGoalSearch.filter;
                     reportsGoalSearchObj.searchBy = goalSearchBy;
                 }
-
                 if($scope.reportsGoalSearch.allResort){
                     reportsGoalSearchObj.resort = $scope.reportsGoalSearch.allResort;
                 }
@@ -1472,7 +1238,6 @@ angular.module('ebs.controller')
                         reportsGoalSearchObj.resort = '';
                     }
                 }
-
                 if($scope.reportsGoalSearch.allDepartment != ''){
                     reportsGoalSearchObj.dept = $scope.reportsGoalSearch.allDepartment;
                 }
@@ -1481,7 +1246,6 @@ angular.module('ebs.controller')
                 }
                 if($scope.reportsGoalSearch.allRole){
                     reportsGoalSearchObj.role = $scope.reportsGoalSearch.allRole;
-
                 }
                 else{
                     reportsGoalSearchObj.role = ''
@@ -1492,18 +1256,15 @@ angular.module('ebs.controller')
                 else{
                     reportsGoalSearchObj.evaluationBy = ''
                 }
-
                 if($scope.reportsGoalSearch.allFrequency){
                     reportsGoalSearchObj.allFrequency = $scope.reportsGoalSearch.allFrequency;
                 }
                 else{
                     reportsGoalSearchObj.allFrequency = ''
                 }
-
                 // $scope.reportGoals = [];
                 // $scope.reportALLGoals = [];
                 // console.log(reportsGoalSearchObj);
-
                 $http.post("/dash/goals",reportsGoalSearchObj)
                     .success(function(response){
                         // console.log(response);
@@ -1512,42 +1273,31 @@ angular.module('ebs.controller')
                         $scope.tempGoals = $scope.allGoals;
                         }*/
                     })
-
                 $http.post('/dash/goals/count', reportsGoalSearchObj)
                     .success(function (response) {
                         $scope.atmsReportTransactionCount(response, 1);
                     });
-
                 $http.post('/dash/reportAllGoals', reportsGoalSearchObj)
                     .success(function (response) {
                         $scope.reportALLGoals = response; // ---- All dropdowns after resort
                     })
-
                 $scope.showGoalFilter = true;
-
                 if($scope.reportsGoalSearch.filter == '')
                     $scope.showGoalFilter = false;
-
             }
-
             if(id == 2){
-
                 jQuery.noConflict();
                 $('.refresh').css("display", "inline");
-
                 $scope.atmsColleagues =[];
                 colleaguesSearchObj.viewLength = 0;
                 colleaguesSearchObj.viewBy = initialViewBy;
-
                 $scope.viewLength = 0;
                 $scope.newViewBy = localViewBy;
                 console.log($scope.colleaguesReportSearch.filter)
-
                 if($scope.colleaguesReportSearch.filter){
                     colleaguesSearchObj.searchFor = $scope.colleaguesReportSearch.filter;
                     colleaguesSearchObj.searchBy = colleaguesSearchBy;
                 }
-
                 if($scope.colleaguesReportFilter.allResort){
                     colleaguesSearchObj.resort = $scope.colleaguesReportFilter.allResort;
                 }
@@ -1561,7 +1311,6 @@ angular.module('ebs.controller')
                         colleaguesSearchObj.resort = ''
                     }
                 }
-
                 if($scope.colleaguesReportFilter.all_Department){
                     colleaguesSearchObj.DEPARTMENT = $scope.colleaguesReportFilter.all_Department;
                 }
@@ -1592,64 +1341,50 @@ angular.module('ebs.controller')
                 else{
                     colleaguesSearchObj.Manager_Name = ''
                 }
-
-
                 $http.post("/dash/reports/atms/sellers", colleaguesSearchObj)
                     .success(function(response){
                         console.log("sellers "+ response.length);
                         $scope.atmsColleagues = response;
                     });
-
                 $http.post("/dash/reports/ATMS/colleagues", colleaguesSearchObj)
                     .success(function(res){
                         $scope.reportsAllColleagues = res;
                         jQuery.noConflict();
                         $('.refresh').css("display", "none");
                     });
-
                 $http.post("/dash/colleagues/count", colleaguesSearchObj)
                     .success(function (res) {
                         $scope.atmsReportTransactionCount(res, 2);
                     })
-
                 $scope.showColleaguesFilter = true;
-
                 if($scope.colleaguesReportSearch.filter == '')
                     $scope.showColleaguesFilter = false;
             }
-
             if(id == 3){
-
                 console.log("Department reports--->>>");
                 jQuery.noConflict();
                 $('.refresh').css("display", "inline");
                 $scope.dashboardFiltersTag = false
-
                 reportsDashboardSearchObj.viewLength = 0;
                 reportsDashboardSearchObj.viewBy = initialViewBy;
-
                 $scope.viewLength = 0;
                 $scope.newViewBy = localViewBy;
-
                 if(tag){
                     reportsDashboardSearchObj.searchFor = tag;
                     reportsDashboardSearchObj.searchBy = dashboardReportSearchBy;
                 }
-
                 if($scope.reportsDashboardSearch.department){
                     reportsDashboardSearchObj.department = $scope.reportsDashboardSearch.department;
                 }
                 else{
                     reportsDashboardSearchObj.department = ''
                 }
-
                 if($scope.reportsDashboardSearch.role){
                     reportsDashboardSearchObj.role = $scope.reportsDashboardSearch.role;
                 }
                 else{
                     reportsDashboardSearchObj.role = ''
                 }
-
                 if($scope.reportsDashboardSearch.startDate){
                     reportsDashboardSearchObj.startDate = $scope.reportsDashboardSearch.startDate;
                 }
@@ -1662,7 +1397,6 @@ angular.module('ebs.controller')
                 else{
                     reportsDashboardSearchObj.endDate = ''
                 }
-
                 if($scope.reportsDashboardSearch.resort){
                     reportsDashboardSearchObj.resort = $scope.reportsDashboardSearch.resort;
                 }
@@ -1675,9 +1409,7 @@ angular.module('ebs.controller')
                         $scope.reportsDashboardSearch.resort = ''
                     }
                 }
-
                 console.log(reportsDashboardSearchObj)
-
                 $http.post("/dash/dashBoard/reports", reportsDashboardSearchObj)
                     .success(function(res_dashboard)
                     {
@@ -1685,7 +1417,6 @@ angular.module('ebs.controller')
                         // console.log(res_dashboard)
                         $scope.temp_groups = res_dashboard;
                         $scope.groupReportsFunc(res_dashboard);
-
                         if($scope.reportsDashboardSearch.startDate && $scope.reportsDashboardSearch.endDate &&
                             $scope.reportsDashboardSearch.department && $scope.reportsDashboardSearch.role && res_dashboard.length)
                         {
@@ -1693,7 +1424,6 @@ angular.module('ebs.controller')
                         }
                         // $scope.atmsReportTransactionCount(res_dashboard,3)
                     })
-
                 //Not using it -- Author : Bhargavi
                 $scope.tempDashbordDropdown=[]
                 $http.post("/dash/dashBoard/reports/count", reportsDashboardSearchObj)
@@ -1713,15 +1443,10 @@ angular.module('ebs.controller')
                                 }
                                 else{
                                     $scope.performanceResorts.push(resorts[j].resort[0]);
-
                                 }
                             }
-
                         }
-
-
                     })
-
                               //Get the resorts dropdown without skip and limit
              $http.post("/dash/deptReports",reportsDashboardSearchObj)
              .success(function(resorts){
@@ -1729,7 +1454,6 @@ angular.module('ebs.controller')
                  if(resorts.length) {
                     jQuery.noConflict();
                     $('.refresh').css("display", "none");
-
                      for (var j = 0; j < resorts.length; j++) {
                          if (resorts[j].resort[0] != undefined) {
                              if ($scope.performanceResorts.includes(resorts[j].resort[0])) {
@@ -1737,7 +1461,6 @@ angular.module('ebs.controller')
                              }
                              else {
                                  $scope.performanceResorts.push(resorts[j].resort[0]);
-
                              }
                          }
                          if (resorts[j].department[0] != undefined) {
@@ -1746,7 +1469,6 @@ angular.module('ebs.controller')
                              }
                              else {
                                  $scope.performanceDepartments.push(resorts[j].department[0]);
-
                              }
                          }
                          if (resorts[j].role[0] != undefined) {
@@ -1755,7 +1477,6 @@ angular.module('ebs.controller')
                              }
                              else {
                                  $scope.performanceRole.push(resorts[j].role[0]);
-
                              }
                          }
                      }
@@ -1765,37 +1486,28 @@ angular.module('ebs.controller')
                      $('.refresh').css("display", "none");
                  }
              });
-
             }
-
             if(id == 4){
-
                 jQuery.noConflict();
                 $(".colleagueCodeDropdown").css('display', 'none')
-
                 if($scope.individualReportFilter.all_Colleague_Code) {
                     jQuery.noConflict();
                     $('.refresh').css("display", "inline");
                 }
-
                 individualReportSearchObj.viewLength = 0;
                 individualReportSearchObj.viewBy = initialViewBy;
-
                 $scope.viewLength = 0;
                 $scope.newViewBy = localViewBy;
-
                 if($scope.individualReportSearch.filter){
                     individualReportSearchObj.searchFor = $scope.individualReportSearch.filter;
                     individualReportSearchObj.searchBy = individualReportSearchBy;
                 }
-
                 if($scope.individualReportFilter.all_Department){
                     individualReportSearchObj.department = $scope.individualReportFilter.all_Department;
                 }
                 else{
                     individualReportSearchObj.department = ''
                 }
-
                 if($scope.individualReportFilter.all_Colleague_Code){
                     individualReportSearchObj.colleauge_code = tag.EVALUATION_ID;
                     if(tag.EVALUATION_NAME)
@@ -1807,7 +1519,6 @@ angular.module('ebs.controller')
                 else{
                     individualReportSearchObj.colleauge_code = ''
                 }
-
                 if($scope.individualReportFilter.startDate){
                     individualReportSearchObj.startDate = $scope.individualReportFilter.startDate;
                     $scope.searchColleagueBody.startDate = $scope.individualReportFilter.startDate;
@@ -1816,7 +1527,6 @@ angular.module('ebs.controller')
                     individualReportSearchObj.startDate = ''
                     $scope.searchColleagueBody.startDate = ''
                 }
-
                 if($scope.individualReportFilter.endDate){
                     individualReportSearchObj.endDate = $scope.individualReportFilter.endDate;
                     $scope.searchColleagueBody.endDate = $scope.individualReportFilter.endDate;
@@ -1825,9 +1535,7 @@ angular.module('ebs.controller')
                     individualReportSearchObj.endDate = ''
                     $scope.searchColleagueBody.endDate =''
                 }
-
                 $scope.atmsIndividualReport = [];
-
                 $http.post("/dash/reports/atms/individual", individualReportSearchObj)
                     .success(function(response){
                         if(response){
@@ -1852,15 +1560,11 @@ angular.module('ebs.controller')
                             $('.refresh').css("display", "none");
                         }
                     })
-
                 $scope.showIndividualReportFilter = true;
-
                 if($scope.individualReportSearch.filter == '')
                     $scope.showIndividualReportFilter = false;
             }
-
             if(id == 5){
-
                 if(tag == 'clear')
                 {
                     reportsNcNrObj.viewLength = 0;
@@ -1877,37 +1581,30 @@ angular.module('ebs.controller')
                         reportsNcNrObj.resort = '';
                     }
                     $scope.atmsReportsDuration = 0;
-
                     $scope.allPerformanceReports = [];
                     $scope.reportsNcNr.startDate = ''
                     $scope.reportsNcNr.endDate = ''
                     $scope.reportsNcNr.allDepartment = ''
                 }
                 else {
-
                     if ($scope.reportsNcNr.allDepartment) {
                         jQuery.noConflict();
                         $('.refresh').css("display", "inline");
                         $scope.flagforncNr=true;
                     }
-
                     reportsNcNrObj.viewLength = 0;
                     reportsNcNrObj.viewBy = 1000;
-
                     $scope.viewLength = 0;
                     $scope.newViewBy = localViewBy;
-
                     if ($scope.reportsNcNr.filter) {
                         $scope.showNcNrFilter = true;
                         reportsNcNrObj.searchFor = $scope.reportsNcNr.filter;
                         reportsNcNrObj.searchBy = ncNrSearchBy;
                     }
-
                     if ($scope.reportsNcNr.startDate && $scope.reportsNcNr.endDate) {
                         reportsNcNrObj.from = $scope.reportsNcNr.startDate;
                         reportsNcNrObj.end = $scope.reportsNcNr.endDate
                     }
-
                     if ($scope.reportsNcNr.allDepartment && $scope.reportsNcNr.allDepartment != '') {
                         reportsNcNrObj.dept = $scope.reportsNcNr.allDepartment;
                     } else {
@@ -1928,16 +1625,13 @@ angular.module('ebs.controller')
                             reportsNcNrObj.resort = '';
                         }
                     }
-
                     $scope.allPerformanceReports = [];
                     // console.log(reportsNcNrObj);
-
                     $http.post("/dash/ncNReports", reportsNcNrObj)
                         .success(function (response_data) {
                             console.log("Response of NC NR------>>>" + response_data.length);
                             // console.log(response_data);
                             // $scope.allPerformanceReports = response_data;
-
                             for (var i = 0; i < response_data.length; i++) {
                                 if (response_data[i].NR || response_data[i].NC) {
                                     // console.log(response_data);
@@ -1949,10 +1643,8 @@ angular.module('ebs.controller')
                                     $('.refresh').css("display", "none");
                                 }
                             }
-
                             $scope.atmsReportTransactionCount($scope.allPerformanceReports.length, 5);
                         })
-
                     if (!reportsNcNrObj.resort && (reportsNcNrObj.from || reportsNcNrObj.end || reportsNcNrObj.dept)) {
                         $http.post("/dash/nc/nr/resorts", reportsNcNrObj)
                             .success(function (resorts) {
@@ -1963,17 +1655,12 @@ angular.module('ebs.controller')
                                 $('.refresh').css("display", "none");
                             })
                     }
-
                 }
-
             }
         }
-
         $scope.changeReportDuration = function(startDate, endDate , index, reset){
-
             if(endDate && !$scope.displayTimeSlot)
             endDate.setHours(23, 59, 59, 59);
-    
             if(!reset) {
                 if(startDate || endDate){
                     if (startDate && endDate) {
@@ -1988,7 +1675,6 @@ angular.module('ebs.controller')
                     }
                     else
                         var numberOfDays = 0;
-    
                     switch (index) {
                         // case 1:
                         //     $scope.topSoldDuration = numberOfDays;
@@ -2020,26 +1706,19 @@ angular.module('ebs.controller')
                         // case 10:
                         //     $scope.visitDuration = numberOfDays;
                         //     break;
-    
                         // case 11:
                         //     $scope.attendanceDuration = numberOfDays;
                         //     break;
-    
                         // case 12:
                         //     $scope.leaveDuration = numberOfDays;
-    
                         // case 13:
                         //     $scope.topEnquiryDuration = numberOfDays;
-    
                         case 14:
                             $scope.atmsReportsDuration = numberOfDays;
-    
                         case 15:
                             $scope.atmsIndividualReportDays = numberOfDays;
-    
                         case 16:
                             $scope.atmsDashboardReportDays = numberOfDays;
-    
                     }
                 }
             }
@@ -2078,15 +1757,12 @@ angular.module('ebs.controller')
                     // case 11:
                     //     $scope.attendanceDuration = 0;
                     //     break;
-    
                     // case 12 :
                     //     $scope.leaveDuration = 0;
                     //     break;
-    
                     // case 13:
                     //     $scope.topEnquiryDuration = 0;
                     //     break;
-
                     case 14:
                         $scope.atmsReportsDuration = 0;
                         break;
@@ -2099,8 +1775,6 @@ angular.module('ebs.controller')
                 }
             }
         }
-
-
         //Department Report ng-repeat func 1
         $scope.groupReportsFunc = function(data){
             $scope.temp_groups2 = [];
@@ -2111,7 +1785,6 @@ angular.module('ebs.controller')
             var index=0
             var perfgroup = {};
             for (var i = 0; i < data.length; i++) {
-
                 if(data[i].personal_details[0].length)
                 {
                     var temp_perf = data[i];
@@ -2144,41 +1817,31 @@ angular.module('ebs.controller')
                         {
                             for(var k=0; k<$scope.temp_groups2[j].goals.length; k++)
                             {
-
                                 $scope.temObjArray.display[index] = $scope.temp_groups2[j].goals[k]
-
                                 if($scope.temp.indexOf($scope.temp_groups2[j].goals[k].GOAL_ID) == -1)
                                 {
                                     $scope.temp.push($scope.temp_groups2[j].goals[k].GOAL_ID)
                                     $scope.temObjArray.cols.push({'GOAL_ID' : $scope.temp_groups2[j].goals[k].GOAL_ID,
                                         'GOAL_STATEMENT' : $scope.temp_groups2[j].goals[k].GOAL_STATEMENT})
                                 }
-
                                 index++;
-
                             }
-
                             if(j == $scope.temp_groups2.length-1)
                             {
                                 console.log($scope.temp_groups2.length)
                                 console.log($scope.temObjArray)
-
                                 //This score was not coming for the last record. Hence download was not working -- Author : Bhargavi
                                 if(!$scope.temp_groups2[j].FINAL_SCORE) $scope.temp_groups2[j].FINAL_SCORE = ($scope.temp_groups2[j].TOTAL/ ($scope.temp_groups2[j].WEIGHTAGE*5))*100
                                 $scope.atmsReportTransactionCount($scope.temp_groups2,3);
                                 jQuery.noConflict();
                                 $('.refresh').css("display", "none");
                             }
-
                         }
                     }
                 }
-
                 //
             }
-
         };
-
         //Department ng-repeat func 2
     $scope.checkIfPerfGrouped = function(perf) {
         for(var i=0;i<$scope.temp_groups2.length;i++) {
@@ -2192,12 +1855,10 @@ angular.module('ebs.controller')
                         'GOAL_ID' : perf.GOAL_ID[0],
                         'GOAL_STATEMENT' : perf.statement[0]
                     }
-
                     $scope.temp_groups2[i].TOTAL += perf.score
                     $scope.temp_groups2[i].WEIGHTAGE += perf.weightage[0]
                     obj[stateVar] = perf.score
                     $scope.temp_groups2[i].goals.push(obj);
-
                     if(j == $scope.temp_groups2[i].goals.length-1)
                     {
                         $scope.temp_groups2[i].FINAL_SCORE = ($scope.temp_groups2[i].TOTAL/ ($scope.temp_groups2[i].WEIGHTAGE*5))*100
@@ -2211,14 +1872,10 @@ angular.module('ebs.controller')
                     }
                 }
             }
-
             // $scope.temp_groups2[i].FINAL_SCORE = ($scope.temp_groups2[i].TOTAL/ ($scope.temp_groups2[i].WEIGHTAGE*5))*100
         }
     }
-
-
     $scope.all_colleague_codes = [];
-
     $scope.searchColleagueCodes = function(text){
         // console.log(text)
         if(text.length >= 4){
@@ -2232,7 +1889,6 @@ angular.module('ebs.controller')
                     }
                     else
                         $scope.all_colleague_codes = [];
-
                 })
         }
         else{
@@ -2240,7 +1896,6 @@ angular.module('ebs.controller')
             $(".colleagueCodeDropdown").css('display', 'none')
         }
     }
-    
     $scope.getNcNrDepts = function(){
         if($scope.reportsNcNr.resort && $scope.reportsNcNr.resort!='')
         {
@@ -2253,29 +1908,22 @@ angular.module('ebs.controller')
                 })
         }
     }
-
     // Download Reports
     $scope.atmsDownloadReports = function(tab,res,dashboard_statements){
-
         if(tab == 1){
             if(res){
                 var result = "Role, Goal Title, Goal Statement, Evaluation By, Wtg, Department, Frequency,Resort, RATING_1, RATING_2, RATING_3, RATING_4, RATING_5, Created Date,Created By, Modified Date,Modified By\n";
-
                 for(var i=0; i< res.length; i++){
-
                     result += res[i].ROLE;
                     result += ',';
-
                     if(res[i].GOAL_TITLE){
                         if ((res[i]['GOAL_TITLE']).toString().indexOf(',') != -1) {
                             var quotesWrapped = '"' + res[i]['GOAL_TITLE'] + '"'
                             res[i].GOAL_TITLE = quotesWrapped;
-
                         }
                         if (res[i]['GOAL_TITLE'] == undefined || res[i]['GOAL_TITLE'] == 'undefined' || !res[i]['GOAL_TITLE']) { //undefined
                             res[i].GOAL_TITLE = ' '
                         }
-
                         if ((res[i]['GOAL_TITLE']).toString().indexOf('\n') != -1) {
                             var quotesWrapped = res[i]['GOAL_TITLE'].replace('\n', ' ');
                             res[i].GOAL_TITLE = quotesWrapped
@@ -2292,17 +1940,14 @@ angular.module('ebs.controller')
                         result += res[i].GOAL_TITLE;
                         result += ',';
                     }
-
                     if(res[i].GOAL_STATEMENT){
                         if ((res[i]['GOAL_STATEMENT']).toString().indexOf(',') != -1) {
                             var quotesWrapped = '"' + res[i]['GOAL_STATEMENT'] + '"'
                             res[i].GOAL_STATEMENT = quotesWrapped;
-
                         }
                         if (res[i]['GOAL_STATEMENT'] == undefined || res[i]['GOAL_STATEMENT'] == 'undefined' || !res[i]['GOAL_STATEMENT']) { //undefined
                             res[i].GOAL_STATEMENT = ' '
                         }
-
                         if ((res[i]['GOAL_STATEMENT']).toString().indexOf('\n') != -1) {
                             var quotesWrapped = res[i]['GOAL_STATEMENT'].replace('\n', ' ');
                             res[i].GOAL_STATEMENT = quotesWrapped
@@ -2319,9 +1964,6 @@ angular.module('ebs.controller')
                         result += res[i].GOAL_STATEMENT;
                         result += ',';
                     }
-
-
-
                     if(res[i].EVALUATION_BY_ROLE){
                         result += res[i].EVALUATION_BY_ROLE;
                         result += ',';
@@ -2331,8 +1973,6 @@ angular.module('ebs.controller')
                         result += res[i].EVALUATION_BY_ROLE;
                         result += ',';
                     }
-
-
                     if(res[i].WEIGHTAGE){
                         result += res[i].WEIGHTAGE;
                         result += ',';
@@ -2342,7 +1982,6 @@ angular.module('ebs.controller')
                         result += res[i].WEIGHTAGE;
                         result += ',';
                     }
-
                     if(res[i].DEPARTMENT){
                         result += res[i].DEPARTMENT;
                         result += ',';
@@ -2352,7 +1991,6 @@ angular.module('ebs.controller')
                         result += res[i].DEPARTMENT;
                         result += ',';
                     }
-
                     if(res[i].EVALUATION_TYPE){
                         result += res[i].EVALUATION_TYPE;
                         result += ',';
@@ -2362,7 +2000,6 @@ angular.module('ebs.controller')
                         result += res[i].EVALUATION_TYPE;
                         result += ',';
                     }
-
                     if(res[i].RESORT){
                         result += res[i].RESORT;
                         result += ',';
@@ -2372,14 +2009,11 @@ angular.module('ebs.controller')
                         result += res[i].RESORT;
                         result += ',';
                     }
-
                     if(res[i].RATING_1){
                         if ((res[i]['RATING_1']).toString().indexOf(',') != -1) {
                             var quotesWrapped = '"' + res[i]['RATING_1'] + '"'
                             res[i].RATING_1 = quotesWrapped;
-
                         }
-
                         if ((res[i]['RATING_1']).toString().indexOf('\n') != -1) {
                             var quotesWrapped = res[i]['RATING_1'].replace('\n', ' ');
                             res[i].RATING_1 = quotesWrapped
@@ -2396,15 +2030,11 @@ angular.module('ebs.controller')
                         result += res[i].RATING_1;
                         result += ',';
                     }
-
-
                     if(res[i].RATING_2){
                         if ((res[i]['RATING_2']).toString().indexOf(',') != -1) {
                             var quotesWrapped = '"' + res[i]['RATING_2'] + '"'
                             res[i].RATING_2 = quotesWrapped;
-
                         }
-
                         if ((res[i]['RATING_2']).toString().indexOf('\n') != -1) {
                             var quotesWrapped = res[i]['RATING_2'].replace('\n', ' ');
                             res[i].RATING_2 = quotesWrapped
@@ -2421,14 +2051,11 @@ angular.module('ebs.controller')
                         result += res[i].RATING_2;
                         result += ',';
                     }
-
                     if(res[i].RATING_3){
                         if ((res[i]['RATING_3']).toString().indexOf(',') != -1) {
                             var quotesWrapped = '"' + res[i]['RATING_3'] + '"'
                             res[i].RATING_3 = quotesWrapped;
                         }
-
-
                         if ((res[i]['RATING_3']).toString().indexOf('\n') != -1) {
                             var quotesWrapped = res[i]['RATING_3'].replace('\n', ' ');
                             res[i].RATING_3 = quotesWrapped
@@ -2445,14 +2072,11 @@ angular.module('ebs.controller')
                         result += res[i].RATING_3;
                         result += ',';
                     }
-
                     if(res[i].RATING_4){
                         if ((res[i]['RATING_4']).toString().indexOf(',') != -1) {
                             var quotesWrapped = '"' + res[i]['RATING_4'] + '"'
                             res[i].RATING_4 = quotesWrapped;
-
                         }
-
                         if ((res[i]['RATING_4']).toString().indexOf('\n') != -1) {
                             var quotesWrapped = res[i]['RATING_4'].replace('\n', ' ');
                             res[i].RATING_4 = quotesWrapped
@@ -2469,14 +2093,11 @@ angular.module('ebs.controller')
                         result += res[i].RATING_4;
                         result += ',';
                     }
-
                     if(res[i].RATING_5){
                         if ((res[i]['RATING_5']).toString().indexOf(',') != -1) {
                             var quotesWrapped = '"' + res[i]['RATING_5'] + '"'
                             res[i].RATING_5 = quotesWrapped;
-
                         }
-
                         if ((res[i]['RATING_5']).toString().indexOf('\n') != -1) {
                             var quotesWrapped = res[i]['RATING_5'].replace('\n', ' ');
                             res[i].RATING_5 = quotesWrapped
@@ -2493,7 +2114,6 @@ angular.module('ebs.controller')
                         result += res[i].RATING_5;
                         result += ',';
                     }
-
                     if(res[i].CREATED_DATE){
                         result += $scope.atmsFormatedDate(res[i].CREATED_DATE);
                         result += ',';
@@ -2503,7 +2123,6 @@ angular.module('ebs.controller')
                         result += res[i].CREATED_DATE;
                         result += ',';
                     }
-
                     if(res[i].CREATED_BY){
                         result += res[i].CREATED_BY;
                         result += ',';
@@ -2513,7 +2132,6 @@ angular.module('ebs.controller')
                         result += res[i].CREATED_BY;
                         result += ',';
                     }
-
                     if(res[i].MODIFIED_DATE){
                         result += $scope.atmsFormatedDate(res[i].MODIFIED_DATE);
                         result += ',';
@@ -2532,18 +2150,14 @@ angular.module('ebs.controller')
                         result += res[i].MODIFIED_BY;
                         result += ',';
                     }
-
                     result += '\n';
                 }
-
                 var blob = new Blob([result], {type : "text/csv;charset=UTF-8"});
                 //console.log(blob);
                 window.URL = window.webkitURL || window.URL;
                 var url = window.URL.createObjectURL(blob);
-
                 var d = new Date();
                 var anchor = angular.element('<a/>');
-
                 anchor.attr({
                     href: url,
                     target: '_blank',
@@ -2551,22 +2165,16 @@ angular.module('ebs.controller')
                 })[0].click();
             }
         }
-
         if(tab == 2){
             if(res.length){
                 var result = "Colleague Code, Colleague Name, Department,Role, Designation, Supervisor Code, Supervisor Name, Supervisor Designation, Phone Number, Assistant Manager Code, Assistant Manager Name, Assistant Manager Designation, Phone Number, Manager Code, Manager Name, Manager Designation, Phone Number,Created Date,Created By, Last Update, Update by,Image Modified By\n";
-
                 for(var i=0; i< res.length; i++){
-
                     result += res[i].EMPLOYEE_ID;
                     result += ',';
-
                     result += res[i].sellername;
                     result += ',';
-
                     result += res[i].DEPARTMENT;
                     result += ',';
-
                     if(res[i].role){
                         if (res[i].role.toString().indexOf(',') != -1) {
                             var quotesWrapped = '"' + res[i].role + '"';
@@ -2580,12 +2188,10 @@ angular.module('ebs.controller')
                             var quotesWrapped = res[i].role.replace('\t', ' ');
                             res[i].role = quotesWrapped;
                         }
-
                         result += res[i].role;
                         result += ',';
                     }else
                         result += ',';
-
                     if(res[i].Designation){
                         if (res[i].Designation.toString().indexOf(',') != -1) {
                             var quotesWrapped = '"' + res[i].Designation + '"';
@@ -2599,13 +2205,10 @@ angular.module('ebs.controller')
                             var quotesWrapped = res[i].Designation.replace('\t', ' ');
                             res[i].Designation = quotesWrapped;
                         }
-
                         result += res[i].Designation;
                         result += ',';
                     }else
                         result += ',';
-
-
                     if(res[i].Supervisor_Code){
                         result += res[i].Supervisor_Code;
                         result += ',';
@@ -2615,7 +2218,6 @@ angular.module('ebs.controller')
                         result += res[i].Supervisor_Code;
                         result += ',';
                     }
-
                     if(res[i].Supervisor_Name){
                         result += res[i].Supervisor_Name;
                         result += ',';
@@ -2625,8 +2227,6 @@ angular.module('ebs.controller')
                         result += res[i].Supervisor_Name;
                         result += ',';
                     }
-
-
                     if(res[i].Supervisor_Designation) {
                         if (res[i].Supervisor_Designation.toString().indexOf(',') != -1) {
                             var quotesWrapped = '"' + res[i].Supervisor_Designation + '"';
@@ -2640,12 +2240,10 @@ angular.module('ebs.controller')
                             var quotesWrapped = res[i].Supervisor_Designation.replace('\t', ' ');
                             res[i].Supervisor_Designation = quotesWrapped;
                         }
-
                         result += res[i].Supervisor_Designation
                         result += ',';
                     }else
                         result += ',';
-
                     if(res[i].Supervisor_Phone_Number){
                         result += res[i].Supervisor_Phone_Number;
                         result += ',';
@@ -2655,7 +2253,6 @@ angular.module('ebs.controller')
                         result += res[i].Supervisor_Phone_Number;
                         result += ',';
                     }
-
                     if(res[i].Assistant_Manager_Code){
                         result += res[i].Assistant_Manager_Code;
                         result += ',';
@@ -2665,7 +2262,6 @@ angular.module('ebs.controller')
                         result += res[i].Assistant_Manager_Code;
                         result += ',';
                     }
-
                     if(res[i].Assistant_Manager_Name){
                         result += res[i].Assistant_Manager_Name;
                         result += ',';
@@ -2675,7 +2271,6 @@ angular.module('ebs.controller')
                         result += res[i].Assistant_Manager_Name;
                         result += ',';
                     }
-
                     if(res[i].Assistant_Manager_Designation) {
                         if (res[i].Assistant_Manager_Designation.toString().indexOf(',') != -1) {
                             var quotesWrapped = '"' + res[i].Assistant_Manager_Designation + '"';
@@ -2689,12 +2284,10 @@ angular.module('ebs.controller')
                             var quotesWrapped = res[i].Assistant_Manager_Designation.replace('\t', ' ');
                             res[i].Assistant_Manager_Designation = quotesWrapped;
                         }
-
                         result += res[i].Assistant_Manager_Designation;
                         result += ',';
                     }else
                         result += ',';
-
                     if(res[i].Assistant_Manager_Phone_Number){
                         result += res[i].Assistant_Manager_Phone_Number;
                         result += ',';
@@ -2704,7 +2297,6 @@ angular.module('ebs.controller')
                         result += res[i].Assistant_Manager_Phone_Number;
                         result += ',';
                     }
-
                     if(res[i].Manager_Code){
                         result += res[i].Manager_Code;
                         result += ',';
@@ -2714,7 +2306,6 @@ angular.module('ebs.controller')
                         result += res[i].Manager_Code;
                         result += ',';
                     }
-
                     if(res[i].Manager_Name){
                         result += res[i].Manager_Name;
                         result += ',';
@@ -2724,7 +2315,6 @@ angular.module('ebs.controller')
                         result += res[i].Manager_Name;
                         result += ',';
                     }
-
                     if(res[i].Manager_Designation) {
                         if (res[i].Manager_Designation.toString().indexOf(',') != -1) {
                             var quotesWrapped = '"' + res[i].Manager_Designation + '"';
@@ -2738,13 +2328,10 @@ angular.module('ebs.controller')
                             var quotesWrapped = res[i].Manager_Designation.replace('\t', ' ');
                             res[i].Manager_Designation = quotesWrapped;
                         }
-
                         result += res[i].Manager_Designation;
                         result += ',';
                     }else
                         result += ',';
-
-
                     if(res[i].Manager_Phone_Number){
                         result += res[i].Manager_Phone_Number;
                         result += ',';
@@ -2754,8 +2341,6 @@ angular.module('ebs.controller')
                         result += res[i].Manager_Phone_Number;
                         result += ',';
                     }
-
-
                     if(res[i].CREATED_DATE) {
                         result += $scope.atmsFormatedDate(res[i].CREATED_DATE);
                         result += ',';
@@ -2764,8 +2349,6 @@ angular.module('ebs.controller')
                         res[i].CREATED_DATE = '';
                         result += ',';
                     }
-
-
                     if(res[i].CREATED_BY) {
                         result += res[i].CREATED_BY;
                         result += ',';
@@ -2774,7 +2357,6 @@ angular.module('ebs.controller')
                         res[i].CREATED_BY = '';
                         result += ',';
                     }
-
                     if(res[i].last_updated) {
                         result += $scope.atmsFormatedDate(res[i].last_updated);
                         result += ',';
@@ -2783,8 +2365,6 @@ angular.module('ebs.controller')
                         res[i].last_updated = '';
                         result += ',';
                     }
-
-
                     if(res[i].last_updated_by) {
                         result += res[i].last_updated_by;
                         result += ',';
@@ -2793,7 +2373,6 @@ angular.module('ebs.controller')
                         res[i].last_updated_by = '';
                         result += ',';
                     }
-
                     if(res[i].IMAGE_MODIFIED_BY) {
                         result += res[i].IMAGE_MODIFIED_BY;
                         result += ',';
@@ -2802,18 +2381,14 @@ angular.module('ebs.controller')
                         res[i].IMAGE_MODIFIED_BY = '';
                         result += ',';
                     }
-
                     result += '\n';
                 }
-
                 var blob = new Blob([result], {type : "text/csv;charset=UTF-8"});
                 //console.log(blob);
                 window.URL = window.webkitURL || window.URL;
                 var url = window.URL.createObjectURL(blob);
-
                 var d = new Date();
                 var anchor = angular.element('<a/>');
-
                 anchor.attr({
                     href: url,
                     target: '_blank',
@@ -2821,14 +2396,11 @@ angular.module('ebs.controller')
                 })[0].click();
             }
         }
-
         if(tab == 3){
             if(res){
                 var result = "Colleague Code, Colleague Name, Designation,";
                 var count =0;
-
                 for (var j = 0; j <= 1; j++) {
-
                     /*if(j == 0){
                      var result = 'Dates';
                      result += ',';
@@ -2839,11 +2411,8 @@ angular.module('ebs.controller')
                      }*/
                     if(j==0)
                     {
-
                         for (var i = 0; i < dashboard_statements.cols.length; i++) {
-
                             var temp = dashboard_statements.cols[i].GOAL_STATEMENT;
-
                             // if(result.indexOf(res[i].statement[0]) == -1)
                             // {
                             if (dashboard_statements.cols[i].GOAL_STATEMENT.toString().indexOf(',') != -1) {
@@ -2863,20 +2432,15 @@ angular.module('ebs.controller')
                                 temp = quotesWrapped;
                             }
                             result += temp;
-
                             if (i == dashboard_statements.cols.length - 1) {
-
                                 result += ', Total, Final Score\n ';
                             } else
                                 result += ',';
                             // }
                         }
                     }
-
                     else {
-
                         console.log(res.length)
-
                         //unique evaluation array with grouped goals -- the main ng-repeat after the groupFunc
                         for(var det=0; det<res.length; det++)
                         {
@@ -2884,47 +2448,34 @@ angular.module('ebs.controller')
                             {
                                 result += res[det].DETAILS[0].EMPLOYEE_ID;
                                 result += ',';
-
                                 result += res[det].DETAILS[0].sellername;
                                 result += ',';
-
                                 result += res[det].DETAILS[0].Designation ? res[det].DETAILS[0].Designation : res[det].DETAILS[0].role;
                                 result += ',';
-
                                 //dashboard_statements is the grouped array for cols and display
                                 for (var k = 0; k < dashboard_statements.cols.length; k++) {
-
                                     for(var index=0; index < dashboard_statements.display.length; index++)
                                     {
                                         if(res[det].EVALUATION == dashboard_statements.display[index].EVALUATION)
                                         {
                                             // if(dashboard_statements.cols[k].GOAL_ID == dashboard_statements.display[index].GOAL_ID)
                                             // {
-
                                             //To check if the goal statement has score in the dashboard_statements.display array
                                             if(dashboard_statements.display[index][dashboard_statements.cols[k].GOAL_STATEMENT]) {
                                                 result += dashboard_statements.display[index][dashboard_statements.cols[k].GOAL_STATEMENT];
                                             }
-
                                             // }
                                         }
                                     }
                                     result += ',';
-
-
-
                                     if (k == dashboard_statements.cols.length - 1) {
                                         result += res[det].TOTAL ? res[det].TOTAL : '';
                                         result += ',';
-
                                         result += res[det].FINAL_SCORE ? res[det].FINAL_SCORE.toFixed(2) : '';
                                         result += ',';
-
                                         result += ' \n ';
                                     }
-
                                 }
-
                                 if (det == res.length - 1) {
                                     result += ' \n ';
                                 }
@@ -2935,22 +2486,15 @@ angular.module('ebs.controller')
                                     result += ' \n ';
                                 }
                             }
-
                         }
-
                     }
-
                 }
-
-
                 var blob = new Blob([result], {type: "text/csv;charset=UTF-8"});
                 //console.log(blob);
                 window.URL = window.webkitURL || window.URL;
                 var url = window.URL.createObjectURL(blob);
-
                 var d = new Date();
                 var anchor = angular.element('<a/>');
-
                 anchor.attr({
                     href: url,
                     target: '_blank',
@@ -2958,15 +2502,12 @@ angular.module('ebs.controller')
                 })[0].click();
             }
         }
-
         if(tab == 4) {
-
             $http.post('/dash/reports/atms/download/individualReport', individualReportSearchObj)
                 .success(function (res) {
                     console.log(res);
                     if (res) {
                         for (var j = 0; j <= Math.round($scope.atmsIndividualReportDays); j++) {
-
                             if(j == 0){
                                 var result = 'Dates';
                                 result += ',';
@@ -2976,7 +2517,6 @@ angular.module('ebs.controller')
                                 result += ',';
                             }
                             for (var i = 0; i < res.length; i++) {
-
                                 if(j==0){
                                     var temp = res[i].goal_statement;
                                     if (res[i].goal_statement.toString().indexOf(',') != -1) {
@@ -2997,9 +2537,7 @@ angular.module('ebs.controller')
                                     }
                                     result += temp+' - '+ res[i].evaluation_type;
                                     result += ',';
-
                                     result += 'Comment';
-
                                     if (i == res.length - 1) {
                                         result += ' \n ';
                                     } else
@@ -3011,12 +2549,10 @@ angular.module('ebs.controller')
                                             if ($scope.inDateRange(res[i].goal_end[count], res[i].goal_start[count], '') == 'not_started') {
                                                 result += '';
                                                 result += ',';
-
                                                 result += '';
                                             } else if ($scope.inDateRange(res[i].goal_end[count], res[i].goal_start[count], '')) {
                                                 result += res[i].rating[count] ? res[i].rating[count].STAR : (res[i].not_completed[count] ? 'NC' : 'NR');
                                                 result += ',';
-
                                                 result += res[i].comment[count];
                                             } else {
                                                 if (res[i].goal_end[count+1]) {
@@ -3024,7 +2560,6 @@ angular.module('ebs.controller')
                                                 } else {
                                                     result += '';
                                                     result += ',';
-
                                                     result += '';
                                                 }
                                             }
@@ -3033,13 +2568,11 @@ angular.module('ebs.controller')
                                             if($scope.inDateRange('', res[i].goal_start[count], true) == 'not_started'){
                                                 result += '';
                                                 result += ',';
-
                                                 result += '';
                                             }
                                             else if($scope.inDateRange('', res[i].goal_start[count], true)){
                                                 result += res[i].rating[count]? res[i].rating[count].STAR : (res[i].not_completed[count] ? 'NC' : 'NR');
                                                 result += ',';
-
                                                 result += res[i].comment[count];
                                             }
                                             else{
@@ -3049,15 +2582,12 @@ angular.module('ebs.controller')
                                                 else{
                                                     result += '';
                                                     result += ',';
-
                                                     result += '';
                                                 }
                                             }
                                         }
                                     }
-
                                     fillData(0);
-
                                     if (i == res.length - 1) {
                                         result += ' \n ';
                                     } else
@@ -3065,15 +2595,12 @@ angular.module('ebs.controller')
                                 }
                             }
                         }
-
                         var blob = new Blob([result], {type: "text/csv;charset=UTF-8"});
                         //console.log(blob);
                         window.URL = window.webkitURL || window.URL;
                         var url = window.URL.createObjectURL(blob);
-
                         var d = new Date();
                         var anchor = angular.element('<a/>');
-
                         anchor.attr({
                             href: url,
                             target: '_blank',
@@ -3081,51 +2608,36 @@ angular.module('ebs.controller')
                         })[0].click();
                     }
                 })
-
         }
-
         if(tab == 5){
             if(res){
                 var result = "Colleague Code, Colleague Name, Department, Designation, No of Goals, No of NCs, No of NRs\n";
-
                 for(var i=0; i< res.length; i++){
-
                     if(res[i].NC != 0 || res[i].NR != 0)
                     {
                         result += res[i]._id.EMPLOYEE_ID;
                         result += ',';
-
                         result += res[i]._id.EVALUATOR_NAME;
                         result += ',';
-
                         result += res[i].DEPARTMENT ? res[i].DEPARTMENT : '';
                         result += ',';
-
                         result += res[i].DESIGNATION ? res[i].DESIGNATION : '';
                         result += ',';
-
                         result += res[i].TOTAL ? res[i].TOTAL : '-';
                         result += ',';
-
                         result += res[i].NC ? res[i].NC : '0';
                         result += ',';
-
                         result += res[i].NR ? res[i].NR : '0';
                         result += ',';
-
                         result += '\n';
                     }
-
                 }
-
                 var blob = new Blob([result], {type : "text/csv;charset=UTF-8"});
                 //console.log(blob);
                 window.URL = window.webkitURL || window.URL;
                 var url = window.URL.createObjectURL(blob);
-
                 var d = new Date();
                 var anchor = angular.element('<a/>');
-
                 anchor.attr({
                     href: url,
                     target: '_blank',
@@ -3134,7 +2646,6 @@ angular.module('ebs.controller')
             }
         }
     }
-
     $scope.atmsFormatedDate = function(d){
         if(d){
             var date = new Date(d);
@@ -3152,7 +2663,6 @@ angular.module('ebs.controller')
         else
             return '';
     }
-
     $scope.getDownloadableDate = function(date, days){
         var tempDate = new Date(date);
         tempDate.setDate(tempDate.getDate() + days);
@@ -3164,7 +2674,6 @@ angular.module('ebs.controller')
         //console.log(dateformat)
         return dateformat
     }
-
     $scope.inDateRange = function(goal_end, goal_start, type){
         if(type){
             var goalStartDate = new Date(goal_start);
@@ -3192,24 +2701,17 @@ angular.module('ebs.controller')
                 return 'not_started';
         }
     }
-
     $scope.individualReportPdf = function(){
-
         document.getElementById('individualReport-print-body').style.display = 'block';
-
         var options = {
             pagesplit : true
         }
-
         var pdf = new jsPDF('p', 'pt', 'a4');
-
         jQuery.noConflict();
         pdf.addHTML($("#individualReport-print-body"), 0, 0, options, function() {
             var title = 'Individual_Reports_' +$scope.selected_Colleague_code.EVALUATION_ID + ($scope.selected_Colleague_code.EVALUATION_NAME ? ('_' + $scope.selected_Colleague_code.EVALUATION_NAME) : '') + '.pdf';
             pdf.save(title);
             document.getElementById('individualReport-print-body').style.display = 'none';
         });
-
     }
-
 })

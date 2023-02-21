@@ -1,76 +1,57 @@
 /**
  * Created by shreyasgombi on 05/07/22.
  */
-
  angular.module('ebs.controller')
-
     .controller("ModuleAdminCtrl", ($scope, $routeParams, $http, $window, Settings) => {
         console.log("Hello From Module Settings Controller .... !!!! ");
-
         $scope.tab = 'overview';
         $scope.application_type = "Orderjini";
-
         $scope.order_status = {"order_status" : false, "line_status" : false, "default_delivery_days" : "0"};
         $scope.orderConditions = {"enabled" : false, "type" : terms_conditions_order, "terms_conditions" : ""};
         $scope.customer_config = {};
-
         $scope.invoice_prefix = {};
         $scope.inventory_config = {"type" : "quantity"};
         $scope.new_location = {"type" : "Real Location"};
         $scope.edited_location = {};
-
         //....Atmosphere....
         $scope.newEvaluationType = {};
         $scope.settingsEvaluation = [];
         $scope.settingsDepartment = [];
         $scope.editEvaluationType = [];
         $scope.editDepartmentSetup = [];
-
         $scope.settings = {};
         $scope.settings.token = false;
         $scope.settings.application_type = "";
         $scope.settings.standard_order_fulfilment = false;
         $scope.settings.attendance = false;
         $scope.settings.van_sales = false;
-
         $scope.country = {};
         $scope.country.name = 'India';
-
         //... Google Maps API Key....
         $scope.gMapAPI = {};
-
         $scope.token = false;
         $scope.applicationType = "";
         $scope.standardOrderFulfilFlag = false;
-
         let instance_details = Settings.getInstance();
         $scope.token = instance_details.token;
         $scope.country.name = instance_details.country || 'India';
-
         $scope.settings.invoice = instance_details.invoice;
         $scope.settings.attendance = instance_details.attendance;
         $scope.settings.currency = instance_details.currency || '₹';
         $scope.settings.van_sales = instance_details.vanSalesEnable;
         $scope.goalsConfigArray = instance_details.goalsConfig ? instance_details.goalsConfig : {};
-
         $scope.gMapAPI = instance_details.gMapAPI;
-        
         $scope.applicationType = (!instance_details.applicationType || instance_details.applicationType == "OrderJini" ? "" : instance_details.applicationType);
-        
         if($scope.applicationType == "Atmosphere") $scope.tab = "atmosphere";
         console.log(instance_details);
-
         //.... Users...
         $scope.user_roles = [];
         $scope.nav = [];
         $scope.editSetupRoles = [];
-
         Settings.getNav(false, nav => {
             $scope.nav = nav;
-
             if($scope.nav && $scope.nav[4].roles && $scope.nav[4].roles.length){
                 $scope.user_roles = $scope.nav[4].roles;
-
                 for(let i = 0; i < $scope.user_roles.length; i++){
                     $scope.editSetupRoles.push({
                         name :$scope.user_roles[i].name,
@@ -85,44 +66,33 @@
                     });
             }
         })
-        
-            
         $scope.add_new_items = instance_details.addItems;
-
         //.... Lead Statuses...
         $scope.lead_statuses = [];
         $scope.lead_sources = [];
         $scope.warehouse_locations = [];
         $scope.customer_category = [];
-
         //... Country Data....
         $scope.countryCode = {};
-        
         if(instance_details.applicationType)
             $scope.application_type = instance_details.applicationType;
         //.... Tabs ....
         if($routeParams.tab) $scope.tab = $routeParams.tab;
-
-
         //... Zeita ...
         $scope.mpg = [];
         $scope.orderType = [];
         $scope.salesUOM = [];
-
         $scope.newmpg = {};
         $scope.neworderType = {};
         $scope.newUOM = {};
-
         const startLoader = () => {
             jQuery.noConflict();
             $('.refresh').css("display", "inline");
         };
-
         const stopLoader = () => {
             jQuery.noConflict();
             $('.refresh').css("display", "none");
         }
-
         $http.get("/country/countryCode")
             .then(countries =>  {
                 if(countries.data)
@@ -134,7 +104,6 @@
                 else if(status >= 500)
                     $window.location.href = '/500';
             })
-
         const fetchDealerTab = () => {
             $http.get("/dash/settings/details/DealerTabs")
                 .then(pincode => {
@@ -160,7 +129,6 @@
                     else
                         $window.location.href = '/404';
                 });
-
             $http.get("/dash/settings/details/customer_setup")
                 .then(setup => {
                     if(setup.data){
@@ -186,7 +154,6 @@
                         $window.location.href = '/404';
                 });
         };
-
         const fetchTaxExclusive = () => {
             $http.get("/dash/settings/details/tax")
                 .then(tax => {
@@ -213,8 +180,6 @@
                         $window.location.href = '/404';
                 });
         }
-
-        
         const fetchOrderSetup = () => {
             startLoader();
             $http.get("/dash/settings/details/order_setup")
@@ -245,7 +210,6 @@
                         $window.location.href = '/404';
                 });
         };
-        
         const fetchOrderTermsAndCondition = () => {
             startLoader();
             $http.get("/dash/settings/details/terms_conditions_order")
@@ -276,7 +240,6 @@
                         $window.location.href = '/404';
                 });
         };
-
         const fetchCustomerSetup = () => {
             startLoader();
             $http.get("/dash/settings/details/customer_setup")
@@ -303,7 +266,6 @@
                         $window.location.href = '/404';
                 });
         }
-
         const fetchInvoiceRunningID = () => {
             $http.get("/dash/settings/invoice/recent/id")
                 .then(response => {
@@ -330,7 +292,6 @@
                         $window.location.href = '/404';
                 });
         }
-
         const fetchInvoiceSettings = () => {
             $http.get("/dash/settings/details/invoice")
                 .then(invoice => {
@@ -356,7 +317,6 @@
                         $window.location.href = '/404';
                 });
         }
-
         const fetchLeadStatuses = () => {
             $http.get("/dash/settings/details/leadStatus")
                 .then(leads => {
@@ -381,7 +341,6 @@
                         $window.location.href = '/404';
                 });
         }
-
         const fetchLeadSources = () => {
             $http.get("/dash/settings/details/leadSource")
                 .then(sources => {
@@ -406,7 +365,6 @@
                         $window.location.href = '/404';
                 });
         }
-
         const fetchInventoryMode = () => {
             $http.get("/dash/settings/details/inventory")
                 .then(inventory => {
@@ -431,7 +389,6 @@
                         $window.location.href = '/404';
                 });
         }
-
         const fetchWarehouseLocations = () => {
             $http.get("/dash/settings/inventory/locations")
                 .then(response => {
@@ -456,7 +413,6 @@
                         $window.location.href = '/404';
                 });
         }
-
         const fetchStandardOrderFulfilment = () => {
             $http.get('/dash/settings/standard/fulfilment')
                 .then(response => {
@@ -482,7 +438,6 @@
                         $window.location.href = '/404';
                 });
         };
-
         const fetchAppUpdateNotification = () => {
             $http.get('/dash/settings/app/update/status')
                 .then((response) => {
@@ -508,7 +463,6 @@
                         $window.location.href = '/404';
                 });
         }
-
         const fetchPermissions = () => {
             $http.get('/dash/settings/details/editByRoles')
                 .then((response) => {
@@ -533,7 +487,6 @@
                         $window.location.href = '/404';
                 });
         }
-
         // Fetch Customer Category
         const fetchCustomerType = () => {
             $http.get("/dash/settings/details/customerCategory")
@@ -559,7 +512,6 @@
                         $window.location.href = '/404';
                 });
         }
-
         const loadMPGList = () => {
             $http.get("/dash/settings/details/mpg")
                 .then(type => {
@@ -584,7 +536,6 @@
                         $window.location.href = '/404';
                 });
         };
-
         const loadUOMList = () => {
             $http.get("/dash/settings/details/salesUOM")
                 .then(type => {
@@ -609,7 +560,6 @@
                         $window.location.href = '/404';
                 });
         };
-
         const loadOrderTypeList = () => {
             $http.get("/dash/settings/details/orderType")
                 .then(type => {
@@ -634,7 +584,6 @@
                         $window.location.href = '/404';
                 });
         };
-
         const loadPercentageDiscount = () => {
             $http.get("/dash/settings/details/percentageDiscount")
                 .then((settings) => {
@@ -642,7 +591,6 @@
                     if(settings && settings.data){
                         if(!settings.data.value || settings.data.value != 'error'){
                             $scope.settings.percentage_discount = settings.data.value;
-
                             if($scope.settings.percentage_discount){
                                 loadMPGList();
                                 loadUOMList();
@@ -669,7 +617,6 @@
                         $window.location.href = '/404';
                 });
          };
-
         //.... Changing the line status setting....
         $scope.lineStatus = () => {
             startLoader();
@@ -684,7 +631,6 @@
                     }
                 })
         };
-
         $scope.orderStatus = () => {
             startLoader();
             $http.put("/dash/settings/enable/status/order", {status: $scope.order_status.order_status})
@@ -698,7 +644,6 @@
                     }
                 })
         };
-
         $scope.stockistTagging = () => {
             startLoader();
             $http.put("/dash/settings/enable/status/stockist", {"status" : $scope.order_status.order_stockist_tagging})
@@ -710,7 +655,6 @@
                     }
                 })
         };
-
         $scope.recordPayment = () => {
             startLoader();
             $http.put("/dash/settings/enable/status/payment", {"status" : $scope.order_status.record_payment})
@@ -722,7 +666,6 @@
                     }
                 })
         };
-
         $scope.creditLimit = () => {
             startLoader();
             $http.put("/dash/settings/enable/status/credit", {"status" : $scope.order_status.credit_limit})
@@ -734,7 +677,6 @@
                     }
                 })
         };
-
         $scope.editPrice = () => {
             startLoader();
             $http.put("/dash/settings/enable/status/price", {"status" : $scope.order_status.edit_price})
@@ -746,7 +688,6 @@
                     }
                 })
         };
-
         $scope.inventoryControl = () => {
             startLoader();
             $http.put("/dash/settings/enable/status/inventory", {"status" : $scope.order_status.inventory_control})
@@ -758,7 +699,6 @@
                     }
                 })
         };
-
         $scope.termsConditionsOrder = (abc) => {
                 startLoader();
     // $scope.orderConditions.enabled = $scope.orderConditions.terms_conditions_order
@@ -784,7 +724,6 @@
             })
             }
         };
-
         $scope.newCustomerAsUser = () => {
             startLoader();
             $http.put("/dash/settings/enable/customer/setup", {"type" : "customer_as_user", "status" : $scope.customer_config.customer_as_user})
@@ -797,7 +736,6 @@
                     }
                 })
         };
-
         $scope.customerNotification = () => {
             startLoader();
             $http.put("/dash/settings/enable/customer/setup", {"type" : "customer_onboard_notification", "status" : $scope.customer_config.customer_onboard_notification})
@@ -810,9 +748,7 @@
                     }
                 })
         };
-
         $scope.customerToMaster = (status) => {
-
              startLoader();
             $http.put("/dash/settings/enable/customer/setup", {"type" : "customer_user_to_master", "status" : $scope.customer_config.customer_user_to_master})
                 .then(response => {
@@ -824,7 +760,6 @@
                     }
                 })
         };
-
         $scope.deliveryDate = () => {
             startLoader();
             $http.put("/dash/settings/enable/status/delivery", {"status" : $scope.order_status.delivery_date})
@@ -836,7 +771,6 @@
                     }
                 })
         };
-
         $scope.orderDeliveryDateSet = () => {
             startLoader();
             $http.put("/dash/settings/enable/status/delivery-days", {"days" : parseInt($scope.order_status.default_delivery_days)})
@@ -848,14 +782,12 @@
                     }
                 })
         };
-
         $scope.editOrderStatus = (status, index) => {
             console.log(status);
             if(!status) Settings.fail_toast('Error', "Please enter the new status name");
             else{
                 startLoader();
                 $scope.nav[1].status[index] = status;
-
                 $http.put("/dash/nav/order/status", $scope.nav[1].status)
                     .then(res => {
                         stopLoader();
@@ -868,7 +800,6 @@
                     })
             }
         };
-
         // Select the inventory type in the instance
         $scope.inventoryType = type => {
             Settings.confirmPopup("Confirm", "Are you sure to change the Inventory Mode - " + (type == "serial" ? "Serial No. Based" : "Quantity Based"),
@@ -886,9 +817,7 @@
                             })
                     }
                 })
-            
         }
-
         $scope.reorderOrderStatus = (dir, value) => {
             let temp = $scope.nav[1].status[value];
             if(dir == 'up'){
@@ -898,7 +827,6 @@
                 $scope.nav[1].status[value] = $scope.nav[1].status[value + 1];
                 $scope.nav[1].status[value + 1] = temp;
             }
-
             startLoader();
             $http.put("/dash/nav/order/status", $scope.nav[1].status)
                 .then(res => {
@@ -908,7 +836,6 @@
                     }
                 })
         };
-
         $scope.customerCategoryMandatory = enable => {
             startLoader();
             $http.put("/dash/settings/customer/category/mandatory", {"customer_category_mandatory" : enable})
@@ -936,7 +863,6 @@
                         $window.location.href = '/404';
                 });
         };
-
         $scope.customerPincodeMandatory = enable => {
             startLoader();
             $http.put("/dash/settings/customer/pincode/mandatory", {"type" : "DealerTabs", "PinCodeMadatory" : enable})
@@ -964,7 +890,6 @@
                         $window.location.href = '/404';
                 });
         }
-
         $scope.toggleTaxExclusive = exclusive => {
             startLoader();
             $http.put("/dash/settings/catalog/prices/tax/exclusive", {activate : exclusive})
@@ -977,16 +902,13 @@
                     }
                 })
         }
-
         $scope.addNewOrderStatus = status => {
             if(status){
                 let statuses = $scope.nav[1].status;
-                
                 if(statuses && statuses.length){
                     statuses = statuses.map(el => el.toLowerCase());
                     if(statuses.indexOf(status.toLowerCase()) == -1){
                         $scope.nav[1].status.push(status);
-
                         $http.put("/dash/nav/order/status", $scope.nav[1].status)
                             .then(res => {
                                 if(res && res.data){
@@ -1018,13 +940,10 @@
                 }
             }
         };
-
-
         $scope.toggleEditOrderDealer = (user, action, type, flag) => {
             startLoader();
             if(type == 'shipment'){
                 $scope.editByRoles[user][action == 'edit' ? 0 : 1]['status'][type] = flag;
-                
                 $http.put("/dash/settings/admin/update/role/access", $scope.editByRoles)
                     .then(response => {
                         stopLoader();
@@ -1054,7 +973,6 @@
                     });
             }else{
                 $scope.editByRoles[user][action == 'edit' ? 0 : 1]['status'][type] = flag;
-                
                 $http.put("/dash/settings/admin/update/role/access", $scope.editByRoles)
                     .then(response => {
                         stopLoader();
@@ -1084,20 +1002,17 @@
                     });
             }
         };
-
         /*..........
                 Remove order status from settings page
          .........*/
          $scope.removeStatus = status => {
             let index = $scope.nav[1].status.indexOf(status);
-
             if(index != -1 && ($scope.nav[1].status.length > 1)){
                 Settings.confirmCustomPopup("Confirm", "Are you sure you want to remove the status " + status + " from the list?",
                 {"cancel" : "No", "confirm" : "Yes"},
                 (result) => {
                     if(result){
                         $scope.nav[1].status.splice(index, 1);
-
                         $http.put("/dash/nav/order/status", $scope.nav[1].status)
                             .then(res => {
                                 if(res && res.data){
@@ -1124,8 +1039,6 @@
                 });
             } else Settings.fail_toast("ERROR","Alteast 1 Status Needs to be available!");
         }
-        
-
         $scope.setInvoice = (data, type) => {
             if(type == 'name'){
                 $http.put("/dash/settings/invoice/prefix", {value : data || "INV"})
@@ -1158,7 +1071,6 @@
                         if (result) {
                             let number = parseInt(data);
                             //let date = new Date();
-
                             $http.post("/dash/settings/invoice/set/id", {id:'INV', invoiceID : number, type : 'settings'})
                                 .then(res => {
                                     if(res && res.data){
@@ -1187,7 +1099,6 @@
                     });
             }
         };
-
         $scope.setOrderSequence = (data, type) => {
             console.log('data, type', data, type);
             if(type == 'name'){
@@ -1196,7 +1107,6 @@
                         if(response.data){
                             $scope.order_prefix.name = data;
                             Settings.success_toast('SUCCESS', 'Order Prefix Updated Successfully!');
-
                         }
                     })
                     .catch((error, status) => {
@@ -1221,14 +1131,12 @@
                         if (result) {
                             let number = parseInt(data);
                             //let date = new Date();
-
                             $http.post("/dash/settings/order/sequence/set/id", {id:'ORD', orderID : number, type : 'settings'})
                                 .then(res => {
                                     if(res && res.data){
                                         $scope.order_prefix.initOrderID = Settings.zeroPad(res.data.value.orderID, 5);
                                         // console.log('orderprefix numb is ', $scope.order_prefix.initOrderID, res.data)
                                         Settings.success_toast('SUCCESS','Order ID Updated Successfully!');
-                                        
                                     }
                                 })
                                 .catch((error, status) => {
@@ -1251,12 +1159,10 @@
                     });
             }
         };
-
         $scope.getOrderIdSequence = ()=> {
             $http.post("/dash/settings/order/sequence/set/id", {type: ''})
                 .then(res => {
                     if(res && res.data){
-
                         $scope.order_prefix = res.data;
                     }else
                         $scope.order_prefix = {};
@@ -1278,9 +1184,7 @@
                         $window.location.href = '/404';
                 });
         }
-
         $scope.getOrderIdSequence();
-
         $scope.addNewItems = () => {
             console.log("Add Items Access --> " + $scope.add_new_items);
             $http.put("/dash/items/add/update", {addItems: $scope.add_new_items})
@@ -1291,8 +1195,6 @@
                     }
                 })
         };
-
-
         /*..........
                 Edit lead status from settings page
          .........*/
@@ -1304,7 +1206,6 @@
                         var statusObj = [];
                         statusObj = $scope.lead_statuses;
                         statusObj[index] = status.toLowerCase();
-
                         $http.post("/dash/settings/leadstatus", statusObj)
                             .then(response => {
                                 if(response.data){
@@ -1339,7 +1240,6 @@
                 }
             }
         };
-
         $scope.editLeadSource = (source, index) => {
             if(!source) Settings.failurePopup('ERROR',"Please enter text");
             else{
@@ -1348,7 +1248,6 @@
                         let sources = [];
                         sources = $scope.lead_sources;
                         sources[index] = source.toLowerCase();
-
                         $http.post("/dash/settings/leadsource", sources)
                             .then(response => {
                                 if(response.data){
@@ -1379,12 +1278,10 @@
                 }
             }
         };
-
         $scope.addLeadStatus = status => {
             const addLead = () => {
                 let temp = $scope.lead_statuses;
                 temp.push(status.toLowerCase())
-
                 $http.post("/dash/settings/leadstatus", temp)
                     .then(response => {
                         if(response.data){
@@ -1397,7 +1294,6 @@
                         }
                     })
             }
-
             if(status){
                 if($scope.lead_statuses.length){
                     if($scope.lead_statuses.indexOf(status.toLowerCase()) == -1){
@@ -1410,7 +1306,6 @@
             }
             else Settings.fail_toast("ERROR", "Please enter text!");
         };
-
         $scope.editUserRolesFromSettings = (role, index) => {
             if(!role ) Settings.failurePopup('ERROR',"Please enter text");
             else{
@@ -1419,7 +1314,6 @@
                         let rolesObj = [];
                         rolesObj = $scope.user_roles;
                         rolesObj[index].name = role;
-    
                         $http.put("/dash/nav/roles/update", rolesObj)
                             .then(response => {
                                 if(response.data){
@@ -1438,11 +1332,9 @@
                 }
             }
         };
-
         $scope.enableUserRole = (status, index) => {
             if($scope.user_roles.length){
                 $scope.user_roles[index].status = status;
-
                 $http.put("/dash/nav/roles/update", $scope.user_roles)
                 .then(response => {
                     if(response.data){
@@ -1454,7 +1346,6 @@
                 })
             }
         };
-
         $scope.enableVanSalesToggle = value => {
             $http.put("/dash/settings/van/sales", {"value" : value})
                 .then(response => {
@@ -1465,7 +1356,6 @@
                     }
                 })
         };
-
         $scope.forceUpdateToggle = (type, value) => {
             if(type == 'updateNotification'){
                 $scope.settings.app_update_notification = value;
@@ -1474,7 +1364,6 @@
                     $scope.settings.app_force_update = value;
                 }
             }
-
             $http.post("/dash/settings/app/update", {"type" : type, "value" : value})
                 .then((response) => {
                     if(response.data){
@@ -1483,7 +1372,6 @@
                     } else Settings.fail_toast("Error", "Error Updating the settings");
                 })
         }
-
         $scope.tokenAccess = () => {
             console.log("Token Access --> " + $scope.token);
             $http.put("/dash/settings/token", {token : $scope.token})
@@ -1512,7 +1400,6 @@
                         $window.location.href = '/404';
                 });
         };
-
         $scope.standredOrderFulfilment = status => {
             $http.put("/dash/settings/update/standard/order/fulfilment", 
                 {"type" : "standardOrderFulfilFlag", "standardOrderFulfilFlag" : status})
@@ -1529,12 +1416,10 @@
                                     else obj.editable = false;
                                     order_status.push(obj);
                                 }
-        
                                 $http.put("/dash/nav/order/status", status)
                                     .then(response => {
                                         if(response.data){
                                             $scope.nav[1].status = status
-        
                                             $http.put("/dash/settings/update/order/edit/access", order_status)
                                                 .then(response => {
                                                     if(response.data){
@@ -1563,7 +1448,6 @@
                             $window.location.href = '/404';
                     });
         }
-
         // Select the application type in the instance
         $scope.changeApplicationType = type => {
             $http.put("/dash/settings/application/" + type)
@@ -1590,12 +1474,10 @@
                         $window.location.href = '/404';
                 });
         }
-
         //..... Update the invoice module setting, to enable users to create invoice for orders, etc 'on-portal'...
         //... Currently designed for B&B Formork customer....
         $scope.invoicingType = () => {
             console.log($scope.settings.invoice);
-
             $http.put("/dash/settings/invoice", {invoice: $scope.settings.invoice})
                 .then(response => {
                     if (response.data && response.data.status == "success") {
@@ -1621,7 +1503,6 @@
                         $window.location.href = '/404';
                 });
         };
-
         $scope.attendanceEnable = () => {
             console.log("Enable/Disable attendance Access --> ", $scope.settings.attendance);
             $http.put("/dash/settings/attendance", {attendance: $scope.settings.attendance})
@@ -1632,7 +1513,6 @@
                     }else $scope.settings.attendance = !$scope.settings.attendance;
                 })
         };
-
         $scope.checkInDistCalEnable = () => {
             // console.log("Enable/Disable checkin previous distance caluculate --> ", $scope.settings.checkInDistCalStatus);
             let checkinObject = {
@@ -1648,7 +1528,6 @@
                     }else $scope.settings.checkInDistCalStatus = !$scope.settings.checkInDistCalStatus;
                 })
         };
-
         const fetchCheckInPrevDist = () => {
             let checkInDistPrevType = 'checkInPreviousDistance'
             $http.get("/dash/settings/type/"+ checkInDistPrevType)
@@ -1678,7 +1557,6 @@
             });
         }
         fetchCheckInPrevDist();
-
         //... Set the instance's currency....
         $scope.setCurrency = currency => {
             console.log("Setting Currency --> " + currency);
@@ -1690,13 +1568,9 @@
                         Settings.setInstanceDetails('currency', currency);
                     }
                 });
-
         };
-
-
         //Function to update GMAP API KEY from SETTINGS PAGE. Only by Admin
         $scope.editGoogleMapsAPIKey = (gMapKey, index,type) => {
-
             if(!gMapKey) Settings.fail_toast('ERROR',"Please Enter the API Key");
             else{
                 $scope.gMapAPI = {"api_key" : gMapKey};
@@ -1710,7 +1584,6 @@
                     })
             }
         }
-        
         $scope.addgMapAPI = gMapKey => {
             $scope.gMapAPI = {"api_key" : gMapKey};
             if(gMapKey){
@@ -1723,11 +1596,9 @@
                     })
             } else Settings.fail_toast("ERROR","Please Enter a Valid API KEY!");
         }
-
         $scope.editGmap = () => {
             $scope.newEditGMapAPI = $scope.gMapAPI;
         }
-
         $scope.setCountry = country => {
             console.log("Setting Country --> " + country);
             if(country){
@@ -1741,7 +1612,6 @@
                         }
                     }
                 }
-
                 $http.post("/dash/settings/country", {"country" : country, "dial_code" : dial_code})
                     .then(response => {
                         if(response.data && response.data.status == 'success'){
@@ -1753,12 +1623,10 @@
                     });
             }
         }
-
         $scope.addLeadSource = source => {
             const addSource = () => {
                 let temp = $scope.lead_sources;
                 temp.push(source.toLowerCase())
-
                 $http.post("/dash/settings/leadsource", temp)
                     .then(response => {
                         if(response.data){
@@ -1786,9 +1654,7 @@
                         else
                             $window.location.href = '/404';
                     });
-
             }
-
             if(source){
                 if($scope.lead_sources.length){
                     if($scope.lead_sources.indexOf(source.toLowerCase()) == -1){
@@ -1799,15 +1665,12 @@
                 } else addSource();
             } else Settings.fail_toast("ERROR", "Please enter text!");
         }
-
-
         /*..........
                 Remove lead status from settings page
          .........*/
          $scope.removeleadStatus = index => {
             let leads = $scope.lead_statuses;
             leads.splice(index, 1);
-
             $http.post("/dash/settings/leadstatus", leads)
                 .then(response => {
                     if(response.data){
@@ -1817,7 +1680,6 @@
                     } else Settings.fail_toast("ERROR", "Could not update lead status!");
                 })
         };
-
         /*..........
          Remove  lead source from settings page
          .........*/
@@ -1833,8 +1695,6 @@
                     } else Settings.fail_toast("ERROR", "Could not update lead source!");
                 })
         };
-
-
         $scope.editWarehouse = (location, index) => {
             if(location) {
                 $http.put("/dash/settings/update/inventory/locations", {location : location, type : 'edit', index : index})
@@ -1847,7 +1707,6 @@
                     })
             }
         };
-
         // Remove warehouse location from settings collection.....
         $scope.removeWarehouseLocation = location => {
             $http.put("/dash/settings/update/inventory/locations", {location : location, type : 'remove'})
@@ -1859,7 +1718,6 @@
                     } else Settings.fail_toast("ERROR", "Could not delete warehouse location!");
                 })
         };
-
         $scope.customerDiscount = enable => {
             $http.put("/dash/settings/update/percentage/discount", {customerDiscount :enable})
                 .then(response => {
@@ -1868,19 +1726,16 @@
                     } else Settings.fail_toast("ERROR", "Could not enable percentage discount (zeita)!");
                 })
         }
-
         // Adding warehouse location to settings collection.....
         $scope.addWarehouseLocation = location => {
             if(location.name){
                 location.name = location.name.toUpperCase();
                 location.latitude = parseFloat(location.latitude);
                 location.longitude = parseFloat(location.longitude);
-
                 if(JSON.stringify($scope.warehouse_locations).indexOf(location.name) != -1){
                     Settings.fail_toast("Error","Location Name Already Exist");
                     return;
                 };
-
                 $http.put("/dash/settings/update/inventory/locations",{location : location})
                     .then(response => {
                         if(response.data) {
@@ -1889,7 +1744,6 @@
                             $scope.new_location.type = 'Real Location';
                             $scope.new_location.latitude = '';
                             $scope.new_location.longitude = '';
-
                             Settings.success_toast("Success", "Warehouse Location Added Successfully");
                         }
                     }).catch(function(error){
@@ -1897,12 +1751,9 @@
                 })
             } else Settings.fail_toast("ERROR", "Please enter warehouse name");
         }
-
-
         /*.....................................
                 Atmosphere
         ....................................*/
-
         const fetchEvaluations = () => {
             $http.get("/dash/settings/get/evaluation")
                 .then(response => {
@@ -1911,7 +1762,6 @@
                     $scope.settingsEvaluation = response.data[0].obj;
                 })
         }
-
         const fetchDepartments = () => {
             if(!$scope.settingsDepartment.length){
                 $http.get("/dash/settings/get/department")
@@ -1922,7 +1772,6 @@
                             .success(function(response){
                                 console.log("All departments" + response.length);
                                 if(response.length) $scope.allDepartments = response;
-
                                 $http.put("/dash/settings/update/department",   $scope.allDepartments)
                                     .success(function(res){
                                         $http.get("/dash/settings/get/department")
@@ -1943,12 +1792,9 @@
                 })
             }
         }
-
         //Atmosphere....Functions for settings --->Author shradha
-
             $scope.addEvaluationType = function(type,days){
                 var length = $scope.settingsEvaluation.length - 1;
-
                 if(type != '' && type != undefined && days != '' && days != undefined){
                     var typeCaps = type.charAt(0).toUpperCase();
                     $scope.settingsEvaluation[length+1] = {
@@ -1957,14 +1803,12 @@
                     };
                     $scope.newEvaluationType.type = '';
                     $scope.newEvaluationType.days = '';
-
                     $http.put("/dash/settings/update/evaluationType",  $scope.settingsEvaluation)
                         .success(function(res){
                             console.log(res);
                         })
                 }
             }
-
             $scope.editEvaluationTypeFromSettings = function(roles, index){
                 if(roles == undefined){
                     Settings.popupAlert("Please enter some text!")
@@ -1976,9 +1820,7 @@
                         name : $scope.settingsEvaluation[index].name,
                         days : roles
                     };
-
                     console.log(rolesObj)
-
                     $http.put("/dash/settings/update/evaluationType",  $scope.settingsEvaluation)
                         .success(function(res){
                             console.log(res);
@@ -1986,11 +1828,8 @@
                                 Settings.popupAlert("Evaluation type successfully updated");
                             } else Settings.popupAlert("Error while updating evaluation type");
                         })
-
                 }
             };
-
-
         $scope.removeEvaluationType = function(roles){
             var index = $scope.settingsEvaluation.map(function(o) { return o.name; }).indexOf(roles);
             console.log(index);
@@ -1998,47 +1837,38 @@
                 console.log(index);
                 $scope.settingsEvaluation.splice(index, 1);
                 console.log($scope.settingsEvaluation)
-
                 $http.put("/dash/settings/update/evaluationType", $scope.settingsEvaluation)
                     .success(function(res){
                         //console.log(res);
                         // $scope.userRole = res;
                     })
-
             }
             else Settings.popupAlert("A minimum of one type has to be present.");
         }
-
         $scope.addDepartment = function(name){
             var length = $scope.settingsDepartment.length-1
-
             if(name != '' && name != undefined){
                 var typeCaps = name.charAt(0).toUpperCase();
                 $scope.settingsDepartment[length+1] = {
                     'name' : typeCaps+name.slice(1)
                 };
                 $scope.newEvaluationType.dept = '';
-
                 $http.put("/dash/settings/update/department",  $scope.settingsDepartment)
                     .success(function(res){
                         console.log(res);
                     })
-
             } else Settings.popupAlert("Please enter both the fields.");
         }
-
         $scope.removeDepartmentFormSetup = function(roles){
             var index = $scope.settingsDepartment.map(function(o) { return o.name; }).indexOf(roles);
             if(index != -1 && ($scope.settingsDepartment.length > 1)){
                 $scope.settingsDepartment.splice(index, 1);
-
                 $http.put("/dash/settings/update/department", $scope.settingsDepartment)
                     .success(function(res){
                         console.log(res);
                     })
             } else Settings.popupAlert("A minimum of one type has to be present.");
         }
-
         $scope.editDepartmentFromSettings = function(roles, index){
             if(roles == undefined){
                 Settings.popupAlert("Please enter some text");
@@ -2050,7 +1880,6 @@
                 rolesObj[index] = {
                     name : typeCaps+roles.slice(1)
                 };
-
                 $http.put("/dash/settings/update/department",  rolesObj)
                     .success(function(res){
                         console.log(res);
@@ -2060,7 +1889,6 @@
                     })
             }
         };
-
         $scope.addGoalsConfiguration = function(evaluation) {
             if(evaluation != '' && evaluation != undefined){
                 $scope.goalsConfigArray= {
@@ -2074,10 +1902,6 @@
                     })
             } else Settings.popupAlert("Please enter text.");
         };
-
-
-
-
         if($scope.applicationType == "Atmosphere"){
             startLoader();
             fetchEvaluations();
@@ -2099,19 +1923,13 @@
             fetchOrderTermsAndCondition();
             loadPercentageDiscount();
         }
-
-
         /*..........
             ADD Customer Category  from settings page
         .........*/
-
-
         $scope.addCustomerType = category => {
-
             const addType = () => {
                 let temp = $scope.customer_category;
                 temp.push(category.toUpperCase())
-
                 $http.post("/dash/settings/customercategory", temp)
                     .then(response => {
                         if(response.data){
@@ -2139,9 +1957,7 @@
                     else
                         $window.location.href = '/404';
                 });
-
             }
-
             if(category){
                         console.log("category",category)
                 if($scope.customer_category.length){
@@ -2153,7 +1969,6 @@
                 } else addType();
             } else Settings.fail_toast("ERROR", "Please enter text!");
         }
-
         /*..........
             Edit Customer Category  from settings page
         .........*/
@@ -2165,7 +1980,6 @@
                         let custCategory = [];
                         custCategory = $scope.customer_category;
                         custCategory[index] = category.toUpperCase();
-
                         $http.post("/dash/settings/customercategory", custCategory)
                             .then(response => {
                             if(response.data){
@@ -2196,8 +2010,6 @@
                 }
             }
         };
-
-
         /*..........
          Remove  Customer Type from settings page
          .........*/
@@ -2213,16 +2025,11 @@
                     } else Settings.fail_toast("ERROR", "Could not update Customer Category!");
                 })
         };
-
-
-
         /*...
             Zeita Functions
         ...*/
-
         //Function to update MPG from SETTINGS PAGE. Only by Admin
         $scope.editMPGFromSettings = (source, index, type) => {
-
             if(!source){
                 Settings.failurePopup('ERROR',"Please enter text");
             } else {
@@ -2234,17 +2041,14 @@
                         Settings.failurePopup('ERROR',"Source name already exist");
                     }
                 }
-
                 function editMPGFunc(){
                     var sourceObj = [];
                     sourceObj = $scope.mpg;
                     sourceObj[index] = source.toLowerCase();
-
                     $http.post("/dash/settings/mpg", sourceObj)
                         .success(function(res){
                             if(res){
                                 Settings.success_toast('SUCCESS',"MPG successfully updated!");
-
                                 $scope.mpg[index] = source.toLowerCase();
                                 Settings.setInstanceDetails('mpg', $scope.mpg)
                             }
@@ -2252,17 +2056,11 @@
                                 Settings.failurePopup('ERROR',"Could not update MPG!");
                             }
                         })
-
                 }
-
-
-
             }
         }
-
         //Function to update OrderType from SETTINGS PAGE. Only by Admin
         $scope.editOrderTypeFromSettings = function(source, index,type){
-
             if(!source)
                 Settings.failurePopup('ERROR',"Please enter text");
             else{
@@ -2273,17 +2071,14 @@
                         Settings.failurePopup('ERROR',"OrderType already exist");
                     }
                 }
-
                 function editOrderTypeFunc(){
                     var sourceObj = [];
                     sourceObj = $scope.orderType;
                     sourceObj[index] = source.toLowerCase();
-
                     $http.post("/dash/settings/orderType", sourceObj)
                         .success(function(res){
                             if(res){
                                 Settings.success_toast('SUCCESS',"orderType successfully updated!");
-
                                 $scope.orderType[index] = source.toLowerCase();
                                 Settings.setInstanceDetails('orderType', $scope.orderType)
                             }
@@ -2294,10 +2089,8 @@
                 }
             }
         }
-
         //Function to update sales UOM from SETTINGS PAGE. Only by Admin
         $scope.editSalesUOMFromSettings = function(source, index,type){
-
             if(!source)
                 Settings.failurePopup('ERROR',"Please enter text");
             else {
@@ -2309,17 +2102,14 @@
                         Settings.failurePopup('ERROR',"sales UOM already exist");
                     }
                 }
-
                 function editSalesUomFunc(){
                     var sourceObj = [];
                     sourceObj = $scope.salesUOM;
                     sourceObj[index] = source.toLowerCase();
-
                     $http.post("/dash/settings/salesUOM", sourceObj)
                         .success(function(res){
                             if(res){
                                 Settings.success_toast('SUCCESS',"salesUOM successfully updated!");
-
                                 $scope.orderType[index] = source.toLowerCase();
                                 Settings.setInstanceDetails('salesUOM', $scope.salesUOM)
                             }
@@ -2330,10 +2120,8 @@
                 }
             }
         }
-
         // Add MPG to settings
         $scope.addMPG = function(source){
-
             if(source){
                 if($scope.mpg.length){
                     if($scope.mpg.indexOf(source.toLowerCase()) == -1){
@@ -2346,11 +2134,9 @@
                 else{
                     mpgSourceFunc ();
                 }
-
                 function mpgSourceFunc (){
                     var temp = $scope.mpg;
                     temp.push(source)
-
                     $http.post("/dash/settings/mpg", temp)
                         .success(function(res){
                             $scope.mpg = temp;
@@ -2358,9 +2144,7 @@
                             Settings.success_toast('SUCCESS',"MPG successfully added!");
                             Settings.setInstanceDetails('mpg', $scope.mpg)
                         })
-
                 }
-
             }
             else{
                 Settings.failurePopup('ERROR',"Please enter text!");
@@ -2368,7 +2152,6 @@
         }
         // Add OrderType to settings
         $scope.addOrderType = function(source){
-
             if(source){
                 if($scope.orderType.length){
                     if($scope.orderType.indexOf(source) == -1){
@@ -2381,11 +2164,9 @@
                 else{
                     orderTypeFunc ();
                 }
-
                 function orderTypeFunc (){
                     var temp = $scope.orderType;
                     temp.push(source)
-
                     $http.post("/dash/settings/orderType", temp)
                         .success(function(res){
                             $scope.orderType = temp;
@@ -2393,9 +2174,7 @@
                             Settings.success_toast('SUCCESS',"OrderType successfully added!");
                             Settings.setInstanceDetails('orderType', $scope.orderType)
                         })
-
                 }
-
             }
             else{
                 Settings.failurePopup('ERROR',"Please enter text!");
@@ -2403,7 +2182,6 @@
         };
         // Add UOM to settings
         $scope.addUOM = function(source){
-
             if(source){
                 if($scope.salesUOM.length){
                     if($scope.salesUOM.indexOf(source.toLowerCase()) == -1){
@@ -2416,11 +2194,9 @@
                 else{
                     salesUOMFunc ();
                 }
-
                 function salesUOMFunc (){
                     var temp = $scope.salesUOM;
                     temp.push(source.toLowerCase())
-
                     $http.post("/dash/settings/salesUOM", temp)
                         .success(function(res){
                             $scope.salesUOM = temp;
@@ -2428,15 +2204,12 @@
                             Settings.success_toast('SUCCESS',"Sales UOM successfully added!");
                             Settings.setInstanceDetails('salesUOM', $scope.salesUOM)
                         })
-
                 }
-
             }
             else{
                 Settings.failurePopup('ERROR',"Please enter text!");
             }
         }
-
         /*..........
             Remove  MPG from settings page
         .........*/
@@ -2456,7 +2229,6 @@
                     }
                 })
         };
-
         /*..........
             Remove  salesUOM from settings page
         .........*/
@@ -2476,7 +2248,6 @@
                     }
                 })
         };
-
         /*..........
             Remove  orderType from settings page
         .........*/

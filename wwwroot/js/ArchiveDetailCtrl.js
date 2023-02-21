@@ -1,15 +1,11 @@
 /**
  * Created by shreyasgombi on 05/03/20.
  */
-
 angular.module('ebs.controller')
-
     .controller("ArchiveDetailCtrl", function($scope, $routeParams, $window, $http){
         console.log("Hello from Archive Details Ctrl ....!!!");
-
         var orderId = $routeParams.orderId;
         $scope.orderDetails = [];
-
         if(orderId){
             console.log("Fetching Order Details for Order ID  : " + orderId);
             $http.get("/dash/orders/" + orderId)
@@ -29,5 +25,4 @@ angular.module('ebs.controller')
                         $window.location.href = '/404';
                 });
         }else $window.location.href = '/404';
-
     })

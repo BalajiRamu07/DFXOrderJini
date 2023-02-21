@@ -1,10 +1,6 @@
 angular.module('ebs.controller')
-
-
-
     .controller("AtmosphereGoalsCtrl",function ($scope, $filter, $http,Settings, $modal, $window, toastr, $interval,$sce,$mdDialog) {
         console.log("Hello From  AtmosphereGoalsCtrl Controller .... !!!!");
-
     //ATMOSPHERE DECLARATIONS
     $scope.allGoals = [];
     $scope.reportGoals = [];
@@ -20,17 +16,12 @@ angular.module('ebs.controller')
     $scope.goalsevaluation=[];
     $scope.goalssearch={};
     $scope.goalssearchwithemployee={};
-
-
     $scope.goalSearch.filter = '';
     var goalSearchObj = {};
-
     var viewBy={};
     viewBy.goals = 12;
     var initialViewBy = 60;
 //     $scope.itemSearch.filter = '';
-
-
     var goalSearchBy = ['RESORT','GOAL_ID', 'GOAL_STATEMENT', 'ROLE', 'DEPARTMENT', 'WEIGHTAGE', 'EVALUATION_TYPE', 'EVALUATION', 'EVALUVATOR', 'EVALUATION_BY_ROLE', 'RATING_SCALE'];
     var ncNrSearchBy = ['sellername','EMPLOYEE_ID','sellerid','DEPARTMENT','role'];
     $scope.editGoal = {};
@@ -51,14 +42,10 @@ angular.module('ebs.controller')
     $scope.assignUI = [];
     $scope.allPerformance = [];
     $scope.managerSelectedList = [];
-
     $scope.reportsGoalSearch = {};
         $scope.sellerNames = []; //stores seller name
             $scope.desc = [];
-
-
    // $scope.reportsGoalSearch.filter = '';
-
 //    var reportsGoalSearchObj = {};
 //    // $scope.pageNumber=0;
 //    var reportsNcNrObj = {};
@@ -72,7 +59,6 @@ angular.module('ebs.controller')
 //    $scope.colleaguesReportSearch.filter = '';
 //    var colleaguesSearchBy = ['sellername','EMPLOYEE_ID','DEPARTMENT','role','Designation','Supervisor_Code','Supervisor_Name','Supervisor_Designation','Assistant_Manager_Code','Assistant_Manager_Name','Assistant_Manager_Designation','Manager_Code','Manager_Name','Manager_Designation'];
 //    $scope.colleaguesReportFilter = {};
-
 //    $scope.atmsIndividualReport = {};
 //    var individualReportSearchObj = {};
 //    var atmsdashboardSearch={}
@@ -92,7 +78,6 @@ angular.module('ebs.controller')
 //    viewBy.scoreCard = 12;
 //    var scoreCardSearchBy = ['sellername'];
 //    $scope.showdepartments=false;
-
 //    var reportsDashboardSearchObj = {};
 //    $scope.reportsDashboardSearch = {};
 //    $scope.reportsDashboardSearch.filter = '';
@@ -109,9 +94,7 @@ angular.module('ebs.controller')
 //    $scope.qbConnect = false;
 //    $scope.showLoader = false;
 //    $scope.distinctperformance=[]
-
     //End of Atmosphere Declarations
-
         //Apply item search Filter
         $scope.goalSearchFilter = function(){
             console.log($scope.goalSearch.filter)
@@ -126,14 +109,11 @@ angular.module('ebs.controller')
             else{
                 goalSearchObj.viewLength = 0;
                 goalSearchObj.viewBy = initialViewBy;
-
                 $scope.viewLength = 0;
                 $scope.newViewBy = viewBy.goals;
-
                 $scope.allGoals = [];
                 $scope.reportGoals = [];
              //   $scope.tempGoals = [];
-
                 if($scope.goalSearch.filter){
                     goalSearchObj.searchFor = $scope.goalSearch.filter;
                     goalSearchObj.searchBy = goalSearchBy;
@@ -141,10 +121,8 @@ angular.module('ebs.controller')
                 if($scope.applicationType == 'Atmosphere' && $scope.user.sellerObject) {
                     goalSearchObj.resort = $scope.user.sellerObject.Resort;
                 }
-
                 $http.post('/dash/mastergoals', goalSearchObj)
                     .success($scope.renderGoals);
-
                 $http.post('/dash/mastergoals/count', goalSearchObj)
                     .success(function(response){
                         $scope.transactionCount(response,29)
@@ -153,16 +131,13 @@ angular.module('ebs.controller')
             }
         }
                      $scope.renderGoals = function (goals_list) {
-
                          var goalResort = {};
                          console.log("Render Goals-->" + goals_list.length);
-
                          if($scope.allGoals.length != 0) {
                              for(var i=0; i<goals_list.length; i++) {
                                  $scope.allGoals.push(goals_list[i]);
                              }
                          }
-
                          else {
                              $scope.allGoals = goals_list;
                          }
@@ -177,16 +152,13 @@ angular.module('ebs.controller')
                          }
                          else{
                              goalResort.resort = '';
-
                          }
-
                          $http.post('/dash/allGoals/resorts',goalResort)
                              .success(function (response) {
                                  console.log("All Goals reosrts--------->>>" + response.length);
                                  $scope.goalsResort = response; // -- resort dropdown with all the data for goals report
                              });
                      };
-
         $scope.getAllGoals=function(){
                         console.log("***** Tab 29 : Fetching all Goals")
                         $scope.viewLength = 0;
@@ -197,8 +169,6 @@ angular.module('ebs.controller')
                          $scope.allGoals = response;
                          console.log($scope.allGoals)
                          })*/
-
-
                         goalSearchObj.viewLength = 0;
                         goalSearchObj.viewBy = 10;
                         goalSearchObj.searchBy = [];
@@ -206,33 +176,26 @@ angular.module('ebs.controller')
                         if($scope.applicationType == 'Atmosphere' && $scope.user.sellerObject) {
                             goalSearchObj.resort = $scope.user.sellerObject.Resort;
                         }
-
                         $scope.allGoals = [];
                         $scope.reportGoals = [];
                         $http.post("/dash/mastergoals", goalSearchObj)
                             .success($scope.renderGoals);
-
                         $http.post('/dash/mastergoals/count', goalSearchObj)
                             .success(function (response) {
                                 console.log("Goals count--------->>>"+response.length);
                                 $scope.transactionCount(response, 29)
                             });
-
-
                         $http.get('/dash/allUsers')
                             .success(function (response) {
                                 console.log("Goals users count--------->>>")
                                 // console.log(response)
                                 if(response.length) $scope.allGoalUsers = response;
                                 console.log($scope.allGoalUsers);
-
                             });
         }
          $scope.getAllGoals();
              $scope.transactionCount = function(response, tab){
                  switch(tab){
-
-
                         case 29:
                          console.log("response goals : count:");
                          console.log(response);
@@ -261,9 +224,7 @@ angular.module('ebs.controller')
                              $scope.allGoals_count = 0;
                              $scope.viewLength = -1;
                          }
-
                          break;
-
                  }
              }
                  $scope.selectedGoal = {}
@@ -273,7 +234,6 @@ angular.module('ebs.controller')
                      var evaluation = [];
                      var evaluator = [];
                      $scope.assign = []
-
                      $scope.editGoal.evaluator = {};
                      $scope.editGoal.evaluator1 = '';
                      $scope.editGoal.evaluation = {};
@@ -281,13 +241,11 @@ angular.module('ebs.controller')
                      $scope.editGoal.start = '';
                      $scope.editGoal.end = '';
                      $scope.addEvaluatorRow = false;
-
                      $scope.goalUserSelected = []
                      // console.log(col);
                      // console.log(item);
                      $scope.selectedGoal = item
                      // $scope.editGoal = item
-
                      $http.get("/dash/goals/" + item.GOAL_ID + "/" + 0 + "/" + 0)
                          .success(function (response) {
                              if (response.length) {
@@ -295,11 +253,8 @@ angular.module('ebs.controller')
                                  for (var i = 0; i < response.length; i++) {
                                      evaluation.push(response[i].EVALUATION)
                                      evaluator.push(response[i].EVALUATOR)
-
-
                                      $scope.selectedGoal.EVALUATOR = response[0].EVALUATOR
                                      $scope.selectedGoal.EVALUATION = evaluation
-
                                      $scope.assign.push({
                                          'EVALUATOR': response[i].EVALUATOR,
                                          'EVALUATION': response[i].EVALUATION,
@@ -308,10 +263,8 @@ angular.module('ebs.controller')
                                          'ASSIGNMENT_ID': response[i].ASSIGNMENT_ID
                                      })
                                  }
-
                                  /*$scope.selectedGoal.EVALUATOR = remove_duplicates_safe(evaluator)
                                   $scope.selectedGoal.EVALUATION = evaluation
-
                                   for(var j=0; j<$scope.selectedGoal.EVALUATOR.length; j++)
                                   {
                                   var evaluator_temp = $scope.selectedGoal.EVALUATOR[j]
@@ -326,23 +279,15 @@ angular.module('ebs.controller')
                                   console.log(j);
                                   console.log($scope.assign);
                                   })(j);
-
                                   })
-
-
                                   }*/
-
-
                              }
                          })
-
                      // jQuery.noConflict();
                      // $('#goalModal').modal('show');
-
                      console.log("Assign Evaluator array----->>>")
                      console.log($scope.assign)
                  }
-
                      $scope.changeGoalButton = function(flag){
                          console.log("Change Goal Button------->>>");
                          console.log(flag);
@@ -350,14 +295,11 @@ angular.module('ebs.controller')
                          $scope.allGoalsEVroles = [];
                          $scope.allGoalsRoles = [];
                          $scope.userRole=[];
-
                           var goalDept = {}
                          if(flag) {
-
                              console.log(flag)
                              $scope.addGoalButton = true;
                              $scope.newGoal = {};
-
                          }
                          else{
                              $scope.addGoalButton = false;
@@ -374,19 +316,16 @@ angular.module('ebs.controller')
                              else{
                                  goalDept.resort = '';
                              }
-
                              $http.post('/dash/goalsDepartments',goalDept)
                                  .success(function (response) {
                                      console.log("ALL goals dept--------->>>"+ response.length)
                                      $scope.allGoalsDept = response
                                  });
-
                              $http.post('/dash/goalsRoles',goalDept)
                                  .success(function (response) {
                                      console.log("ALL goals roles--------->>>"+ response.length)
                                      $scope.allGoalsRoles = response
                                  });
-
                              $http.post('/dash/goalsEVrole',goalDept)
                                  .success(function (response) {
                                      console.log("ALL goals ev roles--------->>>"+ response.length)
@@ -397,31 +336,24 @@ angular.module('ebs.controller')
                                    console.log("All Users Roles--------->>>" + response.length);
                                    $scope.userRole = response;
                                  });
-
                              $http.get("/dash/settings/get/evaluation")
                                  .success(function(response){
                                      console.log("Evaluation types" + response.length)
                                      $scope.settingsEvaluation = response[0].obj;
                                  });
-
                              $http.get("/dash/get/recentGoalID")
                                  .success(function(res){
                                      console.log(res)
                                      $scope.newGoal.GOAL_ID = res.GOAL_ID + 1;
                                  })
-
                          }
-
                      }
                          $scope.addAssignRow = function(tag,goal)
                          {
                              $scope.goalEdit = false
                              // if(tag == 'add')  $scope.assignUI.push({});
                              // else $scope.assignUI.splice(0,1);
-
                               console.log(goal)
-
-
                              if(tag == 'cancel')
                              {
                                  $scope.addEvaluatorRow = false;
@@ -468,30 +400,22 @@ angular.module('ebs.controller')
                                          else
                                          {
                                            Settings.alertPopup('WARNING',"Setup evaluation delay days in settings before assigning goals");
-
 //                                             bootbox.alert({
 //                                                 title : 'WARNING',
 //                                                 message : 'Setup evaluation delay days in settings before assigning goals',
 //                                                 className : 'text-center'
 //                                             })
                                          }
-
                                      })
-
                              }
-
                          }
                              $scope.goalsUsers = [];
                              $scope.searchEvaluator = function(text,index){
-
                                  if(text.length > 0){
-
                                      console.log(text.length)
                                      $http.get("/dash/search/evaluator/"+text)
                                          .success(function(res){
-
                                              $scope.goalsUsers = res;
-
                                              if(index >= 0)
                                              {
                                                  jQuery.noConflict();
@@ -502,7 +426,6 @@ angular.module('ebs.controller')
                                                  jQuery.noConflict();
                                                  $(".evaluatorDropdown").css('display', 'block')
                                              }
-
                                          })
                                  }
                                  else{
@@ -518,7 +441,6 @@ angular.module('ebs.controller')
                                          $(".evaluatorDropdown").css('display', 'none')
                                      }
                                  }
-
                                  if(index >= 0)
                                  {
                                      jQuery.noConflict();
@@ -530,15 +452,12 @@ angular.module('ebs.controller')
                                      $(".evaluatorDropdown").css('display', 'none')
                                  }
                              }
-
                              $scope.evaluationUsers = []
                              $scope.searchEvaluation = function(text){
                              console.log(text);
                                  if(text.length > 0){
-
                                      $scope.evaluationUsers = $filter('filter')($scope.evaluatorUsers, text);
                                      console.log($scope.evaluationUsers)
-
                                      jQuery.noConflict();
                                      $(".evaluationDropdown").css('display', 'block')
                                  }
@@ -547,7 +466,6 @@ angular.module('ebs.controller')
                                      jQuery.noConflict();
                                      $(".evaluationDropdown").css('display', 'none')
                                  }
-
                                  // jQuery.noConflict();
                                  // $(".evaluationDropdown").css('display', 'none')
                              }
@@ -567,8 +485,6 @@ angular.module('ebs.controller')
                                          $scope.editGoal.evaluator1 = evaluatorObj.sellername
                                          $scope.editGoal.evaluator = evaluatorObj
                                      }
-
-
                                      var tempArrayGoal = []
                                      var sellerID = evaluatorObj.sellerid ? evaluatorObj.sellerid : evaluatorObj.EMPLOYEE_ID
                                      $http.get("/dash/evaluator/users/"+evaluatorObj.EMPLOYEE_ID+"/"+sellerID)
@@ -578,13 +494,10 @@ angular.module('ebs.controller')
                                              if(response_evaluator1.length)
                                              {
                                                  // $scope.evaluatorUsers = response_evaluator1;
-
-
                                                  $http.get("/dash/goals/"+goal.GOAL_ID+"/"+evaluatorObj.EMPLOYEE_ID+"/"+sellerID)
                                                      .success(function (response_evaluator)
                                                      {
                                                          tempArrayGoal = response_evaluator;
-
                                                          if(tempArrayGoal.length)
                                                          {
                                                              for( var i = 0; i<response_evaluator1.length; i++){
@@ -602,12 +515,10 @@ angular.module('ebs.controller')
                                                      })
                                              }
                                          })
-
                                      jQuery.noConflict();
                                      $(".evaluatorDropdown").css('display', 'none')
                                  }
                                      $scope.goalUserSelected = []
-
                                      $scope.evaluationSelected = function(user,checkvalue)
                                      {
                                          var goalUsers;
@@ -622,11 +533,9 @@ angular.module('ebs.controller')
                                              $scope.editGoal.evaluation1 = goalUsers.sellername
                                              $scope.editGoal.evaluation = goalUsers
                                          }
-
                                          var index = $scope.goalUserSelected.findIndex(function(el) {
                                              return el.sellerid == goalUsers.sellerid;
                                          });
-
                                          if(checkvalue != 'remove')
                                          {
                                              if ($scope.goalUserSelected.indexOf(goalUsers) == -1) {
@@ -639,12 +548,9 @@ angular.module('ebs.controller')
                                          {
                                              $scope.goalUserSelected.splice(index, 1);
                                          }
-
                                          $scope.editGoal.evaluation1 = '';
-
                                          jQuery.noConflict();
                                          $(".evaluationDropdown").css("display", "none");
-
                                          console.log($scope.goalUserSelected)
                                      }
                                          //assign goal
@@ -652,13 +558,11 @@ angular.module('ebs.controller')
                                          {
                                              $scope.addEvaluatorRow = false;
                                              $scope.hideAddButton = true;
-
                                              if(goal && evaluator && evaluation && startDate && startDate != null &&
                                                  endDate && endDate != null && $scope.editGoal.evaluator1 && $scope.editGoal.evaluator1 != '')
                                              {
                                                  delete goal['_id']
                                                  var assign,assignedTo;
-
                                                  //To handle JSON to JSON parse exceptions
                                                  try {
                                                      assign = JSON.parse(evaluator);  // evaluator is a seller object
@@ -669,7 +573,6 @@ angular.module('ebs.controller')
                                                      assign = evaluator;
                                                      assignedTo = evaluation;
                                                  }
-
                                                  goal.EVALUATOR = assign.EMPLOYEE_ID;
                                                  goal.EVALUATOR_NUMBER = assign.sellerid;
                                                  goal.EVALUATION = $scope.goalUserSelected;
@@ -683,20 +586,14 @@ angular.module('ebs.controller')
                                                  var end = new Date(endDate);
                                                  var today = new Date();
                                                  today.setHours(0,0,0)
-
                                                  goal.START_DATE = [start.getFullYear(), (start.getMonth() + 1).padLeft(), start.getDate().padLeft()].join('-') + ' '
                                                      + [start.getHours().padLeft(), start.getMinutes().padLeft(), start.getSeconds().padLeft()].join(':');
-
                                                  goal.END_DATE = [end.getFullYear(), (end.getMonth() + 1).padLeft(), end.getDate().padLeft()].join('-') + ' '
                                                      + [end.getHours().padLeft(), end.getMinutes().padLeft(), end.getSeconds().padLeft()].join(':');
-
                                                  goal.MODIFIED_DATE = [today.getFullYear(), (today.getMonth() + 1).padLeft(), today.getDate().padLeft()].join('-') + ' '
                                                      + [today.getHours().padLeft(), today.getMinutes().padLeft(), today.getSeconds().padLeft()].join(':');
-
                                                  console.log(goal)
                                                  console.log($scope.goalUserSelected)
-
-
                                                  //Goals check if already assigned
                                                  $http.post("/dash/goalsCheck",goal)
                                                      .success(function(goalsExists)
@@ -714,25 +611,20 @@ angular.module('ebs.controller')
                                                                              goal.EVALUATION_DAYS = parseInt(evaluationType[0].obj[i].days)
                                                                          }
                                                                      }
-
                                                                      $http.post("/dash/add/goals", goal)
                                                                          .success(function(res){
                                                                              if(res){
                                                                                  /*jQuery.noConflict();
                                                                                   $('#storeModal').modal('hide')
-
                                                                                   bootbox.alert({
                                                                                   title : 'SUCCESS',
                                                                                   message : 'Successfully assigned Salesperson',
                                                                                   className : 'text-center'
                                                                                   })*/
-
                                                                                  // $scope.refreshTransactions(4);
-
                                                                                  if(res == 'no date')
                                                                                  {
                                                                                  Settings.alertPopup('ERROR',"Please select start date and end date");
-
 //                                                                                     bootbox.alert({
 //                                                                                         title : 'ERROR',
 //                                                                                         message : 'Please select start date and end date',
@@ -747,9 +639,7 @@ angular.module('ebs.controller')
                                                                                      user_body.EVALUATOR = goal.EVALUATOR;
                                                                                      user_body.EVALUATOR_NUMBER = assign.sellerid;
                                                                                      user_body.EVALUATION = $scope.goalUserSelected;
-
                                                                                      //console.log(user_body)
-
                                                                                      $http.post("/dash/calculate/users/performance",user_body)
                                                                                          .success(function(update_user)
                                                                                          {
@@ -763,7 +653,6 @@ angular.module('ebs.controller')
                                                                                                         message : 'Goal assigned successfully!!',
                                                                                                         className : 'text-center'
                                                                                                     })*/
-
                                                                                                  $scope.editGoal.evaluator = {};
                                                                                                  $scope.editGoal.evaluator1 = '';
                                                                                                  $scope.editGoal.evaluation = {};
@@ -775,20 +664,16 @@ angular.module('ebs.controller')
                                                                                                  $scope.selectGoal(0,$scope.selectedGoal)
                                                                                                  $scope.hideAddButton = false;
                                                                                                  $scope.addEvaluatorRow = true;
-
                                                                                                  bootbox.alert({
                                                                                                      title : 'Error',
                                                                                                      message : 'Goal not assigned!! Please try again.',
                                                                                                      className : 'text-center'
                                                                                                  })
                                                                                              }
-
                                                                                          })
-
                                                                                      // jQuery.noConflict();
                                                                                      // $('#goalModal').modal('hide')
                                                                                  }
-
                                                                                  $scope.selectGoal(0,$scope.selectedGoal)
                                                                              }
                                                                          })
@@ -798,37 +683,25 @@ angular.module('ebs.controller')
                                                              $scope.hideAddButton = false;
                                                              $scope.addEvaluatorRow = true;
                                                              Settings.alertPopup('ERROR',"Goals already assigned!");
-
 //
 //                                                             bootbox.alert({
 //                                                                 title : 'ERROR',
 //                                                                 message : 'Goals already assigned!',
 //                                                                 className : 'text-center'
 //                                                             })
-
                                                          }
-
-
                                                      });
-
-
-
-
-
-
                                              }
                                              else{
                                                  $scope.hideAddButton = false;
                                                  $scope.addEvaluatorRow = true;
                                                  Settings.alertPopup('ERROR',"Please fill all the four fields.");
-
 //
 //                                                 bootbox.alert({
 //                                                     title : 'ERROR',
 //                                                     message : 'Please fill all the four fields.',
 //                                                     className : 'text-center'
 //                                                 })
-
                                                  $scope.goalUserSelected = [];
                                                  $scope.editGoal.evaluator = {};
                                                  $scope.editGoal.evaluator1 = '';
@@ -837,17 +710,12 @@ angular.module('ebs.controller')
                                                  $scope.editGoal.start = '';
                                                  $scope.editGoal.end = '';
                                              }
-
                                          }
-
                                          //all evaluation goals are delete and not evaluator
                                              $scope.deleteEvaluatorDetails = function(goal_id,goal)
                                              {
 //                                               Settings.confirmPopup('CONFIRM',"Are you sure about deleting assigned Goal??");
                                                Settings.confirmPopup('',"Are you sure about deleting assigned Goal??", function(result) {
-
-
-
 //                                                 bootbox.confirm({
 //                                                     title: 'CONFIRM',
 //                                                     message: "Are you sure about deleting assigned Goal??",
@@ -863,7 +731,6 @@ angular.module('ebs.controller')
 //                                                         }
 //                                                     },
 //                                                     callback: function (result) {
-
                                                          if(result)
                                                          {
                                                              $http.delete("/dash/goals/delete/"+goal.ASSIGNMENT_ID+"/"+goal.EVALUATION+"/"+goal.EVALUATOR+"/"+goal_id)
@@ -881,9 +748,7 @@ angular.module('ebs.controller')
                                                                          user_body.EVALUATOR = goal.EVALUATOR;
                                                                          user_body.EVALUATOR_NUMBER = response.EVALUATOR_NUMBER.sellerid;
                                                                          user_body.EVALUATION = response.EVALUATION;
-
                                                                          console.log(user_body)
-
                                                                          if(user_body.EVALUATION.length)
                                                                          {
                                                                              $http.post("/dash/calculate/users/performance",user_body)
@@ -897,19 +762,13 @@ angular.module('ebs.controller')
 //                                                                                         className : "text-center"
 //                                                                                     })
                                                                                  Settings.successPopup('Success',"Goals for the selected evaluation deleted successfully!");
-
                                                                                  })
                                                                          }
                                                                      }
                                                                      $scope.selectGoal(0,$scope.selectedGoal)
-
                                                                  })
                                                          }
                                                          });
-
-
-
-
                                              }
                         /*---fetches sellername if phone is provided---*/
                         $scope.getSellerName = function(sellerNo,tag){
@@ -933,7 +792,6 @@ angular.module('ebs.controller')
                                 }
                             }else return sellerNo;
                         };
-
                             $scope.refreshGoalSellerNames = function(){
                                 if($scope.allGoalUsers){
 //                                console.log($scope.allGoalUsers);
@@ -945,8 +803,6 @@ angular.module('ebs.controller')
                                 }
 //                                console.log($scope.sellerNames);
                             }
-
-
     $scope.editEvaluatorDetails = function(goal_id,evaluator){
         $scope.goalAssignmentDetails ={}
         $scope.goalEvaluators = {};
@@ -956,37 +812,26 @@ angular.module('ebs.controller')
             {
                /* console.log("goal assigned details")
                 console.log(res);*/
-
 //                jQuery.noConflict();
 //                $('#editEvaluatorDetail').modal('show');
-
                 if (res.length) {
                     $scope.goalAssignmentDetails = evaluator;
-
                     $http.get("/dash/managers/users/"+evaluator.EVALUATION)
                         .success(function(managers){
                           //  console.log(managers)
                             $scope.goalEvaluators = managers
                         })
-
                 }
             })
-
-
-
-
     }
         $scope.goals_colleague_codes=[];
-
         $scope.searchColleaguesfromGoals=function(text){
             console.log("Searchhhhh.....");
             // console.log($scope.user.sellerObject)
             if($scope.user.sellerObject) {
                 $scope.searchcolleaguefromgoalsBody.resort = $scope.user.sellerObject.Resort;
             }
-
             // console.log(text)
-
             if(text.length>=4){
                 $http.post("/dash/atms/search/colleagueCodesfromgoals/"+text, $scope.searchcolleaguefromgoalsBody)
                     .success(function(res){
@@ -999,14 +844,12 @@ angular.module('ebs.controller')
                         }
                         else
                             $scope.goals_colleague_codes = [];
-
                     })
             }
             else{
                 jQuery.noConflict();
                 $(".colleagueCodeDropdown").css('display', 'none')
             }
-
         }
             $scope.formatDate = function(date){
                 if(date==undefined || date == '')
@@ -1020,7 +863,6 @@ angular.module('ebs.controller')
                 var dateOut = dt+" - "+monthNames[d.getMonth()]+" - "+(d.getFullYear());
                 return dateOut;
             }
-
                 $scope.saveNewEvaluator = function(newData){
                     //console.log(newData)
                     if(newData.EVALUATOR){
@@ -1033,11 +875,9 @@ angular.module('ebs.controller')
                                     $("#evaluatorUpdateSuccess").fadeIn(1000,function() {
                                         $("#evaluatorUpdateSuccess").fadeOut(3000);
                                     });
-
                                 }
                                 else{
                                    Settings.alertPopup('ERROR',"Unable to edit evaluator");
-
                                     console.log('unable to assign');
 //                                    bootbox.alert({
 //                                        title : 'ERROR',
@@ -1045,7 +885,6 @@ angular.module('ebs.controller')
 //                                        className : 'text-center'
 //                                    })
                                 }
-
                             })
                     }
                     else{
@@ -1058,7 +897,6 @@ angular.module('ebs.controller')
 //                            className : 'text-center'
 //                        })
                     }
-
                 }
                     $scope.clearFilterButton = function (search,tab)
                     {
@@ -1067,7 +905,6 @@ angular.module('ebs.controller')
                             switch (tab)
                             {
                                             case 29 :
-
                                                 goalSearchObj.viewLength = 0;
                                                 goalSearchObj.viewBy = initialViewBy;
                                                 goalSearchObj.searchFor = '';
@@ -1075,22 +912,18 @@ angular.module('ebs.controller')
                                                 if($scope.applicationType == 'Atmosphere' && $scope.user.sellerObject) {
                                                     goalSearchObj.resort = $scope.user.sellerObject.Resort;
                                                 }
-
                                                 $scope.viewLength = 0;
                                                 $scope.newViewBy = viewBy.goals;
                                                 $scope.goalSearch.filter = '';
                                                 $scope.allGoals = [];
                                                 $scope.reportGoals = [];
                                              //   $scope.tempGoals = [];
-
                                                 $http.post('/dash/mastergoals', goalSearchObj)
                                                     .success($scope.renderGoals);
-
                                                 $http.post('/dash/mastergoals/count', goalSearchObj)
                                                     .success(function (response) {
                                                         $scope.transactionCount(response, 29)
                                                     });
-
                                                 // $scope.itemCategories = masterItems.unique('Manufacturer')
                                                 // $scope.itemSubCategories = masterItems.unique('subCategory')
                                                 //
@@ -1102,30 +935,22 @@ angular.module('ebs.controller')
                                                 //     item.selected_subCategory = true;
                                                 //     return item;
                                                 // })
-
                                                 $scope.showItemFilter = false;
-
                                                 break;
-
                             }
                             }
                             }
-
-
                    //Navigation of pages
                    var a = 0;
                    $scope.navPage = function(tab, direction){
                    console.log("Goals navigation");
                        switch(tab){
-
             //Goals Navigation
             case 29:
                 var viewLength = $scope.viewLength;
                 var viewBy = $scope.newViewBy;
-
                 if(direction){
                     //console.log("NEXT");
-
                     if(viewLength + viewBy >= $scope.allGoals.length){
                         if(viewLength + viewBy < $scope.allGoals_count){
                             viewLength += viewBy;
@@ -1137,13 +962,10 @@ angular.module('ebs.controller')
                             if($scope.applicationType == 'Atmosphere' && $scope.user.sellerObject) {
                                 goalSearchObj.resort = $scope.user.sellerObject.Resort;
                             }
-
                             $http.post("/dash/mastergoals",goalSearchObj)
                                 .success(function(response){
                                     console.log(response);
-
                                     $scope.renderGoals(response);
-
                                     if(viewLength + viewBy > $scope.allGoals_count){
                                         a = viewLength + viewBy - $scope.allGoals_count;
                                         viewBy -= a;
@@ -1151,7 +973,6 @@ angular.module('ebs.controller')
                                     }
                                     $scope.viewLength = viewLength;
                                 })
-
                         }
                         else{
                             //console.log("Out of data")
@@ -1165,7 +986,6 @@ angular.module('ebs.controller')
                     else{
                         //console.log("Minus viewby")
                         viewLength += viewBy;
-
                         if(viewLength + viewBy > $scope.allGoals_count){
                             a = viewLength + viewBy - $scope.allGoals_count;
                             viewBy -= a;
@@ -1184,27 +1004,20 @@ angular.module('ebs.controller')
                             viewBy += a;
                             a = 0;
                         }
-
                         viewLength -= viewBy;
-
                         $scope.viewLength = viewLength;
                         $scope.newViewBy = viewBy;
                     }
                 }
-
                 break;
-
                        }
                        }
-
                 $scope.refreshTransactions = function(tab){
                     $scope.displayDealerRefresh = false;
                     $scope.userBranchFilter={};
                     $scope.userDesignationFilter = {};
-
                     jQuery.noConflict();
                     $('.refresh').css("display", "inline");
-
                     switch(tab){
                      case 5:
                                         $scope.clearFilter(29);
@@ -1215,11 +1028,9 @@ angular.module('ebs.controller')
                                         // console.log($scope.goalssearch)
                                         $scope.goalssearch.evaluation='';
                                         $scope.goalssearchwithemployee={};
-
                                         $http.post("/dash/mastergoals",goalSearchObj)
                                             .success(function(response){
                                                 // console.log(response);
-
                                                 $scope.renderGoals(response);
                                                 //
                                                 // if(viewLength + viewBy > $scope.allGoals_count){
@@ -1229,10 +1040,7 @@ angular.module('ebs.controller')
                                                 // }
                                                 // $scope.viewLength = viewLength;
                                             })
-
-
                                     break;
-
                     }
                     }
                         $scope.clearFilter = function(tab){
@@ -1248,8 +1056,6 @@ angular.module('ebs.controller')
                                              $scope.allGoals = response;
                                              console.log($scope.allGoals)
                                              })*/
-
-
                                             goalSearchObj.viewLength = 0;
                                             goalSearchObj.viewBy = initialViewBy;
                                             goalSearchObj.searchBy = [];
@@ -1257,28 +1063,22 @@ angular.module('ebs.controller')
                                             if($scope.applicationType == 'Atmosphere' && $scope.user.sellerObject) {
                                                 goalSearchObj.resort = $scope.user.sellerObject.Resort;
                                             }
-
                                             $scope.allGoals = [];
                                             $scope.reportGoals = [];
                                         //    $scope.tempGoals = [];
                                             $http.post("/dash/mastergoals", goalSearchObj)
                                                 .success($scope.renderGoals);
-
                                             $http.post('/dash/mastergoals/count', goalSearchObj)
                                                 .success(function (response) {
                                                     console.log("Goals count--------->>>"+response.length);
                                                     $scope.transactionCount(response, 29)
                                                 });
-
-
                                             $http.get('/dash/allUsers')
                                                 .success(function (response) {
                                                     console.log("Goals users count--------->>>")
                                                     // console.log(response)
                                                     if(response.length) $scope.allGoalUsers = response
-
                                                 });
-
                                             // if($scope.coID == 'ATMS')
                                             // {
                                       /*      $http.get("/dash/settings/get/evaluation")
@@ -1287,15 +1087,12 @@ angular.module('ebs.controller')
                                                     if(response.length) $scope.settingsEvaluation = response[0].obj;
                                                 })*/
                                             // }
-
                                          /*   $http.get("/dash/settings/get/department")
                                                 .success(function(response){
                                                     console.log(response)
                                                     if(response.length) $scope.settingsDepartment = response[0].obj;
                                                 })*/
-
                                             break;
-
                             }
                             }
                                 $scope.addGoals = function()
@@ -1303,18 +1100,12 @@ angular.module('ebs.controller')
                                     if($scope.newGoal.GOAL_STATEMENT && $scope.desc.length != 0 && $scope.newGoal.WEIGHTAGE
                                         && $scope.newGoal.EVALUATION_TYPE && $scope.newGoal.DEPARTMENT)
                                     {
-
-
                                         $scope.newGoal.RATING_1 = $scope.desc[0] ? $scope.desc[0] : '-'
                                         $scope.newGoal.RATING_2 = $scope.desc[1] ? $scope.desc[1] : '-'
                                         $scope.newGoal.RATING_3 = $scope.desc[2] ? $scope.desc[2] : '-'
                                         $scope.newGoal.RATING_4 = $scope.desc[3] ? $scope.desc[3] : '-'
                                         $scope.newGoal.RATING_5 = $scope.desc[4] ? $scope.desc[4] : '-'
-
-
                                                Settings.confirmPopup('',"Are you sure about adding the goal??", function(result) {
-
-
                                                 if(result)
                                                 {
                                                     /*var start = new Date($scope.newGoal.START_DATE);
@@ -1322,13 +1113,10 @@ angular.module('ebs.controller')
                                                     var date = new Date();
                                                     $scope.newGoal.START_DATE = [start.getFullYear(), (start.getMonth() + 1).padLeft(), start.getDate().padLeft()].join('-') + ' '
                                                         + [start.getHours().padLeft(), start.getMinutes().padLeft(), start.getSeconds().padLeft()].join(':');
-
                                                     $scope.newGoal.END_DATE = [end.getFullYear(), (end.getMonth() + 1).padLeft(), end.getDate().padLeft()].join('-') + ' '
                                                         + [end.getHours().padLeft(), end.getMinutes().padLeft(), end.getSeconds().padLeft()].join(':');
-
                                                     $scope.newGoal.DATE_ADDED = [date.getFullYear(), (date.getMonth() + 1).padLeft(), date.getDate().padLeft()].join('-') + ' '
                                                         + [date.getHours().padLeft(), date.getMinutes().padLeft(), date.getSeconds().padLeft()].join(':');
-
                                                     var tempEvaluationType = {}
                                                     try{
                                                         console.log($scope.newGoal.EVALUATION_TYPE)
@@ -1341,9 +1129,6 @@ angular.module('ebs.controller')
                                                         $scope.newGoal.EVALUATION_TYPE = tempEvaluationType.name
                                                         $scope.newGoal.EVALUATION_DAYS = tempEvaluationType.days
                                                     }*/
-
-
-
                                                     $http.post("/dash/add/master/goals", $scope.newGoal)
                                                         .success(function(res)
                                                         {
@@ -1360,7 +1145,6 @@ angular.module('ebs.controller')
                                                             $scope.addGoalButton = true;
                                                         })
                                                 }
-
                                                 else
                                                 {}
                                                  });
@@ -1374,13 +1158,9 @@ angular.module('ebs.controller')
                                             //                                            className : 'text-center'
                                             //                                        })
                                                                                 }
-
-
                                     }
                                         $scope.atmsgoalsforcolleague=function(code){
-
                                             // console.log(code)
-
                                             $scope.showsearchedgoals=true;
                                             $scope.showevaluatorgoals = [];
                                             jQuery.noConflict();
@@ -1388,8 +1168,6 @@ angular.module('ebs.controller')
                                             if(code.EMPLOYEE_ID){
                                                 $scope.goalEmployeecode.all_Colleague_Code=code.EMPLOYEE_ID+' - '+code.sellername;
                                                 $scope.goalssearchwithemployee.EMPLOYEE_ID=code.EMPLOYEE_ID;
-
-
                                             }
                                             else{
                                                 $scope.goalssearchwithemployee.EvaluationId=code;
@@ -1402,37 +1180,17 @@ angular.module('ebs.controller')
                                                             for(var i=0; i<res.length; i++) {
                                                                 $scope.showevaluatorgoals.push(res[i]);
                                                                 for(var j=0;j<res[i].EVALUATION_ID.length;j++){
-
                                                                     $scope.goalsevaluation.push({'id' : res[i].EVALUATION_ID[j]});
-
-
                                                                 }
                                                             }
                                                             // console.log($scope.showevaluatorgoals)
-
                                                             $scope.transactionCount(res.length, 29);
-
                                                         }
-
                                                     })
-
                                             }
-
-
                                             // if($scope.goalEmployeecode.all_Colleague_Code) {
                                             //     jQuery.noConflict();
                                             //     $('.refresh').css("display", "inline");
                                             // }
                                         }
-
-
-
-
-
-
-
-
-
-
-
         });

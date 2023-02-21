@@ -1,12 +1,7 @@
-
-
 angular.module('ebs.controller')
-
 .controller("ProfileDetailsCtrl", function ($scope, $filter, $http, Settings, $modal, $window) {
     console.log("Hello From Profile Details Controller .... !!!!");
-
     $scope.user = {};
-
     Settings.getUserInfo((user_details) => {
         console.log(user_details);
         if(user_details.sellerObject)
@@ -14,8 +9,6 @@ angular.module('ebs.controller')
         else
             $scope.user = user_details;
     });
-
-
     $scope.formatDate = date => {
         if(date){
             let a = date.toString();

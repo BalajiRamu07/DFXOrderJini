@@ -1,27 +1,20 @@
 /**
  * Created by shreyasgombi on 30/07/22.
  */
-
-
  angular.module('ebs.controller')
-
  .controller("NavCtrl", function($scope, $location, $http, $window, Settings){
      console.log("Hello From Admin Settings Nav Controller .... !!!!");
-
      $scope.nav = [];
      $scope.otherTabs = [];
      $scope.reportTab = [];
-
      const startLoader = () => {
         jQuery.noConflict();
         $('.refresh').css("display", "inline");
     };
-
     const stopLoader = () => {
         jQuery.noConflict();
         $('.refresh').css("display", "none");
     }
-
      $scope.leaveType = [ 
         {
             "name" : "Casual Leave",
@@ -54,12 +47,10 @@
             "enable" : false
         }
     ];
-
      Settings.getNav(false, nav => {
         $scope.nav = nav;
         $scope.reportTab = $scope.nav[8].cols;
      });
-
      const fetchOtherTabs = () => {
         startLoader();
         $http.get("/dash/settings/fetch/other/tabs")
@@ -105,7 +96,6 @@
                     $window.location.href = '/404';
             });
      }
-
      const updateNav = nav => {
         $http.put("/dash/nav/tabs/update", nav)
             .then(update => {
@@ -134,7 +124,6 @@
                     $window.location.href = '/404';
             });
      };
-
      const updateOtherTabs = nav => {
         $http.put("/dash/nav/others/update", nav)
             .then(response => {
@@ -144,7 +133,6 @@
                 // $scope.taxSetup = flag
             })
      }
-
      const fetchLeaves = () => {
         $http.get("/dash/settings/details/leave")
             .then(leave => {
@@ -169,7 +157,6 @@
                     $window.location.href = '/404';
             });
      }
-
      //... When you update the nav name...
      $scope.updateTabName = (new_name, nav) => {
         if(new_name){
@@ -179,19 +166,15 @@
                 result => {
                     if(result){
                         nav.tab = new_name;
-    
                         let update = {};
                         update.task = 'name';
                         update.nav = nav;
-    
                         updateNav(update);
                     }
                 });
             }
         } else Settings.fail_toast("Error", "Enter a name for the tab");
     }
-
-
     $scope.toggleNav = (nav) => {
         Settings.confirmPopup("Confirm", 
             (nav.activated ? "Enable " : "Disable " ) + nav.tab + "?",
@@ -200,12 +183,10 @@
                     let update = {};
                     update.task = 'toggle';
                     update.nav = nav;
-
                     updateNav(update);
                 }
             })
     };
-
     $scope.toggleLeaves = leave => {
         Settings.confirmPopup("Confirm", 
             (leave.enable ? "Enable " : "Disable " ) + leave.name + " for all users?",
@@ -237,7 +218,6 @@
                 }
             });
     };
-
     //Report tab toggle
     $scope.toggleReportTab = report => {
         report.task = 'reportToggle';
@@ -268,14 +248,12 @@
                     $window.location.href = '/404';
             });
     }
-
     $scope.renameReportChange = (new_name, nav) => {
         if(new_name){
             Settings.confirmPopup("Confirm", "Renaming " + nav.tabName + " to " + new_name, result => {
                 if(result){
                     nav.tab = new_name;
                     nav.task = 'report';
-
                     $http.put("/dash/nav/tabs/update", nav)
                         .then(response => {
                             if(response.data && response.data.status == "success"){
@@ -309,7 +287,6 @@
             Settings.popupAlert("Enter a name for the tab")
         }
     }
-
     $scope.otherTabSetup = (tab) => {
         Settings.confirmPopup("Confirm", 
             (tab.enable ? "Enable " : "Disable " ) + tab.tab + "?",
@@ -320,7 +297,6 @@
                     fetchOtherTabs();
             })
     }
-
     fetchOtherTabs();
     fetchLeaves();
  });

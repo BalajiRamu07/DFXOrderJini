@@ -1,32 +1,23 @@
 /**
  * Created by shreyasgombi on 05/07/22.
  */
-
  angular.module('ebs.controller')
-
 .controller("FTPCtrl", ($scope, $routeParams, $http, $window, Settings) => {
     console.log("Hello From FTP Settings Controller .... !!!!");
-
     $scope.tenant = {};
-
     //... Nav tabs...
     $scope.nav = [];
-
     Settings.getNav(false, nav => {
         $scope.nav = nav;
     });
-
     const startLoader = () => {
         jQuery.noConflict();
         $('.refresh').css("display", "inline");
     }
-
     const stopLoader = () => {
         jQuery.noConflict();
         $('.refresh').css("display", "none");
     }
-
-
     //.... Fetch all FTP tenants....
     const fetchFTPTenants = () => {
         startLoader();
@@ -53,14 +44,12 @@
                     $window.location.href = '/404';
             });
     };
-
     //.... Create a new tenant....
     $scope.createTenant = function(){
         console.log("Tenant Details --> ", $scope.tenant);
         if($scope.tenant.itemshost && $scope.tenant.itemsport){
             if ($scope.tenant && $scope.tenant._id)
             $scope.tenant._id = null;
-
             $http.post("/dash/tenants", $scope.tenant)
                 .then((response) => {
                     console.log("Create -->" + response);
@@ -83,9 +72,7 @@
                         $window.location.href = '/404';
                 });
         }else Settings.fail_toast("Error", "Enter the Host and Port address")
-        
     };
-
     //.... Remove a tenant.....
     $scope.removeTenant = function(id) {
         $http.delete("/dash/tenants/" + id)
@@ -110,7 +97,6 @@
                     $window.location.href = '/404';
             });
     };
-
     //..... Choose a tenant....
     $scope.selectTenant = function(id) {
         $http.get("/dash/tenants/" + id)
@@ -135,7 +121,6 @@
                     $window.location.href = '/404';
             });
     };
-
     //..... Update the tenant information.....
     $scope.updateTenant = function() {
         $http.put("/dash/tenants/" + $scope.tenant._id, $scope.tenant)
@@ -161,7 +146,6 @@
                     $window.location.href = '/404';
             });
     };
-
     $scope.downloadStorecsv = function(){
         $http.get("/dash/stores/ftp/refresh")
             .then(() => {
@@ -185,8 +169,6 @@
                     $window.location.href = '/404';
             });
     }
-
-
     $scope.downloadcsv = function(){
         //$http.get("/dash/items/download")
         $http.get("/dash/items/refresh")
@@ -211,8 +193,6 @@
                     $window.location.href = '/404';
             });
     }
-
-
     $scope.downloadSellerscsv = function(){
         //$http.get("/dash/items/download")
         $http.get("/dash/sellersrefresh")
@@ -237,6 +217,5 @@
                     $window.location.href = '/404';
             });
     }
-
     fetchFTPTenants();
 });

@@ -1,53 +1,39 @@
 /**
  * Created by shreyasgombi on 27/09/22.
  */
-
  angular.module('ebs.controller')
     .controller("InventoryTransferCtrl",function ($scope, $routeParams, $http, Settings, $window) {
         console.log("Hello From Transfer Inventory Controller .... !!!!");
-
         $scope.tab = "quantity";
-
         $scope.tab = ($routeParams.tab && $routeParams.tab != "quantity") ? ($routeParams.tab ? $routeParams.tab : "quantity") : "quantity";
-
         //... Transfer Items....
         $scope.transfer_items = {};
         $scope.transfer_items.item_search = "";
         $scope.transfer_items.from_location = "";
         $scope.transfer_items.to_location = "";
-
         $scope.locations = [{"name" : "DEFAULT", "type" : "Real Location"}];
-
         //... From Inventory Stats.....
         $scope.from_inventory = [];
-
         //... From Inventory Stats.....
         $scope.to_inventory = [];
-
         //.... Serial Based Scanning....
         $scope.serial_items = [];
         //.... Miscellaneous Items....
         $scope.misc_items = [];
-
         //... Miscellaneous item scan....
         $scope.misc_item = {};
-
         $scope.user_details = {};
-
         Settings.getUserInfo(user_details => {
             $scope.user_details = user_details;
         })
-
         const startLoader = () => {
             jQuery.noConflict();
             $('.refresh').css("display", "inline");
         }
-
         const stopLoader = () => {
             jQuery.noConflict();
             $('.refresh').css("display", "none");
         }
-
         const fetchLocations = () => {
             startLoader();
             $http.get("/dash/settings/details/inventoryLocation")
@@ -58,23 +44,17 @@
                     }
                 })
         };
-
         $scope.fetchMiscInventory = () => {
             startLoader();
-            
             //.... Reset the display....
             $scope.from_inventory = [];
             $scope.to_inventory = [];
-
             if($scope.transfer_items.from_location){
                 let query = new URLSearchParams();
-
                 if($scope.tab) query.append("tab", $scope.tab);
-
                 if($scope.transfer_items.item_search) {
                     query.append("item", $scope.transfer_items.item_search);
                     query.append("location", $scope.transfer_items.from_location);
-    
                     $http.get("/dash/inventory/search?" + query.toString())
                     .then(inventory => {
                         stopLoader();
@@ -103,12 +83,10 @@
                 }else stopLoader();
                 if($scope.transfer_items.to_location) {
                     let query = new URLSearchParams();
-
                     if($scope.tab) query.append("tab", $scope.tab);
                     if($scope.transfer_items.item_search) {
                         query.append("item", $scope.transfer_items.item_search);
                         query.append("location", $scope.transfer_items.to_location); 
-        
                         $http.get("/dash/inventory/search?" + query.toString())
                         .then(inventory => {
                             stopLoader();
@@ -138,21 +116,17 @@
                 } else stopLoader();
             } else stopLoader();
         };
-
         $scope.fetchInventory = tab => {
             if($scope.item_details && $scope.item_details.itemCode){
                 startLoader();
-                
                 if(tab == 'from') $scope.from_inventory = [];
                 else if(tab == 'to') $scope.to_inventory = [];
                 let query = new URLSearchParams();
-
                 if($scope.tab) query.append("tab", $scope.tab);
                 if($scope.transfer_items.item_search) {
                     if($scope.transfer_items.item_search.itemCode) query.append("item", $scope.transfer_items.item_search.itemCode);
                     else query.append("item", $scope.transfer_items.item_search);
                 }
-
                 //console.log(tab, $scope.transfer_items.from_location, $scope.transfer_items.to_location)
                 if(tab == 'from'){
                     if($scope.transfer_items.from_location) 
@@ -161,7 +135,6 @@
                     if($scope.transfer_items.to_location) 
                         query.append("location", $scope.transfer_items.to_location);
                 }
-                    
                 $http.get("/dash/inventory/search?" + query.toString())
                     .then(inventory => {
                         stopLoader();
@@ -220,7 +193,6 @@
                     })
             }
         }
-
         $scope.searchItem = () => {
             if($scope.transfer_items.item_search){
                 startLoader();
@@ -229,7 +201,6 @@
                         stopLoader();
                         if(items.data && items.data.length){
                             $scope.inventory_search = items.data;
-                            
                             if(items.data.length == 1){
                                 if(items.data[0].cloudinaryURL && items.data[0].cloudinaryURL != "undefined"){
                                     if(typeof items.data[0].cloudinaryURL == "string"){
@@ -268,7 +239,6 @@
                     })
             }
         };
-
         const transferInventory = items => {
             startLoader();
             $http.put("/dash/inventory/items/transfer?tab=" + $scope.tab, items)
@@ -280,7 +250,6 @@
                         $scope.to_inventory = [];
                         $scope.serial_items = [];
                         $scope.misc_items = [];
-
                         $scope.transfer_items.from_location = "";
                         $scope.transfer_items.to_location = "";
                     }else{
@@ -296,7 +265,6 @@
                         $window.location.href = '/404';
                 })
         };
-
         $scope.transferInventory = () => {
             if($scope.tab == "quantity"){
                 console.log("Transfer Inventory ---> ", $scope.from_inventory, $scope.to_inventory);
@@ -305,9 +273,7 @@
                         let transfer_items = [];
                         transfer_items = $scope.from_inventory.filter(el => el.transfer && el.transfer > 0);
                         transfer_items.map(el => el.to_location = $scope.transfer_items.to_location);
-    
                         console.log(transfer_items);
-        
                         if(transfer_items.length){
                             Settings.confirmPopup("Confirm", "Are you sure?\nNote that this will update the inventory data.",
                             result => {
@@ -336,10 +302,8 @@
                     if($scope.from_inventory.length && $scope.to_inventory.length){
                         let items = $scope.from_inventory.filter(el => el.transfer && el.transfer > 0);
                         console.log(items);
-
                         if(items.length){
                             items.map(el => el.to_location = $scope.transfer_items.to_location);
-
                             console.log(items);
                             Settings.confirmPopup("Confirm", "Are you sure?\nNote that this will update the inventory data.",
                             result => {
@@ -350,31 +314,24 @@
                     }else Settings.fail_toast("Error", "Choose Items from Inventory Locations");
                 }else Settings.fail_toast("Error", "From and To Location Cannot be the same");
             }
-            
         }
-
         $scope.scanItem =  () => {
             if($scope.transfer_items.scan_items){
                 if(JSON.stringify($scope.serial_items).indexOf($scope.transfer_items.scan_items) == -1){
                     if($scope.transfer_items.scan_items && $scope.transfer_items.from_location){
                         startLoader();
-                        
                         let query = new URLSearchParams();
                         //.... Set the tab.....
                         if($scope.tab) query.append("tab", $scope.tab);
-
                         //..... Set the item.....
                         if($scope.transfer_items.item_search) {
                             if($scope.transfer_items.item_search.itemCode) query.append("item", $scope.transfer_items.item_search.itemCode);
                             else query.append("item", $scope.transfer_items.item_search);
                         }
-
                         //.... Set the location....
                         if($scope.transfer_items.from_location) 
                             query.append("location", $scope.transfer_items.from_location);
-                        
                         if($scope.transfer_items.scan_items) query.append("serial", $scope.transfer_items.scan_items);
-
                         $http.get("/dash/inventory/search?" + query.toString())
                             .then(inventory => {
                                 stopLoader();
@@ -387,7 +344,6 @@
                                         "to_location" : $scope.transfer_items.to_location,
                                         "type" : "serial"
                                     })
-
                                     $scope.transfer_items.scan_items = '';
                                 }else Settings.fail_toast("Error", "Scanned Serial Number is not available");
                             });
@@ -395,7 +351,6 @@
                 }else Settings.fail_toast("Error", "Scanned Item Already Exists");
             }else Settings.fail_toast("Error", "Enter the Serial Number / Unique Code");
         };
-
         $scope.selectItem = item => {
             if(item.cloudinaryURL && item.cloudinaryURL != "undefined"){
                 if(typeof item.cloudinaryURL == "string"){
@@ -416,42 +371,30 @@
                     "image" : "appimages/product_image_not_available.png"
                 }];
             }
-
             $scope.item_details = item;
-
             $scope.from_inventory = [];
             $scope.to_inventory = [];
-            
             $scope.transfer_items.from_location = "";
             $scope.transfer_items.to_location = "";
-
             $scope.fetchInventory();
         }
-
         if($scope.user_details.role == "Admin"){
             fetchLocations();
         }
-
         if($scope.tab != "miscellaneous"){
             if($routeParams.item && $routeParams.item != 'undefined'){
                 $scope.transfer_items.item_search = $routeParams.item;
                 $scope.searchItem();
             }
         }
-        
-
         $scope.reset = () => {
             $scope.from_inventory = [];
             $scope.to_inventory = [];
-
             $scope.transfer_items.from_location = "";
             $scope.transfer_items.to_location = "";
-
             $scope.transfer_items.item_search = '';
             $scope.item_details = {};
             $scope.misc_item = {};
             $scope.misc_items = [];
         }
-
-
     })

@@ -1,5 +1,4 @@
 angular.module('ebs.controller')
-
     .controller("StoreDiscountCtrl",function ($scope, $filter, $http,Settings, $modal, $window, toastr, $interval,$sce,$mdDialog) {
         console.log("Hello From  Store Discount Controller .... !!!!");
         $scope.storeDiscount=[];
@@ -19,11 +18,4 @@ angular.module('ebs.controller')
                     });
                 }
                 $scope.getMasterStoreDiscount();
-
-
-
-
-
-
-
  })

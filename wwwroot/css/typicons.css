@@ -1,5 +1,4 @@
 @charset 'UTF-8';
- 
 /* @FONT-FACE loads font into browser */
 @font-face {
   font-family: 'typicons';
@@ -11,7 +10,6 @@
        url('typicons.ttf') format('truetype'),
        url('typicons.svg#typicons') format('svg');
 }
- 
 /* :before psuedo-selector inserts and styles icon */
 .typcn:before {
   font-family: 'typicons';
@@ -28,7 +26,6 @@
   font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
 }
- 
 /* Code for individual icons */ 
 .typcn-adjust-brightness:before { 
   content: '\e000'; /* '' */

@@ -1,28 +1,20 @@
 /**
  * Created by shreyasgombi on 30/07/22.
  */
-
-
 angular.module('ebs.controller')
-
     .controller("AdminLoginCtrl", function($scope, $location, $http, $window, Settings){
         console.log("Hello From Admin Settings Login Controller .... !!!!");
-
         $scope.login = {};
         $scope.login.password = '';
-
         const startLoader = () => {
             jQuery.noConflict();
             $('.refresh').css("display", "inline");
         };
-
         const stopLoader = () => {
             jQuery.noConflict();
             $('.refresh').css("display", "none");
         }
-        
         if(Settings.getSuperAdminLogin()) $location.path('/setting/admin/home');
-
         $scope.authenticate = () => {
             if($scope.login.password){
                 startLoader();
@@ -54,7 +46,6 @@ angular.module('ebs.controller')
                     });
             } else Settings.fail_toast("Error", "Enter the super admin password");
         }
-
         startLoader();
         setTimeout(() => {
             stopLoader();

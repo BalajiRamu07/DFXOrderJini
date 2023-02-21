@@ -1,10 +1,7 @@
 /**
  * Created by shreyasgombi on 02/03/20.
  */
-
-
 angular.module("ebs.filters", [])
-
     .filter("managerFilter", function() {
         return function(items) { //items is the parameter that is fetched by default from ng-repeat x in y, here its x
             var result = [];
@@ -21,7 +18,6 @@ angular.module("ebs.filters", [])
                 return result;
         };
     })
-
     .filter('reverse', function() {
         //filter to reverse the order of ng-repeat
         return function(items) {
@@ -29,7 +25,6 @@ angular.module("ebs.filters", [])
                 return items.slice().reverse();
         };
     })
-
     .filter('getEnabled', function(){
         return function(items){
             var result = [];
@@ -41,29 +36,24 @@ angular.module("ebs.filters", [])
             return result;
         }
     })
-
     .filter('INR', function(){
         return function(input){
             if(input){
                 var currencySymbol = '₹';
                 //var output = Number(input).toLocaleString('en-IN');   <-- This method is not working fine in all browsers!
                 var result = input.toString().split('.');
-
                 var lastThree = result[0].substring(result[0].length - 3);
                 var otherNumbers = result[0].substring(0, result[0].length - 3);
                 if (otherNumbers != '')
                     lastThree = ',' + lastThree;
                 var output = otherNumbers.replace(/\B(?=(\d{2})+(?!\d))/g, ",") + lastThree;
-
                 if (result.length > 1) {
                     output += "." + result[1];
                 }
-
                 return currencySymbol + output;
             }
         }
     })
-
     .filter( 'camelCase', function ()
     {
         var camelCaseFilter = function ( input )
@@ -78,11 +68,9 @@ angular.module("ebs.filters", [])
                     words[i] = words[i].charAt( 0 ).toUpperCase() + words[i].slice( 1 );
                 return words.join( ' ' );
             }
-
         };
         return camelCaseFilter;
     })
-
     .filter('singular', function()
     {
         var singularString = function (value){
@@ -94,11 +82,8 @@ angular.module("ebs.filters", [])
         };
         return singularString;
     })
-
     .filter("multiKeyFilter",[ function(){
-
         return function(items, keySetObject, a){
-
             var filteredList = [];
             var matchFound;
             var numberOfItemsFound = 0;
@@ -114,28 +99,20 @@ angular.module("ebs.filters", [])
             }else{
                 itemsList = items;
             }
-
             if( itemsList )
                 for(var i =0; i< itemsList.length; i++)
                 {
                     numberOfMatchesFound = 0;
-
                     for(var j = 0; j< keySetObject.length; j++)
                     {
                         matchFound = false;
-
                         for(key in keySetObject[j])
                         {
-
                             if( keySetObject[j][key].length == 0 && !keySetObject[j].strictWhenEmpty)
                                 numberOfMatchesFound++;
-
-
                             for(var k=0; k < keySetObject[j][key].length; k++)
                             {
-
                                 switch(keySetObject[j].type ) {
-
                                     case filterTagTypes.select :
                                     case filterTagTypes.valueString:
                                         if (itemsList[i][key].toString().toUpperCase().indexOf(keySetObject[j][key][k].toUpperCase()) != -1)
@@ -146,9 +123,7 @@ angular.module("ebs.filters", [])
                                         }
                                         break;
                                 }
-
                             }
-
                             if(matchFound) continue;
                         }
                     }
@@ -156,9 +131,7 @@ angular.module("ebs.filters", [])
                         filteredList.push(itemsList[i]);
                     }
                 }
-
             return filteredList;
-
         }
     }])
     .filter('statusFil',function(){
@@ -171,14 +144,10 @@ angular.module("ebs.filters", [])
                     }
                 }
             } else  return item;
-
             return arr
         }
     })
-
     //***************** inventory filter **************
-
-
     .filter( 'inventoryQty', function ()
     {
         var inventoryFilter = function (inv ,location) {
@@ -196,11 +165,8 @@ angular.module("ebs.filters", [])
                             totalInventory += inv[i].Qty;
                         }
                     }return totalInventory;
-
                 }
             }
-
         };
         return inventoryFilter;
     });
-

@@ -1,16 +1,10 @@
-
-
 angular.module('ebs.controller')
-
 .controller("TicketDetailsCtrl", function ($scope, $http, Settings, $routeParams, $window, $timeout) {
     console.log("Hello From Ticket Details Controller .... !!!!");
-
     //.... Ticket information....
     $scope.ticket = {};
     $scope.ticket_update = {};
-
     let todayDate = new Date();
-
     $scope.checkDueDate = function(due_date){
         if(due_date)
             due_date.setHours(23, 59, 59, 59)
@@ -22,36 +16,28 @@ angular.module('ebs.controller')
             $scope.ticket_update.due_date = todayDate;
         }
     }
-
     //... List of users...
     $scope.users = [];
-
     Settings.getUserInfo(user_details => {
         if(user_details)
             $scope.user_details = user_details;
     })
-
     //.... Ticket ID from the params...
     const ticket_id =  $routeParams.id;
-
     const startLoader = () => {
         jQuery.noConflict();
         $('.refresh').css("display", "inline");
     }
-
     const stopLoader = () => {
         jQuery.noConflict();
         $('.refresh').css("display", "none");
     }
-
     Settings.getNav((nav) => {
         $scope.nav = nav;
         $scope.userRole = $scope.nav[4].roles ? $scope.nav[4].roles: [];
     });
-
     console.log("Ticket Details for - ", ticket_id);
     $scope.tab = 'open';
-
     ///..... Function to fetch ticket details....
     const getTicketDetails = () => {
         startLoader();
@@ -70,15 +56,12 @@ angular.module('ebs.controller')
                             //     }
                             // }
                         }
-
                         $scope.ticket = ticket_details.data[0];
-
                         if(ticket_details.data[0].assigned_to && ticket_details.data[0].assigned_to._id) {
                             $timeout(function() {
                                 $scope.ticket_update.assigned_to = ticket_details.data[0].assigned_to._id;
                             }, 1000);
                         }
-                        
                         if(ticket_details.data[0].priority) $scope.ticket_update.priority = ticket_details.data[0].priority;
                         if(ticket_details.data[0].due_date) $scope.ticket_update.due_date = new Date(ticket_details.data[0].due_date);
                         if(ticket_details.data[0].status) $scope.ticket_update.status = ticket_details.data[0].status
@@ -95,7 +78,6 @@ angular.module('ebs.controller')
                 });
         }else stopLoader();
     };
-
     $scope.getResolutionUserNames = function(id){
         let name = '';
         if($scope.ticket && $scope.ticket.resolutionUsers && $scope.ticket.resolutionUsers.length){
@@ -109,9 +91,7 @@ angular.module('ebs.controller')
             return name;
         else
             return '';
-
     }
-
     //.... Function to get all users...
     const getUsers = () => {
         $http.post("/dash/users/list", {"appType": 'serviceComplaints'})
@@ -129,9 +109,7 @@ angular.module('ebs.controller')
                     $window.location.href = '/404';
             });
     }
-
     $scope.goBack = () => $window.history.back();
-
     $scope.updateTicketResolution = function() {
         startLoader();
         $http.put("/dash/services/update/ticket/resolution/" + ticket_id, $scope.ticket_update)
@@ -145,16 +123,13 @@ angular.module('ebs.controller')
                 }
             })
     }
-
     //... Update the ticket details...
     $scope.updateTicket = () => {
-
         // console.log($scope.ticket_update.status,  $scope.ticket.status, $scope.ticket_update);
         startLoader()
         $scope.ticket_update.regalStatus = false;
         if($scope.nav.length && $scope.nav[25] && $scope.nav[25].activated == true)
             $scope.ticket_update.regalStatus = $scope.nav[25].activated;
-
         if($scope.ticket_update.assigned_to){
             let user = $scope.users.find(u=> u._id === $scope.ticket_update.assigned_to)
             if(user._id)
@@ -171,7 +146,6 @@ angular.module('ebs.controller')
                 }
             })
     }
-
     $scope.regalStatus =[];
     const getSettingTypes = (typeName) => {
         startLoader();
@@ -192,12 +166,9 @@ angular.module('ebs.controller')
                     $window.location.href = '/404';
             });
     }
-
     if($scope.nav[25] && $scope.nav[25].activated){
         getSettingTypes("regalStatus")
     }
-
     getUsers();
     getTicketDetails();
-    
 });

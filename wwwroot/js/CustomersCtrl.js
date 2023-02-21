@@ -1,37 +1,28 @@
 /**
  * Created by shreyasgombi on 05/03/20.
  */
-
 angular.module('ebs.controller')
-
     .controller("CustomersCtrl",function ($scope, $filter, $http, $routeParams, $window, toastr, Settings, $location) {
         console.log("Hello From Customers Controller .... !!!!");
-
         //Render Stores
         // Dealer page declaration
-
         $scope.dealerListPage = true ;
         $scope.dealerAddPage = false ;
         $scope.dealerEditPage = false ;
-
         // ************************Add dealer
         $scope.dealer = {};
-
         $scope.redirect = null;
         if($routeParams.redirectTo) $scope.redirect = $routeParams.redirectTo;
-
         //Store customer images and document images while creating a new customer from portal
         $scope.newStoreImageArray = {};
         $scope.newStoreImageArray.customerImage = [];
         $scope.newStoreImageArray.customerDoc = [];
-
         // ************************dealer filter
         $scope.dealerSearch = {};
         $scope.dealerSearch.filter = '';
         $scope.dealerSearch.filterBy = '';
         $scope.cityText = {};
         $scope.cityText.filter = '';
-
         $scope.allDealers = [];
         $scope.branches = [];
         $scope.dealerSelectAll = {};
@@ -41,7 +32,6 @@ angular.module('ebs.controller')
         $scope.user = {};
         $scope.dealerClasses = [] ;
         $scope.countryCode = [];
-
         var viewBy = {};
         viewBy.dealer = 12;
         var initialViewBy = 60;
@@ -66,7 +56,6 @@ angular.module('ebs.controller')
         dealerSearchObj.searchByArea = [];
         dealerSearchObj.searchRegion = [];
         dealerSearchObj.plant = [];
-
         allStoreRetrieveObj.viewLength = 0;
         allStoreRetrieveObj.viewBy = 60;
         allStoreRetrieveObj.searchFor = '';
@@ -77,10 +66,7 @@ angular.module('ebs.controller')
         allStoreRetrieveObj.searchRegion = [];
         // $scope.customerType='customer';
         $scope.class = {};
-
-
         $scope.dealerSelectAll.city = true;
-
         $scope.showStoreFilter = false;
         $scope.filter.sales = "All";
         $scope.filter.branch = "All";
@@ -97,18 +83,13 @@ angular.module('ebs.controller')
         $scope.dealerfilterFlag = false ;
         $scope.leadstatus=[];
         $scope.customercategory=[];
-
         $scope.disableFlag = false;
-
         // $scope.cityFilterFlag = false;
         // $scope.areaFilterFlag = false;
-
         //Checkin Map Icons
         $scope.checkinIcons = [];
         $scope.checkinIcons['Customer'] = 'https://maps.google.com/mapfiles/ms/micons/orange-dot.png';
-
         $scope.leadstatus=instanceDetails.leadStatus;
-
         $scope.user = '';
         var userRole = '';
         Settings.getUserInfo(function(user_details){
@@ -121,24 +102,20 @@ angular.module('ebs.controller')
                 allStoreRetrieveObj.plant = $scope.user.sellerObject.plant_code || [];
             }
         });
-
         $http.get("/dash/shopify/creds/fetch")
             .success(function (response) {
                 console.log("Shopify credentials Fetched")
                 if(response.length){
-
                     if(response[0].shopify_api_key && response[0].shopify_password && response[0].shopify_host && (userRole == 'admin' || !userRole)){
                         $scope.DisplayShopifyButton = true;
                     }else{
                         $scope.DisplayShopifyButton = false;
                     }
-
                 }
             })
             .error(function (error){
                 console.log(error)
             })
-
         $scope.renderInstanceDetails = function (response) {
             console.log("Instance Details for Dealers -->");
              console.log(response);
@@ -150,7 +127,6 @@ angular.module('ebs.controller')
             }
             $scope.customercategory=response.customerCategory;
         };
-
         $scope.countryCodeGet = function () {
             console.log('get country codes');
             $http.get("/country/countryCode").success(function (res) {
@@ -159,9 +135,7 @@ angular.module('ebs.controller')
                 }
             });
         };
-
         $scope.countryCodeGet();
-
         $http.get("/dash/instanceDetails")
             .success($scope.renderInstanceDetails).error(function(error, status){
             console.log(error, status);
@@ -172,7 +146,6 @@ angular.module('ebs.controller')
             else
                 $window.location.href = '/404';
         });
-
         $scope.userRole=[
             {
                 name:"Admin",
@@ -215,11 +188,8 @@ angular.module('ebs.controller')
                 status:true
             }
         ];
-
         jQuery.noConflict();
         $('.refresh').css("display", "inline");
-
-
         $scope.redirectTo = code => {
             switch($scope.redirect){
                 case "enquiry" : {
@@ -242,16 +212,13 @@ angular.module('ebs.controller')
                 }
             }
         }
-
         function reverseGeocode(callback, latlng, type){
             var geocoder = new google.maps.Geocoder();
-
             if(type == 'customer'){
                 geocoder.geocode({ 'latLng': latlng }, function (results, status) {
                     if (status !== google.maps.GeocoderStatus.OK) {
                         console.log(status);
                     }
-
                     if (status == google.maps.GeocoderStatus.OK) {
                         //console.log(results);
                         var address = (results[0].formatted_address);
@@ -259,7 +226,6 @@ angular.module('ebs.controller')
                     }
                 });
             }
-
         }
         $scope.formatFullDate = function(date){
             if(date==undefined)
@@ -267,7 +233,6 @@ angular.module('ebs.controller')
             /* replace is used to ensure cross browser support*/
             var d = new Date(date.toString().replace("-","/").replace("-","/"));
             var monthNames = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"]
-
             var time = ''
             var hour =  d.getHours();
             var minute = d.getMinutes();
@@ -278,7 +243,6 @@ angular.module('ebs.controller')
                 var temp = minute;
                 minute = '0' +minute
             }
-
             if(d.getHours()>12) {
                 session = 'PM'
                 hour -= 12
@@ -290,21 +254,15 @@ angular.module('ebs.controller')
             }
             time = hour+':'+ minute +' '+session
             var dateOut = d.getDate()+" - "+monthNames[d.getMonth()]+" - "+(d.getFullYear())+' at '+ time
-
             $scope.mapTransactionDate = d.getDate()+" - "+monthNames[d.getMonth()]+" - "+(d.getFullYear());
-
             return dateOut;
         }
-
         function geocode_address(result, type){
             if(type == 'customer'){
                 $scope.checkinMapLocation.dealer = result;
                 $scope.$apply();
             }
-
         }
-
-
         $http.get("/dash/addresses")
             .success(function(addresses){
                 $scope.allShippingAddress = addresses;
@@ -317,7 +275,6 @@ angular.module('ebs.controller')
             else
                 $window.location.href = '/404';
         });
-
         $http.get("/dash/role/sellers/Salesperson")
             .success(function (salesperson) {
                 //console.log("Salesperson : ", salesperson);
@@ -337,7 +294,6 @@ angular.module('ebs.controller')
             else
                 $window.location.href = '/404';
         });
-
         $http.get("/dash/settings/details/DealerTabs")
             .then(pincode => {
                 if(pincode.data){
@@ -362,9 +318,6 @@ angular.module('ebs.controller')
                 else
                     $window.location.href = '/404';
             });
-
-
-
         $http.get("/dash/nav")
             .success(function(response){
                 $scope.nav = response;
@@ -377,7 +330,6 @@ angular.module('ebs.controller')
             else
                 $window.location.href = '/404';
         });
-
         $http.get("/dash/user/role/access")
             .success(function(res) {
                 if (res.role) {
@@ -392,16 +344,12 @@ angular.module('ebs.controller')
             else
                 $window.location.href = '/404';
         });
-
-
         $scope.getRewardPoints = function(flag){
             if(flag){
                 for(var i=0; i<$scope.orders.length; i++) {
                     for (var j = 0; j < $scope.serviceClients.length; j++) {
-
                         if (!$scope.serviceClients[j].Revenue)
                             $scope.serviceClients[j].Revenue = 0;
-
                         if ((Number($scope.orders[i].dealerphone[0])) == $scope.serviceClients[j].Phone) {
                             $scope.serviceClients[j].Revenue += (Number($scope.orders[i].total_amount[0]) / 100);
                         }
@@ -409,7 +357,6 @@ angular.module('ebs.controller')
                 }
             }
         }
-
         $scope.refreshSellerNames = function(){
             if(typeof $scope.roleSalesrep == 'object'){
                 for(var j=0;j<$scope.roleSalesrep.length;j++){
@@ -417,10 +364,8 @@ angular.module('ebs.controller')
                         $scope.sellerNames[$scope.roleSalesrep[j].sellerphone] = $scope.roleSalesrep[j].sellername;
                 }
             }
-
             // console.log($scope.sellerNames);
         }
-
         $scope.getSellerName = function(sellerNo,tag){
             // console.log('SellerNumber',sellerNo,'Tag',tag)
             /*---DynamicProgramming---*/
@@ -438,7 +383,6 @@ angular.module('ebs.controller')
                 }
             }else return sellerNo;
         };
-
         $scope.getRoleName = function(role){
             // console.log(role)
             var temp = '';
@@ -455,21 +399,15 @@ angular.module('ebs.controller')
             return temp ;
         };
         // console.log($scope.sellerNames);
-
         $scope.multipleUsers = function(response,type){
-
             var obj = [];
             if($scope.filter.branch == 'All')
                 $scope.allStockistFromDealer = [];
             var allStockist = [];
-
             // check for seller name by searching it in number
-
             for(var i=0;i<response.length;i++){
                 response[i].multipleSeller = false;
                 response[i].multipleStockist = false;
-
-
                 if((typeof(response[i].Seller) == 'string' || typeof(response[i].Seller == 'number')) && !angular.isObject(response[i].Seller)){
                     //console.log(response[i].Dealercode)
                     response[i].SellerName = $scope.getSellerName(response[i].Seller) ?  $scope.getSellerName(response[i].Seller) : response[i].SellerName;
@@ -484,7 +422,6 @@ angular.module('ebs.controller')
                             response[i].SellerName += $scope.getSellerName(response[i].Seller[j]);
                     }
                 }
-
                 if(typeof(response[i].Stockist) == 'string' || typeof(response[i].Stockist) == 'number'){
                     // if(response[i].StockistName )
                     //     allStockist.push({Stockist : response[i].Stockist, StockistName : response[i].StockistName});
@@ -497,27 +434,17 @@ angular.module('ebs.controller')
                      if(response[i].StockistName[j])
                      allStockist.push({Stockist : response[i].Stockist[j], StockistName : response[i].StockistName[j]});
                      else allStockist.push({Stockist : response[i].Stockist[j], StockistName : 'No Name'});
-
                      // if(j < response[i].Stockist.length - 1)
                      //     response[i].StockistName += $scope.getSellerName(response[i].Stockist[j]) ? $scope.getSellerName(response[i].Stockist[j]) : 'No Name'+", ";
                      // else
                      //     response[i].StockistName += $scope.getSellerName(response[i].Stockist[j]) ? $scope.getSellerName(response[i].Stockist[j]) : 'No Name';
                      }*/
-
                 }
-
-
                     $scope.serviceClients.push(response[i]);
-
-
-
-
                 // if(response[i].Area){
                 //     obj.push(response[i]);
                 // }
             }
-
-
             // if(type=='City'){
             //     $scope.dealer_area = [];
             //     $scope.dealer_area = obj.unique('Area');
@@ -533,13 +460,8 @@ angular.module('ebs.controller')
             //         return dealer;
             //     })
             // }
-
-
-
             $scope.serviceClients = $filter('orderBy')( $scope.serviceClients, 'DealerName');
-
             if($scope.filter.branch == 'All'){
-
           //      $http.get("/dash/stores/stockist").success(function(response){
                 $http.get("/dash/stores/all/stockist").success(function(response){
                     // console.log("stockist=====",response);
@@ -556,22 +478,16 @@ angular.module('ebs.controller')
                     else
                         $window.location.href = '/404';
                 });
-
             }
-
         }
-
         //Store filter function
         $scope.storeSearchFilter = function(){
             console.log($scope.filter.customerType);
-
             $scope.showListDealerDetail = false;
             dealerSearchObj.viewLength = 0;
             dealerSearchObj.viewBy = initialViewBy;
-
             $scope.viewLength = 0;
             $scope.newViewBy = localViewBy;
-
             if($scope.dealerSearch.filter){
                 dealerSearchObj.searchFor = $scope.dealerSearch.filter;
                 dealerSearchObj.searchBy = dealerSearchBy;
@@ -584,21 +500,18 @@ angular.module('ebs.controller')
             if($scope.filter.customercategory){
                 dealerSearchObj.customercategory = $scope.filter.customercategory;
             }
-
             dealerSearchObj.stockist = {};
             dealerSearchObj.STOCKISTS = {};
             if($scope.filter.branch != 'All'){
                 console.log("$scope.filter.branch",$scope.filter.branch);
               //  dealerSearchObj.stockist = $scope.filter.branch;
                 dealerSearchObj.STOCKISTS = $scope.filter.branch;
-
             }
             else {
                // dealerSearchObj.stockist = '';
                 dealerSearchObj.STOCKISTS = '';
             }
             console.log("dealer object",dealerSearchObj);
-
             if($scope.filter.sales != 'All'){
                 dealerSearchObj.seller = $scope.filter.sales;
             }
@@ -617,22 +530,17 @@ angular.module('ebs.controller')
             else{
                 dealerSearchObj.customerType = '';
             }
-
             if(  $scope.user && $scope.user.role == 'Factory' && $scope.user.sellerObject && $scope.user.sellerObject.plant_code ){
                 dealerSearchObj.plant = $scope.user.sellerObject.plant_code || [];
             }else{
                 dealerSearchObj.plant = [];
             }
-
             $scope.serviceClients = [];
-
             jQuery.noConflict();
             $('.refresh').css("display", "inline");
             console.log(dealerSearchObj)
-
             $http.post('/dash/stores', dealerSearchObj)
                 .success(function(res){
-                    
                     $scope.multipleUsers(res);
                     // $scope.renderStoreMap(res);
                 }).error(function(error, status){
@@ -644,7 +552,6 @@ angular.module('ebs.controller')
                 else
                     $window.location.href = '/404';
             });
-
             $http.post("/dash/stores/count", dealerSearchObj)
                 .success(function(res){
                     $scope.transactionCount(res,4);
@@ -657,19 +564,13 @@ angular.module('ebs.controller')
                 else
                     $window.location.href = '/404';
             });
-
             setTimeout(function () {
                 $('.refresh').css("display", "none");
             }, 1000);
-
-
-
             $scope.showStoreFilter = true;
-
             if($scope.dealer.selected_city == '' && $scope.dealer.selected_area == '' && $scope.dealerSearch.filter == '' && $scope.filter.branch == 'All' && $scope.filter.sales == 'All' && $scope.filter.class == 'All' && $scope.filter.customerType == 'All')
                 $scope.showStoreFilter = false;
         };
-
         $scope.renderServiceClients = function (response) {
             $scope.serviceClients =[];
             $scope.leadserviceClients=[];
@@ -683,23 +584,16 @@ angular.module('ebs.controller')
             }
             // console.log("GetAll Stores --> " + response.length);
             $scope.invoiceClients = response;
-
             // console.log(response)
             $scope.multipleUsers(response);
-
-
             if($scope.dealerSelectAll.city)
                 $scope.dealerSelectAll.city = true;
             else
                 $scope.dealerSelectAll.city = false;
-
             if($scope.dealerSelectAll.city)
                 $scope.dealerSelectAll.area = true;
             else
                 $scope.dealerSelectAll.area = false;
-
-
-
             $http.get("/dash/store/branches").then(function(response){
                 if(response.data.length){
                     for(var i = 0; i < response.data.length; i++){
@@ -708,7 +602,6 @@ angular.module('ebs.controller')
                     }
                 }
             })
-
             // if(response.length == 1){
             //     console.log('One Store');
             //     $scope.data.newOrderStore = response[0];
@@ -732,17 +625,12 @@ angular.module('ebs.controller')
             // }
             // /*if(response.length < 50)
             //   $scope.totalStoresDisplayed = response.length;*/
-
             // $scope.getRewardPoints(1);
-
-
             //Set checkboxes for CITY and AREA filter as true
             $scope.dealerSelectAll = {};
             $scope.dealerSelectAll.city = true;
             $scope.dealerSelectAll.area = true;
-
         };
-
         $scope.trial42 = function (val, i) {
             $scope.branches = $filter('filter')($scope.items41, val);
             $scope.viewby = i;
@@ -751,7 +639,6 @@ angular.module('ebs.controller')
             $scope.itemsPerPage = $scope.viewby;
             $scope.maxSize = 5;
         }
-
         $scope.transactionCount = function(response, tab){
             //console.log(response);
             if(response){
@@ -778,7 +665,6 @@ angular.module('ebs.controller')
                 $scope.viewLength = -1;
             }
         }
-
         $scope.navPage = function(tab, direction){
             var viewLength = $scope.viewLength;
             var viewBy = $scope.newViewBy;
@@ -796,21 +682,18 @@ angular.module('ebs.controller')
                         // else {
                         //     dealerSearchObj.stockist = '';
                         // }
-
                         if($scope.filter.branch != 'All'){
                             dealerSearchObj.STOCKISTS = $scope.filter.branch;
                         }
                         else {
                             dealerSearchObj.STOCKISTS = '';
                         }
-
                         if($scope.filter.class != 'All'){
                             dealerSearchObj.class = $scope.filter.class;
                         }
                         else {
                             dealerSearchObj.class = '';
                         }
-
                         if($scope.filter.sales != 'All'){
                             dealerSearchObj.seller = $scope.filter.sales.seller;
                         }
@@ -820,17 +703,13 @@ angular.module('ebs.controller')
                         dealerSearchObj.searchBy = dealerSearchBy;
                         jQuery.noConflict();
                         $('.refresh').css("display", "inline");
-
                         // dealerSearchObj.viewBy = 0;
                         // dealerSearchObj.viewLength = 0;
                         console.log(dealerSearchObj)
                         $http.post("/dash/stores",dealerSearchObj)
                             .success(function(response){
                                 // console.log(response);
-
-
                                 $scope.multipleUsers(response);
-
                                 if(viewLength + viewBy > $scope.dealer_count){
                                     a = viewLength + viewBy - $scope.dealer_count;
                                     viewBy -= a;
@@ -840,8 +719,6 @@ angular.module('ebs.controller')
                                 jQuery.noConflict();
                                 $('.refresh').css("display", "none");
                             })
-
-
                     }
                     else{
                         //console.log("Out of data")
@@ -855,7 +732,6 @@ angular.module('ebs.controller')
                 else{
                     //console.log("Minus viewby")
                     viewLength += viewBy;
-
                     if(viewLength + viewBy > $scope.dealer_count){
                         a = viewLength + viewBy - $scope.dealer_count;
                         viewBy -= a;
@@ -874,28 +750,23 @@ angular.module('ebs.controller')
                         viewBy += a;
                         a = 0;
                     }
-
                     viewLength -= viewBy;
-
                     $scope.viewLength = viewLength;
                     $scope.newViewBy = viewBy;
                 }
             }
         }
-
         //Store filter function search by area and city
         $scope.storeSearchByArea = function(){
             $scope.dealer_city = [];
             $scope.dealer_area = [];
             var temp = [];
             var temp1 = [];
-
             if($scope.cityText.filter){
                 dealerSearchObj.searchFor = $scope.cityText.filter;
                 dealerSearchObj.searchBy = dealerSearchBy;
                 $http.post("/dash/stores", dealerSearchObj)
                     .success(function (res) {
-
                         $scope.serviceClients = res;
                         $scope.transactionCount(res.length, 4);
                         for(var i=0; i<res.length; i++){
@@ -904,15 +775,11 @@ angular.module('ebs.controller')
                         }
                         $scope.dealer_city = temp.unique("_id");
                         $scope.dealer_area = temp1.unique("_id");
-
                     });
-
             }
             $scope.showStoreFilter = true;
         };
-
         $scope.getAllStoreCities = function(param,type){
-
             $http.post("/dash/stores/filter/"+type, {viewBy : 0})
                 .success(function(city){
                     $scope.dealer_city = city;
@@ -925,7 +792,6 @@ angular.module('ebs.controller')
                     //     }
                     //     return dealer;
                     // })
-
                 }).error(function(error, status){
                 console.log(error, status);
                 if(status >= 400 && status < 404)
@@ -936,7 +802,6 @@ angular.module('ebs.controller')
                     $window.location.href = '/404';
             });
         };
-
         $scope.getAllStoreAreas = function(param,type){
             $http.post("/dash/stores/filter/"+type, {viewBy : 0})
                 .success(function(area){
@@ -962,18 +827,12 @@ angular.module('ebs.controller')
                     $window.location.href = '/404';
             });
         };
-
         $scope.getAllStoreCities(true,'city');
-
         $scope.getAllStoreAreas(true,'area');
-
         $scope.showDealerTransactions = true;
-
-
         if ($scope.dealer_count < viewBy.dealer) {
             $scope.newViewBy = $scope.dealer_count;
         }
-
         $scope.clearFilterButton = function (search,tab) {
             if (search === '') {
                 dealerSearchObj.viewLength = 0;
@@ -983,9 +842,7 @@ angular.module('ebs.controller')
                 dealerSearchObj.stockist = '';
                 dealerSearchObj.STOCKISTS = '';
                 dealerSearchObj.searchBy = [];
-
                 // dealerSearchObj.searchBycustomertype='';
-
                 // if($scope.customerType=='lead'){
                 //     dealerSearchObj.searchBycustomertype='Lead';
                 //
@@ -994,18 +851,14 @@ angular.module('ebs.controller')
                 //     dealerSearchObj.searchBycustomertype='';
                 //
                 // }
-
                 $scope.viewLength = 0;
                 $scope.newViewBy = viewBy.dealer;
                 $scope.dealerSearch.filter = '';
                 $scope.serviceClients = [];
                 $scope.cityText.filter = '';
                 console.log(dealerSearchObj)
-
                 $http.post("/dash/stores", dealerSearchObj)
                     .success(function(res){
-                        
-                        
                         $scope.multipleUsers(res);
                     }).error(function(error, status){
                     console.log(error, status);
@@ -1016,7 +869,6 @@ angular.module('ebs.controller')
                     else
                         $window.location.href = '/404';
                 });
-
                 $http.post("/dash/stores/count", dealerSearchObj)
                     .success(function(res){
                         $scope.transactionCount(res,4);
@@ -1029,14 +881,11 @@ angular.module('ebs.controller')
                     else
                         $window.location.href = '/404';
                 });
-
                 $scope.showStoreFilter = false;
-
                 $scope.getAllStoreCities(true,'city');
                 $scope.getAllStoreAreas(true,'area');
             }
         };
-
         $scope.clearFilter = function(tab){
             dealerSearchObj.viewLength = 0;
             dealerSearchObj.viewBy = initialViewBy;
@@ -1051,20 +900,16 @@ angular.module('ebs.controller')
             dealerSearchObj.customerType = '';
             dealerSearchObj.leadstatus = '';
             dealerSearchObj.customercategory = '';
-
-
             if($scope.user && $scope.user.role == 'Factory' && $scope.user.sellerObject && $scope.user.sellerObject.plant_code ){
                 dealerSearchObj.plant = $scope.user.sellerObject.plant_code || [];
             }else {
                 dealerSearchObj.plant = [];
             }
             if($scope.user && $scope.user.role == 'Factory' && $scope.user.sellerObject && $scope.user.sellerObject.plant_code ){
-
                 allStoreRetrieveObj.plant = $scope.user.sellerObject.plant_code || [];
             }else {
                 allStoreRetrieveObj.plant = [];
             }
-
             // if($scope.customerType=='lead'){
             //     dealerSearchObj.searchBycustomertype='Lead';
             //
@@ -1078,7 +923,6 @@ angular.module('ebs.controller')
             $scope.dealerSearch.filter = '';
             $scope.serviceClients = [];
             $scope.cityText.filter = '';
-
             $scope.filter.sales = "All";
             $scope.filter.branch = "All";
             $scope.filter.class = "All";
@@ -1087,25 +931,17 @@ angular.module('ebs.controller')
             $scope.filter.customerType = "All";
             $scope.filter.leadstatus = '';
             $scope.filter.customercategory = '';
-
-
             $scope.showStoreFilter = false;
             $scope.showListDealerDetail = false;
             $scope.dealerSelectAll.city = true;
             $scope.storeMarkershowMap = true;
             $scope.disableFlag = false;
-
-
 // change for pagination
             $http.post("/dash/stores", allStoreRetrieveObj)
                 .success(function(response){
-
-
-
                     $scope.multipleUsers(response);
                     // $scope.renderStoreMap(response);
                     $scope.displayDealerRefresh=  true
-
                 }).error(function(error, status){
                 console.log(error, status);
                 if(status >= 400 && status < 404)
@@ -1115,12 +951,10 @@ angular.module('ebs.controller')
                 else
                     $window.location.href = '/404';
             });
-
             $http.post("/dash/stores/count", dealerSearchObj)
                 .success(function(res){
                     $scope.transactionCount(res,4);
                     $scope.displayDealerRefresh=  true
-
                 }).error(function(error, status){
                 console.log(error, status);
                 if(status >= 400 && status < 404)
@@ -1130,12 +964,9 @@ angular.module('ebs.controller')
                 else
                     $window.location.href = '/404';
             });
-
-
             $scope.getAllStoreCities(true,'city');
             $scope.getAllStoreAreas(true,'area');
         };
-
         $scope.getImageUrl = function(obj){
             if(obj){
                 if(obj.cloudinaryURL){
@@ -1154,7 +985,6 @@ angular.module('ebs.controller')
                 }
             }
         }
-
         //Function to filter stores based on customer type
         // $scope.filterDealerBy = function(type){
         //     if(type == 'lead'){
@@ -1171,7 +1001,6 @@ angular.module('ebs.controller')
         //         $scope.refreshTransactions(4);
         //     }
         // }
-
         //Function to filter stores based on city and area
         $scope.filterDealerByCriteria = function (type, all, filter) {
             $scope.serviceClients = [];
@@ -1179,7 +1008,6 @@ angular.module('ebs.controller')
             if(type == 'city'){
                 dealerSearchObj.viewLength = 0;
                 dealerSearchObj.viewBy = initialViewBy;
-
                 $scope.viewLength = 0;
                 $scope.newViewBy = localViewBy;
                 dealerSearchObj.searchRegion = [];
@@ -1198,10 +1026,8 @@ angular.module('ebs.controller')
                 dealerSearchObj.searchByArea = [];
                 dealerSearchObj.viewLength = 0;
                 dealerSearchObj.viewBy = initialViewBy;
-
                 $scope.viewLength = 0;
                 $scope.newViewBy = localViewBy;
-
                 if(filter.selected_city){
                     dealerSearchObj.searchRegion = [];
                     dealerSearchObj.searchRegion.push(filter.selected_city)
@@ -1216,14 +1042,12 @@ angular.module('ebs.controller')
                         dealerSearchObj.searchByArea = [];
                     }
                 }
-
             }
             $scope.showStoreFilter = true;
             jQuery.noConflict();
             $('.refresh').css("display", "inline");
             $http.post("/dash/stores", dealerSearchObj)
                 .success(function (response) {
-                    
                     $scope.multipleUsers(response, );
                     // $scope.renderStoreMap(response);
                 }).error(function(error, status){
@@ -1235,7 +1059,6 @@ angular.module('ebs.controller')
                 else
                     $window.location.href = '/404';
             });
-
             $http.post("/dash/stores/count", dealerSearchObj)
                 .success(function (res) {
                     $scope.transactionCount(res, 4);
@@ -1248,7 +1071,6 @@ angular.module('ebs.controller')
                 else
                     $window.location.href = '/404';
             });
-
             setTimeout(function () {
                 $('.refresh').css("display", "none");
             }, 1000);
@@ -1789,7 +1611,6 @@ angular.module('ebs.controller')
             //
             // }
         };
-
         $scope.fetchStoresByCities =function(dealerSearchObj){
             $http.post("/dash/stores", dealerSearchObj)
                 .success(function (response) {
@@ -1809,7 +1630,6 @@ angular.module('ebs.controller')
                     $scope.getAllStoreAreas(false, 'area');
                 });
         }
-
         $scope.fetchStoresByArea =function(dealerSearchObj){
             $http.post("/dash/stores", dealerSearchObj)
                 .success(function (response) {
@@ -1828,22 +1648,16 @@ angular.module('ebs.controller')
                     });
                 });
         }
-
-
         $scope.phoneNoValidate = function(tab ,flag,temp,type){
             $scope.validateDealerphone = false;
-
-
             switch(tab){
                 /*customer tab*/
                 case 0: {
-
                     if (flag != true) {
                         var body = {
                             phone: temp
                         };
                         $http.post("/dash/enquiry/validate/phone", body).success(function (res) {
-
                             if(type != 'edit'){
                                 if(temp){
                                     if(res.length){
@@ -1854,7 +1668,6 @@ angular.module('ebs.controller')
                                 }else{
                                     $scope.validateDealerphone = false;
                                 }
-
                             }else if(type == 'edit') {
                                 if (temp != $scope.oldPhoneNo && temp) {
                                     if (res.length) {
@@ -1866,7 +1679,6 @@ angular.module('ebs.controller')
                                     $scope.validateDealerphone = false;
                                 }
                             }
-
                         }).error(function(error, status){
                             console.log(error, status);
                             if(status >= 400 && status < 404)
@@ -1879,17 +1691,12 @@ angular.module('ebs.controller')
                     }
                     break;
                 }
-
-
             }
-
         };
-
         //add Dealer auto fill address
         $scope.addNewDealerAddress = function () {
             var input = document.getElementById('address');
             var editDealerAddress_autocomplete = new google.maps.places.Autocomplete(input);
-
             editDealerAddress_autocomplete.addListener('place_changed', function () {
                 var newplace = editDealerAddress_autocomplete.getPlace();
                 var lat=newplace.geometry.location.lat();
@@ -1908,7 +1715,6 @@ angular.module('ebs.controller')
                     if(newplace.address_components[i].types[0] == 'country')
                         var jcountry = newplace.address_components[i].long_name;
                 }
-
                 var scope = angular.element(document.getElementById('address')).scope();
                 scope.dealer.City = jcity;
                 scope.dealer.Area = jarea;
@@ -1918,11 +1724,9 @@ angular.module('ebs.controller')
                 scope.dealer.Address = jaddress;
                 scope.dealer.latitude = lat;
                 scope.dealer.longitude = long;
-
                 $('#newDealerArea').val(jarea);
                 $('#newDealerCity').val(jcity);
                 $('#newDealerPincode').val(jpostalCode);
-
                 var latlng = new google.maps.LatLng(lat, long);
                 var mapCanvas = document.getElementById("customerAddMap");
                 var mapOptions = {center: latlng, zoom: 15};
@@ -1931,15 +1735,12 @@ angular.module('ebs.controller')
                 marker.setMap(map);
             })
         };
-
         $scope.appendImageToStore = function(type, operation, index){
             /*
              Function to upload or remove an image of customer or customer document while adding it from portal
-
              type = Customer image or customer document image
              operation = add or remove an image
              index = used while removing an image from array
-
              */
             if(operation == 'add'){
                 var image = ( (type == 'store') ? (document.getElementById('newStoresImage').files) : (document.getElementById('newStoreDocumentImage').files) );
@@ -1952,7 +1753,6 @@ angular.module('ebs.controller')
                         tempObj.date = new Date()+"";
                         tempObj.username = ($scope.user.username ? $scope.user.username : "Portal Admin");
                         tempObj.userphone = ($scope.user.sellerphone ? $scope.user.sellerphone : null);
-
                         if(type == 'store'){
                             tempObj.name = image[0].name ? image[0].name : "Customer Image";
                             $scope.newStoreImageArray.customerImage.push(tempObj);
@@ -1961,7 +1761,6 @@ angular.module('ebs.controller')
                             tempObj.name = image[0].name ? image[0].name : "Document Image";
                             $scope.newStoreImageArray.customerDoc.push(tempObj)
                         }
-
                         // if($scope.itemsDisp.cloudinary){
                         //     if($scope.itemsDisp.cloudinaryURL.length > 0){
                         //         for(var i=0; i< $scope.itemsDisp.cloudinaryURL.length; i++){
@@ -1972,7 +1771,6 @@ angular.module('ebs.controller')
                         jQuery.noConflict();
                         $('#newStoresImage').val(null);
                         $('#newStoreDocumentImage').val(null);
-
                         jQuery.noConflict();
                         $scope.$apply();
                     }
@@ -1980,7 +1778,6 @@ angular.module('ebs.controller')
                 }
                 else{
                     Settings.failurePopup('Error',"Please select an image");
-
                     // bootbox.alert({
                     //     title : "ERROR",
                     //     message : "Please select an image",
@@ -2004,14 +1801,9 @@ angular.module('ebs.controller')
                     }
                 }
             }
-
-
         }
-
         $scope.addDealer = function (flag) {
             $scope.disableFlag = true;
-
-
             $scope.dealer.Phone = Number($scope.dealer.Phone) ;
             if($scope.pinCodeMadatory){
                 if($scope.dealer.DealerName && $scope.dealer.Phone && $scope.dealer.Pincode){
@@ -2032,7 +1824,6 @@ angular.module('ebs.controller')
                         $scope.dealer.dob = $scope.formatYYMMDDrDate($scope.dealer.dob) ;
                         $scope.dealer.anniversary = $scope.formatYYMMDDrDate($scope.dealer.anniversary);
                         $scope.dealer.DealerName = $scope.dealer.DealerName.substr(0,1).toUpperCase() + $scope.dealer.DealerName.substr(1);
-
                         $scope.postNewDealer();
                     }
                     else{
@@ -2046,11 +1837,9 @@ angular.module('ebs.controller')
                                     $scope.dealercodeUnique = "unique";
                                 }
                                 if($scope.dealercodeUnique == "unique"){
-
                                     if($scope.dealer.countryCode && $scope.dealer.countryCode != '+91'){
                                         $scope.dealer.Phone = Number($scope.dealer.countryCode + $scope.dealer.Phone);
                                     }
-
                                     $scope.dealer.Dealercode = $scope.dealer.Dealercode != '' ? $scope.dealer.Dealercode : '';
                                     var dealercodes = $scope.dealer.Dealercode;
                                     if (isNaN(dealercodes)) {
@@ -2061,7 +1850,6 @@ angular.module('ebs.controller')
                                     }
                                     $scope.dealer.DealerName = $scope.dealer.DealerName.substr(0,1).toUpperCase() + $scope.dealer.DealerName.substr(1);
                                     // $scope.dealer.Seller = $scope.dealer.Seller ? Number($scope.dealer.Seller) : '';
-
                                     if($scope.dealer.salesPerson){
                                         $scope.dealer.Seller = $scope.dealer.salesPerson.sellerphone ? Number($scope.dealer.salesPerson.sellerphone) : '' ;
                                         $scope.dealer.SellerName =  $scope.dealer.salesPerson.sellername ? $scope.dealer.salesPerson.sellername : '' ;
@@ -2072,16 +1860,13 @@ angular.module('ebs.controller')
                                     }
                                     $scope.dealer.class = $scope.dealer.class ? $scope.dealer.class : '';
                                     $scope.dealer.addedBy = $scope.user.sellerphone ? Number($scope.user.sellerphone) : '' ;
-
                                     $scope.dealer.Stockist = $scope.dealer.Stockist ? Number($scope.dealer.Stockist) : null;
                                     $scope.dealer.STOCKISTS = $scope.dealer.STOCKISTS ? Number($scope.dealer.STOCKISTS) : null;
                                     $scope.dealer.cloudinaryURL = ($scope.newStoreImageArray.customerImage.length > 0) ? $scope.newStoreImageArray.customerImage : [];
                                     $scope.dealer.doccloudinaryURL = ($scope.newStoreImageArray.customerDoc.length > 0) ? $scope.newStoreImageArray.customerDoc : [];
                                     $scope.dealer.customerType = "Lead";
-
                                     if(flag){
                                         $scope.postNewDealer('pos');
-
                                     }else{
                                         $scope.postNewDealer();
                                     }
@@ -2111,7 +1896,6 @@ angular.module('ebs.controller')
                             $scope.disableFlag = false;
                             Settings.failurePopup('Error','This Phone number already exists.');
                         }
-
                     }
                 }
                 else if ($scope.dealer.Phone == undefined) {
@@ -2121,7 +1905,6 @@ angular.module('ebs.controller')
                     $scope.disableFlag = false;
                     Settings.failurePopup('Error','Please enter all mandatory details');
                 }
-
             }else{
                 if($scope.dealer.DealerName && $scope.dealer.Phone){
                     if ($scope.applicationType == 'StoreJini'){
@@ -2141,7 +1924,6 @@ angular.module('ebs.controller')
                         $scope.dealer.dob = $scope.formatYYMMDDrDate($scope.dealer.dob) ;
                         $scope.dealer.anniversary = $scope.formatYYMMDDrDate($scope.dealer.anniversary);
                         $scope.dealer.DealerName = $scope.dealer.DealerName.substr(0,1).toUpperCase() + $scope.dealer.DealerName.substr(1);
-
                         $scope.postNewDealer();
                     }
                     else{
@@ -2155,11 +1937,9 @@ angular.module('ebs.controller')
                                     $scope.dealercodeUnique = "unique";
                                 }
                                 if($scope.dealercodeUnique == "unique"){
-
                                     if($scope.dealer.countryCode && $scope.dealer.countryCode != '+91'){
                                         $scope.dealer.Phone = Number($scope.dealer.countryCode + $scope.dealer.Phone);
                                     }
-
                                     $scope.dealer.Dealercode = $scope.dealer.Dealercode != '' ? $scope.dealer.Dealercode : '';
                                     var dealercodes = $scope.dealer.Dealercode;
                                     if (isNaN(dealercodes)) {
@@ -2178,10 +1958,8 @@ angular.module('ebs.controller')
                                         $scope.dealer.Seller = $scope.user.sellerphone ? Number($scope.user.sellerphone) : '' ;
                                         $scope.dealer.SellerName =  $scope.user.username ? $scope.user.username : '' ;
                                     }
-
                                     $scope.dealer.addedBy = $scope.user.sellerphone ? Number($scope.user.sellerphone) : '' ;
                                     $scope.dealer.class = $scope.dealer.class ? $scope.dealer.class : '';
-
                                     $scope.dealer.Stockist = $scope.dealer.Stockist ? Number($scope.dealer.Stockist) : null;
                                     $scope.dealer.STOCKISTS = $scope.dealer.STOCKISTS ? Number($scope.dealer.STOCKISTS) : null;
                                     $scope.dealer.cloudinaryURL = ($scope.newStoreImageArray.customerImage.length > 0) ? $scope.newStoreImageArray.customerImage : [];
@@ -2189,7 +1967,6 @@ angular.module('ebs.controller')
                                     $scope.dealer.customerType = "Lead";
                                     if(flag){
                                         $scope.postNewDealer('pos');
-
                                     }else{
                                         $scope.postNewDealer();
                                     }
@@ -2225,28 +2002,19 @@ angular.module('ebs.controller')
                 }
             }
         };
-
-
-
         $scope.postNewDealer = function(flag){
-
             jQuery.noConflict();
             $('.refresh').css("display", "inline");
-
             $http.post("/dash/stores/add/new", $scope.dealer)
                 .success(function (res) {
                     //console.log(res);
-
                     if (!res.imageStatus) {
                         Settings.failurePopup('Error','Your image data could not be uploaded');
                     }
-
                     if(!flag){
                         Settings.successPopup('Success',$scope.dealer.DealerName+' successfully added.')
                     }
-
                     $scope.dealerAddPage = false;
-
                     $scope.dealer = {};
                     $scope.dealer.email = '';
                     $scope.showStockist = false;
@@ -2254,49 +2022,33 @@ angular.module('ebs.controller')
                     $scope.newStoreImageArray = {};
                     $scope.newStoreImageArray.customerImage = [];
                     $scope.newStoreImageArray.customerDoc = [];
-
                     setTimeout(function () {
                         $('.refresh').css("display", "none");
                     }, 1000);
-
                     $scope.refreshTransactions(4);
-
                 })
-
         };
-
         $scope.refreshTransactions = function(tab){
             $scope.displayDealerRefresh = false;
-
             jQuery.noConflict();
             $('.refresh').css("display", "inline");
-
             $scope.clearFilter(4);
-
             setTimeout(function(){
                 $('.refresh').css("display", "none");
             }, 2000);
         };
-
         $scope.ChangeCustomerType=function(data){
             if(data){
                 $scope.editedDealer.customerType='';
             }
-
         }
-
-
-
-
         //new dealer address is blank, city and area also black
         $scope.empty = function(type){
-
             if(type == 'new'){
                 if($scope.dealer.Address  == "" || $scope.dealer.Address == undefined) {
                     $('#newDealerArea').val('');
                     $('#newDealerCity').val('');
                     $('#newDealerPincode').val('');
-
                     $scope.dealer.Area="";
                     $scope.dealer.City="";
                     $scope.dealer.State="";
@@ -2312,7 +2064,6 @@ angular.module('ebs.controller')
                     $('#editDealerArea').val('');
                     $('#editDealerCity').val('');
                     $('#editDealerPincode').val('');
-
                     $scope.editedDealer.Area = "";
                     $scope.editedDealer.City = "";
                     $scope.editedDealer.State = "";
@@ -2322,20 +2073,14 @@ angular.module('ebs.controller')
                     $scope.editedDealer.longitude = "";
                 }
             }
-
         }
-
         $scope.notEmptyOrNull = function(item){
             return !(item._id === null || item._id.trim().length === 0)
         };
-
         //Edit Dealer Details
-
-
         $scope.dealerFilterBy = function(){
             $scope.dealerfilterFlag = !$scope.dealerfilterFlag;
         };
-
         $scope.assignNewSeller = function(seller,type){
             if(type == 'new'){
                 if($scope.editedDealer.assignedSellers.indexOf(seller.sellerphone) == -1){
@@ -2344,15 +2089,12 @@ angular.module('ebs.controller')
                 }else{
                     Settings.alertPopup('Error',"Salesperson Already assigned");
                 }
-
             } else if(type == 'remove'){
                 $scope.editedDealer.assignedSellers.splice(seller,1);
             }
         };
-
         $scope.assignNewStockist = function(user,type){
             if(type == 'new'){
-
                 if($scope.editedDealer.assignedStockist.indexOf(user.Stockist) == -1){
                     if($scope.editedDealer.newStockist.length){
                         if($scope.editedDealer.newStockist.indexOf(user.Stockist) == -1){
@@ -2367,31 +2109,23 @@ angular.module('ebs.controller')
                         $scope.editedDealer.newStockist.push(user.Stockist);
                         $scope.storesDisp.stockist = '';
                     }
-
                 }else{
                     Settings.alertPopup('Error',"Stockist Already assigned");
-
                 }
             } else if(type == 'remove'){
                 $scope.editedDealer.newStockist.splice(user,1);
             }
         };
-
         $scope.removeDealerImage = function(index){
             $scope.editedDealer.cloudinaryURL.splice(index,1);
             console.log(index);
-
         };
-
         $scope.uploadStoreImage = function(type){
-
             if(type == 'img'){
                 var image = document.getElementById('uploadStoreImage').files;
-
                 if(image.length){
                     jQuery.noConflict();
                     $('.refresh').css("display", "inline");
-
                     var reader = new FileReader();
                     reader.onloadend = function () {
                         var tempObj = {};
@@ -2400,9 +2134,7 @@ angular.module('ebs.controller')
                         tempObj.date_added = new Date() + "" ;
                         tempObj.username = ($scope.user.username ? $scope.user.username : "Portal Admin");
                         tempObj.userphone = ($scope.user.sellerphone ? $scope.user.sellerphone : null);
-
                         var imageObj = [];
-
                         if ($scope.storesDisp.cloudinaryURL) {
                             if ($scope.storesDisp.cloudinaryURL.length > 0) {
                                 for (var i = 0; i < $scope.storesDisp.cloudinaryURL.length; i++) {
@@ -2416,13 +2148,10 @@ angular.module('ebs.controller')
                             .success(function (res) {
                                 console.log("res is :");
                                 console.log(res);
-
                                 setTimeout(function () {
                                     $('.refresh').css("display", "none");
                                 }, 500);
-
                                 if (res) {
-
                                     $scope.storesDisp.cloudinaryURL = res;
                                     // bootbox.alert({
                                     //     title: 'SUCCESS',
@@ -2454,15 +2183,12 @@ angular.module('ebs.controller')
                     }
                     reader.readAsDataURL(image[0]);
                 }
-
             }
             if(type == 'doc'){
                 var image = document.getElementById('uploadStoreDoc').files;
-
                 if(image.length){
                     jQuery.noConflict();
                     $('.refresh').css("display", "inline");
-
                     var reader = new FileReader();
                     reader.onloadend = function () {
                         var tempObj = {};
@@ -2472,9 +2198,7 @@ angular.module('ebs.controller')
                         tempObj.username = ($scope.user.username ? $scope.user.username : "Portal Admin");
                         tempObj.userphone = ($scope.user.sellerphone ? $scope.user.sellerphone : null);
                         tempObj.type = 'doc';
-
                         var imageObj = [];
-
                         if ($scope.storesDisp.doccloudinaryURL) {
                             if ($scope.storesDisp.doccloudinaryURL.length > 0) {
                                 for (var i = 0; i < $scope.storesDisp.doccloudinaryURL.length; i++) {
@@ -2482,20 +2206,16 @@ angular.module('ebs.controller')
                                 }
                             }
                         }
-
                         var type = 'doc' ;
                         imageObj.push(tempObj);
                         $http.put("/dash/stores/image/upload/"+type, imageObj)
                             .success(function (res) {
                                 console.log("res is :");
                                 console.log(res);
-
                                 setTimeout(function () {
                                     $('.refresh').css("display", "none");
                                 }, 500);
-
                                 if (res) {
-
                                     $scope.storesDisp.doccloudinaryURL = res;
                                     toastr.success('Successfully uploaded image.')
                                     jQuery.noConflict();
@@ -2522,32 +2242,26 @@ angular.module('ebs.controller')
                     }
                     reader.readAsDataURL(image[0]);
                 }
-
             }
         }
-
         $scope.submitComments=function(dealer){
             if(dealer){
-
                 var dealerId=dealer.Dealercode;
                 var comments = {comment: '', username: '', userphone: '', date: ''};
                 comments.comment=dealer.newcomments;
                 if($scope.user.sellerObject){
                     comments.userphone=$scope.user.sellerObject.sellerphone;
                     comments.username=$scope.user.sellerObject.sellername;
-
                 }
                 else{
                     comments.userphone=0;
                     comments.username='Portal';
                 }
-
                 comments.date=new Date();
                 var date = 	comments.date;
                 comments.date = [date.getFullYear(),(date.getMonth()+1).padLeft(), date.getDate().padLeft() ].join('-') + ' '
                     + [date.getHours().padLeft(), date.getMinutes().padLeft(), date.getSeconds().padLeft()].join (':');
             }
-
             $http.put("/dash/store/comments/add/"+dealerId, comments).success(function (res) {
                 if(res){
                     $scope.editedDealer.comments.push(comments);
@@ -2563,8 +2277,6 @@ angular.module('ebs.controller')
                     $window.location.href = '/404';
             });
         }
-
-
         $scope.submitLeadStatus=function(dealer){
             if(dealer) {
                 if (dealer.leadstatus && dealer.leadDate) {
@@ -2578,36 +2290,29 @@ angular.module('ebs.controller')
                     if ($scope.user.sellerObject) {
                         leadStatusWithFollowup.userphone = $scope.user.sellerObject.sellerphone;
                         leadStatusWithFollowup.username = $scope.user.sellerObject.sellername;
-
                     } else {
                         leadStatusWithFollowup.userphone = 0;
                         leadStatusWithFollowup.username = 'Portal';
                     }
-
                     leadStatusWithFollowup.dateAdded = new Date();
                     var date = leadStatusWithFollowup.dateAdded;
                     leadStatusWithFollowup.dateAdded = [date.getFullYear(), (date.getMonth() + 1).padLeft(), date.getDate().padLeft()].join('-') + ' '
                         + [date.getHours().padLeft(), date.getMinutes().padLeft(), date.getSeconds().padLeft()].join(':');
-
                     //comments part
                     var comments = {comment: '', username: '', userphone: '', date: ''};
                     comments.comment = dealer.newcomments;
                     if ($scope.user.sellerObject) {
                         comments.userphone = $scope.user.sellerObject.sellerphone;
                         comments.username = $scope.user.sellerObject.sellername;
-
                     } else {
                         comments.userphone = 0;
                         comments.username = 'Portal';
                     }
-
                     comments.date = new Date();
                     var date = comments.date;
                     comments.date = [date.getFullYear(), (date.getMonth() + 1).padLeft(), date.getDate().padLeft()].join('-') + ' '
                         + [date.getHours().padLeft(), date.getMinutes().padLeft(), date.getSeconds().padLeft()].join(':');
-
                     leadStatusWithFollowup.comments = comments;
-
                     $http.post("/dash/store/lead/followup/add/" + dealerId, leadStatusWithFollowup).success(function (res) {
                         if (res) {
                             $scope.editedDealer.leadStatusWithFollowup.push(leadStatusWithFollowup);
@@ -2632,19 +2337,16 @@ angular.module('ebs.controller')
                     if($scope.user.sellerObject){
                         comments.userphone=$scope.user.sellerObject.sellerphone;
                         comments.username=$scope.user.sellerObject.sellername;
-
                     }
                     else{
                         comments.userphone=0;
                         comments.username='Portal';
                     }
-
                     comments.date=new Date();
                     var date = 	comments.date;
                     comments.date = [date.getFullYear(),(date.getMonth()+1).padLeft(), date.getDate().padLeft() ].join('-') + ' '
                         + [date.getHours().padLeft(), date.getMinutes().padLeft(), date.getSeconds().padLeft()].join (':');
                 }
-
                 $http.put("/dash/store/comments/add/"+dealerId, comments).success(function (res) {
                     if(res){
                         $scope.editedDealer.comments.push(comments);
@@ -2665,7 +2367,6 @@ angular.module('ebs.controller')
             $scope.class.name = '';
             $scope.class.priceList = 'master';
         }
-
         $scope.addDealerClass = function(data){
             if(data.name){
                 if($scope.dealerClasses.length){
@@ -2688,12 +2389,10 @@ angular.module('ebs.controller')
                 }
                 function postData(){
                     var temp = $scope.dealerClasses ;
-
                     temp[temp.length] = {
                         name : data.name,
                         priceList : data.priceList
                     };
-
                     $http.put("/dash/settings/dealer/class", temp)
                         .success(function(res){
                             //console.log(res);
@@ -2709,15 +2408,12 @@ angular.module('ebs.controller')
                 Settings.failurePopup('ERROR',"Please enter text!");
             }
         }
-
         $scope.changeDealerPricelist = function(data,index){
             var temp = $scope.dealerClasses ;
-
             temp[index] = {
                 name : data.name,
                 priceList : data.priceList
             };
-
             $http.put("/dash/settings/dealer/class", temp)
                 .success(function(res){
                     //console.log(res);
@@ -2734,9 +2430,7 @@ angular.module('ebs.controller')
                     // console.log($scope.priceListName)
                     Settings.success_toast('SUCCESS', "Class Updated Successfully!")
                 })
-
         }
-
         $scope.removeDealerPricelist = function(index){
             var temp = $scope.dealerClasses ;
             temp.splice(index,1)
@@ -2747,16 +2441,13 @@ angular.module('ebs.controller')
                     Settings.setInstanceDetails('dealerClass', $scope.dealerClasses)
                     Settings.success_toast('SUCCESS', "Class Removed Successfully!")
                 })
-
         }
-
         if($location.search().type){
             document.getElementById("leadButton").click();
             // dealerSearchObj.searchBycustomertype='Lead';
             // $scope.customerType='lead';
             // $scope.refreshTransactions();
         }
-
         $http.post("/dash/stores", dealerSearchObj)
             .success(function (res) {
                 console.log("res",res);
@@ -2770,10 +2461,6 @@ angular.module('ebs.controller')
             else
                 $window.location.href = '/404';
         });
-        
-
-
-
         $http.post("/dash/stores/count", dealerSearchObj)
             .success(function(res){
                 $scope.transactionCount(res,4);
@@ -2786,8 +2473,6 @@ angular.module('ebs.controller')
             else
                 $window.location.href = '/404';
         });
-
-
         $scope.getShopifyStores = function(){
             jQuery.noConflict();
             $('.refresh').css("display", "inline");
@@ -2795,13 +2480,10 @@ angular.module('ebs.controller')
                 .success(function (response) {
                     console.log("Shopify Stores Updation initiated")
                     console.log(response);
-
                     setTimeout(function(){
                         $('.refresh').css("display", "none");
                     }, 2000);
-
                     if(response == true){
-
                         Settings.success_toast('SUCCESS',"Shopify Stores will be synced in the background");
                     }
                     else{
@@ -2816,8 +2498,6 @@ angular.module('ebs.controller')
                     Settings.failurePopup('ERROR',"Stores importing failed");
                 })
         }
-
-
         $scope.testFunc = function(){
             let date = new Date();
             let timestamp = date.getTime();
@@ -2833,22 +2513,14 @@ angular.module('ebs.controller')
                 method : "GET",
                 timeout : api_timeout,
             };
-
             $http(request_object)
                 .success(function(response) {
                     console.log(response);
                     downloadcustomer(response);
                 })
-
-
-
         }
-
         function downloadcustomer(arg) {
             var result = arg.result
-
-
-
             console.log('headers',Object.keys(result[0]))
             function formatdate(date){
                 if(date==undefined || date == '')
@@ -2862,7 +2534,6 @@ angular.module('ebs.controller')
                 var dateOut = dt+"-"+monthNames[d.getMonth()]+"-"+(d.getFullYear())
                 return dateOut;
             }
-
             var headerLeadsource = true;
             var headerRevenueAmount = true;
             var headerComment = true;
@@ -2872,7 +2543,6 @@ angular.module('ebs.controller')
             var headercustomerType = true;
             var headerChangedToCustomer = true;
             var headercreatedDate = true;
-
             var Pincode = 'Pincode';
             var customerType = 'customerType';
             var customerCategory = 'customerCategory';
@@ -2885,15 +2555,12 @@ angular.module('ebs.controller')
             var comment = 'comment';
             var ChangedToCustomer = 'ChangedToCustomer';
             var createdDate = 'createdDate';
-
             var header = [];
             header = Object.keys(result[0])//get all key names for csv file
             header.push(customerCategory)
             header = header.filter(function( obj ) {
                 return (obj !== '_id' && obj !== 'comments' && obj !== 'leadStatusWithFollowup');
             });
-
-
             // if( header.includes('multiple_stockist')){
             //     header.splice(10, 2);
             // }
@@ -2920,11 +2587,9 @@ angular.module('ebs.controller')
                                     }
                                     // console.log("header[10]",result[i],header[9]);
                                     result[i][temp] = multi_stockist;
-
                                 }
                             }
                         }
-
                         if (temp == 'cloudinaryURL') {
                             if (result[i][temp] && result[i][temp].length) {
                                 if (result[i][temp][0].image) {
@@ -2932,7 +2597,6 @@ angular.module('ebs.controller')
                                 }
                             }
                         }
-
                         if (temp == 'doccloudinaryURL') {
                             if (result[i][temp] && result[i][temp].length) {
                                 if (result[i][temp][0].image) {
@@ -2966,12 +2630,10 @@ angular.module('ebs.controller')
                         } else {
                             result[i].leadstatus = '';
                         }
-
                         if (result[i].leadStatusWithFollowup && result[i].leadStatusWithFollowup.length) {
                             var last = result[i].leadStatusWithFollowup[result[i].leadStatusWithFollowup.length - 1];
                             result[i].leadDate = formatdate(last.leadDate);
                         }
-
                         if (result[i].comments && result[i].comments.length) {
                             var last = result[i].comments[result[i].comments.length - 1];
                             result[i].comment = last.comment;
@@ -3002,20 +2664,16 @@ angular.module('ebs.controller')
                         output += ','
                 }
                 output += '\n';
-
             }
             var blob = new Blob([output], {type: "text/csv;charset=UTF-8"});
             console.log(blob);
             window.URL = window.webkitURL || window.URL;
             var url = window.URL.createObjectURL(blob);
-
             //console.log(url);
             //var data = output;
-
             var d = new Date();
             var anchor = angular.element('<a/>');
             var fileName = arg.fileName
-
             anchor.attr({
                 href: url,
                 target: '_blank',
@@ -3023,14 +2681,10 @@ angular.module('ebs.controller')
                 download: fileName
             })[0].click();
         }
-        
-
         setTimeout(function(){
             $('.refresh').css("display", "none");
         }, 2000);
-
         $scope.backToBrowserHistory = function() {
             $window.history.back();
         };
     });
-

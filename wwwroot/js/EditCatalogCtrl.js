@@ -1,27 +1,18 @@
 /**
  * Created by Bharat DN on 08/09/20.
  */
-
 angular.module('ebs.controller')
-
     .controller("EditCatalogCtrl",function ($scope, $filter, $http, $modal,$routeParams, $window, toastr,Settings) {
-       
-
-
         $scope.user = {};
         $scope.user.role = '';
         $scope.nav = [] ;
-
         var catItem = {};
         catItem.itemId = $routeParams.id;
         $scope.itemIdParam = $routeParams.id;
-
         // item page declaration
-
         // $scope.itemListPage = true ;
         // $scope.itemAddPage = false ;
         // $scope.itemEditPage = false ;
-
         var masterItems = [] ;
         $scope.items = [];
         $scope.categories = [];
@@ -37,7 +28,6 @@ angular.module('ebs.controller')
         $scope.newItem = {} ;
         $scope.edit = {};
         $scope.editedItem = {};
-
         $scope.itemSearch = {};
         $scope.priceListView = {};
         var instanceDetails =  Settings.getInstance();
@@ -51,7 +41,6 @@ angular.module('ebs.controller')
         $scope.allTags=[];
         $scope.percentageDiscountFlag=false;
         $scope.percentageDiscountFlag=instanceDetails.percentageDiscount;
-
         var viewBy = {};
         viewBy.items = 12;
         var initialViewBy = 60;
@@ -76,7 +65,6 @@ angular.module('ebs.controller')
         $scope.priceListView.filter='master' ;
         $scope.tax = []; //Holds array of tax objects
         var defaultTaxObj = {}; //Has default tax object..
-
         $scope.categoryFilterFlag = false ;
         $scope.subCategoryFilterFlag = false ;
         $scope.subSubCategoryFilterFlag = false ;
@@ -84,7 +72,6 @@ angular.module('ebs.controller')
         // $scope.tagsArray=[];
         $scope.DisplayShopifyButton = false;
          $scope.salesOrg=[];
-
         //Ghana tax
         $scope.ghanaTax = {
             NHIL:2.5,
@@ -92,63 +79,45 @@ angular.module('ebs.controller')
             VAT:15.9,
             VAT_VAL: 15
         };
-
         $scope.currencySet = Settings.getInstanceDetails('currency');
-
         var userRole = '';
         Settings.getUserInfo(function(user_details){
             if(user_details.role){
                 userRole = user_details.role.toLowerCase();
             }
-
         });
-
 //                        $http.get("/dash/customerItems/"+ $scope.CatagoryDetails.product_id).success(function (res) {
 //                            console.log("sales org details");
 //                            console.log(res);
 //                            $scope.salesOrg = res;
 //                        });
-
         console.log("$scope.tempCountryName", $scope.tempCountryName);
-
         console.log("catalog", catItem);
         console.log("instanceDetails.country", instanceDetails);
-
         $http.get('/dash/item/details/'+ catItem.itemId)
             .success(function (catDetailsResponse) {
                 console.log("catalog single response ",catDetailsResponse);
-                
-                
                 $scope.CatagoryDetails = catDetailsResponse[0];
                 Object.assign($scope.editedItem, $scope.CatagoryDetails)
-
                 $scope.itemsColname( $scope.CatagoryDetails);
-
                 console.log("catalog single response ", $scope.CatagoryDetails);
             })
-
-
         $http.get("/dash/shopify/creds/fetch")
             .success(function (response) {
                 console.log("Shopify credentials Fetched")
                 if(response.length){
-
                     if(response[0].shopify_api_key && response[0].shopify_password && response[0].shopify_host && (userRole == 'admin' || !userRole)){
                         $scope.DisplayShopifyButton = true;
                     }else{
                         $scope.DisplayShopifyButton = false;
                     }
-
                 }
             })
             .error(function (error){
                 console.log(error)
             })
-
-
         jQuery.noConflict();
         $('.refresh').css("display", "inline");
-
         $http.get("/dash/items")
             .success(function (response) {
                 masterItems = response ;
@@ -162,11 +131,6 @@ angular.module('ebs.controller')
             else
                 $window.location.href = '/404';
         });
-
-
-
-
-
         $scope.renderInstanceDetails = function (response) {
             console.log("Instance Details for Items  -->");
             console.log(response);
@@ -184,31 +148,22 @@ angular.module('ebs.controller')
                     }
                 }
             }
-
             $scope.otherTaxDefalt = response.other
             $scope.taxObj = response.taxObj ? response.taxObj : [];
-
             if($scope.taxObj){
-
                 if($scope.taxObj.setupType == 'india'){
                     $scope.taxSetups.indiaSetup = 'india';
-
                 }else if($scope.taxObj.setupType == 'other'){
                     $scope.taxSetups.otherSetup = 'other';
                 }
             }
-
-
             for(var i=0; i< $scope.tax.length;i++){
                 if($scope.tax[i].default)
                     defaultTaxObj = $scope.tax[i];
             }
-
             if(response.addItems != undefined)
                 $scope.addItems = response.addItems;
             else $scope.addItems = false;
-
-
             if(response.dealerClass){
                 $scope.dealerClasses = response.dealerClass ;
                 function onlyUnique(value, index, self) {
@@ -224,17 +179,12 @@ angular.module('ebs.controller')
             if(response.masterPriceList){
                 $scope.masterPriceList = response.masterPriceList;
             }
-
         };
-
         $scope.notEmptyOrNull = function(item){
             return !(item._id === null || item._id.trim().length === 0)
         };
-
         $http.get("/dash/instanceDetails")
             .success($scope.renderInstanceDetails);
-
-
         $http.get("/dash/nav")
             .success(function(response){
                 $scope.nav = response;
@@ -248,7 +198,6 @@ angular.module('ebs.controller')
             else
                 $window.location.href = '/404';
         });
-
         $http.get("/dash/user/role/access")
             .success(function(res) {
                 if (res.role) {
@@ -263,7 +212,6 @@ angular.module('ebs.controller')
             else
                 $window.location.href = '/404';
         });
-
         $scope.getImageUrl = function(obj){
             if(obj){
                 if(obj.cloudinaryURL){
@@ -282,19 +230,14 @@ angular.module('ebs.controller')
                 }
             }
         };
-
-
         $scope.getAllCategories = function(param,type){
-
             $http.post("/dash/items/filter/"+type, {viewBy : 0})
                 .success(function(category){
                     $scope.itemFilterCategories = category ;
                     $scope.itemCategories = category;
-
                     $scope.itemCategories = $scope.itemCategories.filter(function( obj ) {
                         return obj._id !== 'DEFAULT';
                     })
-
                     // $scope.itemCategories.map(function (item) {
                     //
                     //     if($scope.itemSelectAll.category){
@@ -304,22 +247,16 @@ angular.module('ebs.controller')
                     // }
                     //     return item;
                     // })
-
                 })
         };
-
-
         $scope.getAllSubCategories = function(param,type){
             $http.post("/dash/items/filter/"+type, {viewBy : 0})
                 .success(function(subCategory){
-
                     $scope.itemSubCategories = subCategory;
                     $scope.itemFilterSubCategories = subCategory;
-
                     $scope.itemSubCategories = $scope.itemSubCategories.filter(function( obj ) {
                         return obj._id !== 'DEFAULT';
                     })
-
                     // $scope.itemSubCategories.map(function (item) {
                     //
                     //     if($scope.itemSelectAll.category){
@@ -331,22 +268,16 @@ angular.module('ebs.controller')
                     //     }
                     //     return item;
                     // })
-
                 })
         };
-
-
         $scope.getAllSubSubCategories = function(param,type){
             $http.post("/dash/items/filter/"+type, {viewBy : 0})
                 .success(function(subSubCategory){
                     $scope.itemSubSubCategories = subSubCategory;
-
                     $scope.itemFilterSubSubCategories = subSubCategory;
-
                     $scope.itemSubSubCategories = $scope.itemSubSubCategories.filter(function( obj ) {
                         return obj._id !== 'DEFAULT';
                     });
-
                     if($scope.itemSubSubCategories.length ==1){
                         if($scope.itemSubSubCategories[0]._id == null){
                             $scope.itemSubSubCategories = [];
@@ -373,7 +304,6 @@ angular.module('ebs.controller')
                     $window.location.href = '/404';
             });
         };
-
         $scope.getAllTags = function(param,type){
             $http.post("/dash/items/filter/"+type, {viewBy : 0})
                 .success(function(tags){
@@ -381,11 +311,9 @@ angular.module('ebs.controller')
                     $scope.allTags=[];
                     $scope.tagsFilter=[]
                     var uniqueArray=[];
-
                     for(var i=0;i<tags.length;i++) {
                         for(var j=0; j<tags[i]._id.length;j++){
                             tempTagsArray.push(tags[i]._id[j]);
-
                         }
                     }
                     if(tempTagsArray.length){
@@ -404,16 +332,9 @@ angular.module('ebs.controller')
                             for(var l=0;l<uniqueArray.length;l++){
                                 $scope.allTags.push({tagname:uniqueArray[l],isselected:false});
                                 $scope.tagsFilter=$scope.allTags;
-
-
-
                             }
-
                         }
                     }
-
-
-
                 }).error(function(error, status){
                 console.log(error, status);
                 if(status >= 400 && status < 404)
@@ -430,38 +351,24 @@ angular.module('ebs.controller')
                 if (index === i && $scope.allTags[i].isselected==false) {
                     $scope.allTags[i].isselected = true;
                     // $scope.tagsNewArray.push($scope.allTags[i].tagname);
-
                 }
                 else if(index === i && $scope.allTags[i].isselected==true){
                     $scope.allTags[i].isselected = false;
                     // $scope.tagsNewArray.splice(index,1);
-
-
                 }
                 if($scope.allTags[i].isselected==true){
                     tempArray.push($scope.allTags[i].tagname);
-
                 }
-
             }
             itemSearchObj.viewLength = 0;
             itemSearchObj.viewBy = initialViewBy;
-
             $scope.viewLength = 0;
             $scope.newViewBy = viewBy.items;
-
             $scope.items = [];
-
-
-
-
             itemSearchObj.filterByTags = tempArray;
             // itemSearchObj.searchBy = itemSearchBy;
-
-
             $http.post("/dash/items",itemSearchObj)
                 .success(function(response) {
-
                     $scope.renderItems(response);
                 }).error(function(error, status){
                 console.log(error, status);
@@ -472,7 +379,6 @@ angular.module('ebs.controller')
                 else
                     $window.location.href = '/404';
             });
-
             $http.post('/dash/item/count', itemSearchObj)
                 .success(function(response){
                     $scope.transactionCount(response,2);
@@ -486,12 +392,7 @@ angular.module('ebs.controller')
                     $window.location.href = '/404';
             });
             $scope.showItemFilter = true;
-
-
-
-
         }
-
         $scope.filterBasedOnCategory=function(category,type){
             var tempCategory = [];
             for(var i=0;i< masterItems.length;i++){
@@ -500,7 +401,6 @@ angular.module('ebs.controller')
                 }
             }
             if(type == 'add'){
-
                 $scope.addItemSubCategory = tempCategory.unique('subCategory');
                 $scope.newItem.subCategory = 'DEFAULT' ;
                 if($scope.itemsDisp){
@@ -513,18 +413,15 @@ angular.module('ebs.controller')
                     $scope.itemsDisp.itemSubCategories = tempCategory.unique('subCategory') ;
                 }
             }
-
             setTimeout(function(){
                 $scope.$digest();
             }, 1000);
         };
-
         $scope.fetchOnlySubCatDropDown = function(data,type, subtype){
             // console.log(data)
             // console.log(type)
             var tempObj = {};
             tempObj = data;
-
             $http.post("/dash/items/category/sub", tempObj).success(function(res) {
                 // console.log("res of subcat======",res);
                 // $scope.subCategoriesDropDown = [];
@@ -533,7 +430,6 @@ angular.module('ebs.controller')
                     $scope.subCategoriesDropDown = $scope.subCategoriesDropDown.filter(function( obj ) {
                         return obj._id !== 'DEFAULT';
                     });
-
                     $scope.newItem.subCategory = "DEFAULT" ;
                     $scope.newItem.subSubCategory = "DEFAULT";
                     $scope.subSubCategoriesDropDown = [];
@@ -551,7 +447,6 @@ angular.module('ebs.controller')
                     }
                     // $scope.editedItem.subSubCategory = "" ;
                 }
-
                 // console.log($scope.editedItem.subCategory)
             }).error(function(error, status){
                 console.log(error, status);
@@ -563,12 +458,9 @@ angular.module('ebs.controller')
                     $window.location.href = '/404';
             });
         };
-
-
         $scope.fetchOnlySubSubCatDropDown = function(data,type, subType){
             var tempObj = {};
             tempObj = data;
-
             $http.post("/dash/items/category/sub/sub", tempObj).success(function(res) {
                 // $scope.subCategoriesDropDown = [];
                 if(type == 'add'){
@@ -599,28 +491,19 @@ angular.module('ebs.controller')
                     $window.location.href = '/404';
             });
         };
-
         $scope.refreshTransactions = function(tab){
             $scope.displayDealerRefresh = false;
-
             jQuery.noConflict();
             $('.refresh').css("display", "inline");
-
-
             $scope.clearFilter(2);
-
-
             setTimeout(function(){
                 $('.refresh').css("display", "none");
             }, 2000);
         };
-
         $scope.renderItems = function (items_list,type) {
-
             if($scope.coID == 'GLGR'){
                 $scope.items = [];
             }
-
             //   console.log(items_list);
             var obj = [];
             // if($scope.itemSelectAll.category)
@@ -637,7 +520,6 @@ angular.module('ebs.controller')
             //     $scope.itemSelectAll.subSubCategory = true;
             // else
             //     $scope.itemSelectAll.subSubCategory = false;
-
             if($scope.user.role == 'Dealer'){
                 console.log("dealer")
                 $http.get("/dash/store/details/"+$scope.user.sellerphone)
@@ -657,9 +539,7 @@ angular.module('ebs.controller')
                                             $scope.newViewBy = pricelist.length;
                                             dealerNewViewBy = pricelist.length;
                                         }
-
                                         $scope.customPrices = pricelist;
-
                                         if (pricelist.length > 0) {
                                             console.log("Populating Custom price list")
                                             for (var i = 0; i < pricelist.length; i++) {
@@ -689,12 +569,10 @@ angular.module('ebs.controller')
                                                     items_list[i].trackInventory = items_list[i].trackInventory;
                                                 }
                                                 $scope.items.push(items_list[i])
-
                                             }
                                             $scope.itemsInModal = $scope.items;
                                             console.log("scope of items",$scope.items)
                                             // $scope.renderItemsMrp();
-
                                         }
                                     })
                         }
@@ -710,7 +588,6 @@ angular.module('ebs.controller')
                                 }else{
                                     items_list[i].trackInventory = items_list[i].trackInventory;
                                 }
-
                                 $scope.items.push(items_list[i])
                             }
                             $scope.itemsInModal = $scope.items;
@@ -734,7 +611,6 @@ angular.module('ebs.controller')
                     else
                         $window.location.href = '/404';
                 });
-
             }
             else{
                 for(var i=0; i< items_list.length; i++){
@@ -774,17 +650,12 @@ angular.module('ebs.controller')
                                 }
                             }
                         }
-
                     }
                     if( !items_list[i].trackInventory && items_list[i].trackInventory !== false){
                         items_list[i].trackInventory = true;
                     }else{
                         items_list[i].trackInventory = items_list[i].trackInventory;
                     }
-
-
-
-
                     $scope.items.push(items_list[i])
                     if(items_list[i].subCategory){
                         obj.push(items_list[i]);
@@ -792,14 +663,10 @@ angular.module('ebs.controller')
                 }
                 $scope.itemsInModal=$scope.items;
                 // $scope.renderItemsMrp();
-
             }
-
             setTimeout(function(){
                 $('.refresh').css("display", "none");
             }, 2000);
-
-
             // if(type=='Manufacturer'){
             //     $scope.itemSubCategories = [];
             //     $scope.itemSubCategories = obj.unique('subCategory');
@@ -840,22 +707,14 @@ angular.module('ebs.controller')
             //         return item;
             //     })
             // }
-
             // $scope.itemSelectAll.subCategory = true;
-
         };
-
-
-
         $http.post("/dash/items", itemSearchObj)
             .success($scope.renderItems);
-
         $scope.refreshItems = function () {
             $http.post("/dash/items", itemSearchObj)
                 .success($scope.renderItems);
         }
-
-
         $scope.clearFilter = function(tab){
             itemSearchObj.viewLength = 0;
             itemSearchObj.viewBy = initialViewBy;
@@ -865,9 +724,7 @@ angular.module('ebs.controller')
             itemSearchObj.searchBySubSubCategory = [];
             itemSearchObj.searchCategory = [];
             itemSearchObj.filterByTags = [];
-
             $scope.itemFilterBy('');
-
             $scope.viewLength = 0;
             $scope.newViewBy = viewBy.items;
             $scope.itemSearch.filter = '';
@@ -875,14 +732,10 @@ angular.module('ebs.controller')
             $scope.priceListView.filter='master' ;
             $scope.priceListfilter = false ;
             $scope.items = [];
-
             $scope.showItemFilter = false;
-
             $scope.itemSelectAll.category = true;
-
             $http.post("/dash/items",itemSearchObj)
                 .success(function(response) {
-
                     $scope.renderItems(response);
                 }).error(function(error, status){
                 console.log(error, status);
@@ -893,7 +746,6 @@ angular.module('ebs.controller')
                 else
                     $window.location.href = '/404';
             });
-
             $http.post('/dash/item/count', itemSearchObj)
                 .success(function(response){
                     $scope.transactionCount(response,2)
@@ -906,22 +758,17 @@ angular.module('ebs.controller')
                 else
                     $window.location.href = '/404';
             });
-
             $scope.getAllCategories(true,'category');
             $scope.getAllSubCategories(true,'subCategory');
             $scope.getAllSubSubCategories(true,'subSubCategory');
             $scope.getAllTags(true,'tags');
-
         };
-
         var a = 0;
         $scope.navPage = function(tab, direction){
             var viewLength = $scope.viewLength;
             var viewBy = $scope.newViewBy;
-
             if(direction){
                 console.log("NEXT");
-
                 if(viewLength + viewBy >= $scope.items.length){
                     if(viewLength + viewBy < $scope.items_count){
                         $scope.displayloader = true
@@ -931,15 +778,12 @@ angular.module('ebs.controller')
                         itemSearchObj.viewBy = initialViewBy;
                         itemSearchObj.searchFor = $scope.itemSearch.filter;
                         itemSearchObj.searchBy = itemSearchBy;
-
                         jQuery.noConflict();
                         $('.refresh').css("display", "inline");
                         $http.post("/dash/items",itemSearchObj)
                             .success(function(response){
                                 console.log(response,"response")
-
                                 $scope.renderItems(response,'Manufacturer');
-
                                 if(viewLength + viewBy > $scope.items_count){
                                     a = viewLength + viewBy - $scope.items_count;
                                     viewBy -= a;
@@ -947,7 +791,6 @@ angular.module('ebs.controller')
                                 }
                                 $scope.viewLength = viewLength;
                                 $scope.displayloader = false;
-
                             })
                             .error(function(error, status){
                                 console.log(error, status);
@@ -958,7 +801,6 @@ angular.module('ebs.controller')
                                 else
                                     $window.location.href = '/404';
                             });
-
                         jQuery.noConflict();
                         $('.refresh').css("display", "none");
                     }
@@ -974,7 +816,6 @@ angular.module('ebs.controller')
                 else{
                     //console.log("Minus viewby")
                     viewLength += viewBy;
-
                     if(viewLength + viewBy > $scope.items_count){
                         a = viewLength + viewBy - $scope.items_count;
                         viewBy -= a;
@@ -993,15 +834,12 @@ angular.module('ebs.controller')
                         viewBy += a;
                         a = 0;
                     }
-
                     viewLength -= viewBy;
-
                     $scope.viewLength = viewLength;
                     $scope.newViewBy = viewBy;
                 }
             }
         }
-
         $scope.transactionCount = function(response, tab){
             // console.log(response);
             if(response){
@@ -1028,24 +866,19 @@ angular.module('ebs.controller')
                 $scope.viewLength = -1;
             }
         };
-
         $scope.clearFilterButton = function (search,tab) {
             if (search === '') {
-
                 itemSearchObj.viewLength = 0;
                 itemSearchObj.viewBy = initialViewBy;
                 itemSearchObj.searchFor = '';
                 itemSearchObj.searchBy = [];
-
                 $scope.viewLength = 0;
                 $scope.newViewBy = viewBy.items;
                 $scope.itemSearch.filter = '';
                 $scope.itemSearch.priceList = '';
                 $scope.items = [];
-
                 $http.post('/dash/items', itemSearchObj)
                     .success($scope.renderItems);
-
                 $http.post('/dash/item/count', itemSearchObj)
                     .success(function (response) {
                         $scope.transactionCount(response, 2)
@@ -1058,8 +891,6 @@ angular.module('ebs.controller')
                     else
                         $window.location.href = '/404';
                 });
-
-
                 // $scope.itemCategories = masterItems.unique('Manufacturer')
                 // $scope.itemSubCategories = masterItems.unique('subCategory')
                 //
@@ -1071,16 +902,12 @@ angular.module('ebs.controller')
                 //     item.selected_subCategory = true;
                 //     return item;
                 // })
-
                 $scope.showItemFilter = false;
-
                 $scope.getAllCategories(true,'category');
                 $scope.getAllSubCategories(true,'subCategory');
                 $scope.getAllTags(true,'tags');
-
             }
         };
-
         $scope.itemSearchFilter = function(){
             if($scope.itemSearch.filter == ''){
                 bootbox.alert({
@@ -1091,20 +918,15 @@ angular.module('ebs.controller')
             else{
                 itemSearchObj.viewLength = 0;
                 itemSearchObj.viewBy = initialViewBy;
-
                 $scope.viewLength = 0;
                 $scope.newViewBy = viewBy.items;
-
                 $scope.items = [];
-
                 if($scope.itemSearch.filter){
                     itemSearchObj.searchFor = $scope.itemSearch.filter;
                     itemSearchObj.searchBy = itemSearchBy;
                 }
-
                 $http.post('/dash/items', itemSearchObj)
                     .success($scope.renderItems);
-
                 $http.post('/dash/item/count', itemSearchObj)
                     .success(function(response){
                         $scope.transactionCount(response,2)
@@ -1120,7 +942,6 @@ angular.module('ebs.controller')
                 $scope.showItemFilter = true;
             }
         };
-
         $http.post("/dash/item/count", itemSearchObj)
             .success(function(response){
                 $scope.transactionCount(response,2)
@@ -1133,7 +954,6 @@ angular.module('ebs.controller')
             else
                 $window.location.href = '/404';
         });
-
         $scope.trial31 = function (i) {
             // alert()
             $scope.items = $scope.items18;
@@ -1145,7 +965,6 @@ angular.module('ebs.controller')
             $scope.maxSize = 5;
             $scope.case3Length = $scope.items.length;
         };
-
         $scope.changeItemButton = function (flag) {
             if (flag == 0) {
                 // console.log('back') ;
@@ -1157,8 +976,6 @@ angular.module('ebs.controller')
                         $scope.allTags[i].isselected=false;
                     }
                 }
-
-
                 // $scope.newItem = {};
                 // $scope.newItem.Area = '';
                 // $scope.newItem.City  = '';
@@ -1201,14 +1018,9 @@ angular.module('ebs.controller')
                 removeImageindex= [];
                 num = 0 ;
                 $scope.getAllTags(true,'tags');
-
-
                 // $scope.formItem.addItem.$setPristine();
                 // $scope.formItem.addItem.$setUntouched();
-
                 // console.log($scope.subCategoriesDropDown)
-
-
                 // $http.post("/dash/items",itemSearchObj)
                 //     .success(function(response) {
                 //
@@ -1219,14 +1031,11 @@ angular.module('ebs.controller')
                 //     .success(function(response){
                 //         $scope.transactionCount(response,2)
                 //     });
-
                 $scope.getAllCategories(true,'category');
                 // $scope.getAllSubCategories(true,'subCategory');
                 // $scope.getAllSubSubCategories(true,'subSubCategory');
-
                 $http.get("/dash/get/recentID/item")
                     .success(function (res) {
-
                         if(res.itemCode){
                             $scope.itemcodetemp = 1001;
                             $scope.itemcodetemp = res.itemCode + 1;
@@ -1243,20 +1052,14 @@ angular.module('ebs.controller')
                     else
                         $window.location.href = '/404';
                 });
-
-
             }
             else if (flag == 2){
                 // console.log('edit')
                 // $scope.itemListPage = false ;
                 // $scope.itemEditPage = true ;
                 // $scope.getAllTags(true,'tags');
-
-
-
             }
         };
-
         // $scope.addNewItem = function(){
         //     $scope.disableFlag = true;
         //     if($scope.newItem.Product == '' || $scope.newItem.MRP == 0 ||$scope.newItem.MRP == undefined || $scope.newItem.itemCode == '' || $scope.newItem.itemCode == undefined){
@@ -1434,20 +1237,16 @@ angular.module('ebs.controller')
         //         });
         //     }
         // };
-
         $scope.appendImageToItem = function(type, operation, index){
             /*
              Function to upload or remove an image of customer or customer document while adding it from portal
-
              type = Customer image or customer document image
              operation = add or remove an image
              index = used while removing an image from array
-
              */
             console.log(index);
             if(operation == 'add'){
                 var image = (document.getElementById('addNewItemImage').files);
-
                 if(image[0]){
                     var reader = new FileReader();
                     reader.onloadend = function() {
@@ -1456,20 +1255,16 @@ angular.module('ebs.controller')
                         tempObj.date = new Date()+"";
                         tempObj.username = ($scope.user.username ? $scope.user.username : "Portal Admin");
                         tempObj.userphone = ($scope.user.sellerphone ? $scope.user.sellerphone : null);
-
                         tempObj.name = image[0].name ? image[0].name : "Item Image";
                         $scope.newItemImageArray.itemImage.push(tempObj);
-
                         jQuery.noConflict();
                         $('#addNewItemImage').val(null);
-
                         $scope.$apply();
                     }
                     reader.readAsDataURL(image[0]);
                 }
                 else{
                     Settings.failurePopup('Error','Please select an image');
-
                     // bootbox.alert({
                     //     title : "ERROR",
                     //     message : "Please select an image",
@@ -1478,7 +1273,6 @@ angular.module('ebs.controller')
                 }
             }
             else if(operation == 'del'){
-
                 for(var i=0; i< $scope.newItemImageArray.itemImage.length ; i++)
                 {
                     if(i == index){
@@ -1486,15 +1280,9 @@ angular.module('ebs.controller')
                     }
                 }
             }
-
-
         };
-
-
         $scope.itemsColname = function (j) {
-
             console.log("itemscolName",j);
-
             if(j) {
                 $scope.itemsDisp = j;
                 $scope.itemsDisp.Manufacturer = j.Manufacturer || 'DEFAULT';
@@ -1521,9 +1309,7 @@ angular.module('ebs.controller')
                 $scope.editedItem.hsn_code = j.hsn_code || '';
                 // $scope.editedItem.Tag='';
                 // $scope.editedItem.tags=[];
-
                 // $scope.getAllTags(false,'tags');
-
                 if( !j.trackInventory && j.trackInventory != false){
                     $scope.itemsDisp.trackInventory = true;
                     $scope.editedItem.trackInventory = true;
@@ -1531,30 +1317,15 @@ angular.module('ebs.controller')
                     $scope.editedItem.trackInventory = j.trackInventory;
                     $scope.itemsDisp.trackInventory = j.trackInventory;
                 }
-
                 if(j.tags){
-
-
-
-
                     for(var k=0;k<j.tags.length;k++){
                         for(var l=0;l<$scope.allTags.length;l++){
                             if(j.tags[k]==$scope.allTags[l].tagname){
                                 $scope.allTags[l].isselected=true;
-
                             }
-
                         }
-
-
-
                     }
-
                 }
-
-
-
-
                 if(j.gst){
                     $scope.editedItem.gst = j.gst ;
                 }else{
@@ -1563,23 +1334,17 @@ angular.module('ebs.controller')
                     $scope.editedItem.gst.sgst = j.SGST;
                     $scope.editedItem.gst.igst = j.IGST;
                 }
-
                 if($scope.priceListName.length){
                     for(var i=0 ; i < $scope.priceListName.length ; i++){
                         if($scope.priceListName[i].toUpperCase() != "MASTER")
                             $scope.editedItem[$scope.priceListName[i]] = (j[$scope.priceListName[i]] || j[$scope.priceListName[i]] === 0)?j[$scope.priceListName[i]]:null ;
                     }
                 }
-
                 $scope.fetchOnlySubCatDropDown(j,'add');
                 $scope.fetchOnlySubSubCatDropDown(j,'add');
-
                 // $scope.filterBasedOnCategory(j.Manufacturer,'add') ;
-
                 jQuery.noConflict();
                 $('#uploadItemImage').val(null);
-
-
                 if(j.cloudinaryURL){
                     if(typeof(j.cloudinaryURL) == 'string'){
                         var url = j.cloudinaryURL;
@@ -1593,16 +1358,13 @@ angular.module('ebs.controller')
                         $scope.editedItem.cloudinaryURL = j.cloudinaryURL ;
                         $scope.editedItem.presentImages = angular.copy($scope.editedItem.cloudinaryURL)
                     }
-
                 }else{
                     $scope.itemsDisp.cloudinaryURL = [];
                     $scope.editedItem.cloudinaryURL = [];
                 }
             }
         };
-
     //    $scope.itemsColname(Settings.getItemData())
-
         //Edit Item Details
         $scope.editItemDetails = function(item){
             if(item.Product != '' && item.Product != undefined){
@@ -1617,8 +1379,6 @@ angular.module('ebs.controller')
                             }
                         }
                     }
-
-
                     if(itemEditimage.length){
                         var checkFlag = false ;
                         for(var i = 0; i < itemEditimage.length; i++){
@@ -1653,22 +1413,11 @@ angular.module('ebs.controller')
                             if($scope.allTags[j].isselected==true){
                                 tagsArray.push($scope.allTags[j].tagname);
                             }
-
                         }
-
                     }
-
-
-
-
                     item.tags=tagsArray;
-
-
-
-
                     jQuery.noConflict();
                     $('.refresh').css("display", "inline");
-
                     $http.put('/dash/items/edit', item)
                         .success(function(res){
                             if(res){
@@ -1679,7 +1428,6 @@ angular.module('ebs.controller')
                                 var i = masterItems.findIndex(function(element) {
                                     return element.itemCode == item.itemCode;
                                 });
-
                                 if(i >= 0){
                                     masterItems[i].Product = item.Product ;
                                     masterItems[i].Manufacturer = item.Manufacturer ;
@@ -1693,10 +1441,8 @@ angular.module('ebs.controller')
                                     masterItems[i].DealerPrice = item.DealerPrice ;
                                     masterItems[i].hsn_code = item.hsn_code;
                                 }
-
                                 $http.post("/dash/items", itemSearchObj)
                                     .success($scope.renderItems);
-
                                 $http.post("/dash/item/count", itemSearchObj)
                                     .success(function(response){
                                         Settings.successPopup("Success",item.Product+' details updated');
@@ -1712,21 +1458,17 @@ angular.module('ebs.controller')
                                     else
                                         $window.location.href = '/404';
                                 });
-
                                 setTimeout(function(){
                                     $('.refresh').css("display", "none");
                                 }, 1000);
-
                                 if(item.newImages.length){
                                     for(var i = 0;i<item.newImages.length;i++){
                                         item.cloudinaryURL.push(item.newImages[i])
                                     }
                                 }
-
                                 $scope.refreshTransactions();
                                 $scope.itemsDisp = item ;
                                 $scope.edit.item = false ;
-
                             }
                             else{
                                 setTimeout(function(){
@@ -1745,7 +1487,6 @@ angular.module('ebs.controller')
                 Settings.failurePopup("Error",'Enter a valid Product Name');
             }
         };
-
         //Add Tags to an Item on edit
         $scope.AddTag=function(item,index,flag){
             console.log("herohero")
@@ -1754,27 +1495,19 @@ angular.module('ebs.controller')
                     if (index === i && $scope.allTags[i].isselected==false) {
                         $scope.allTags[i].isselected = true;
                         // $scope.tagsNewArray.push($scope.allTags[i].tagname);
-
                     }
                     else if(index === i && $scope.allTags[i].isselected==true){
                         $scope.allTags[i].isselected = false;
                         // $scope.tagsNewArray.splice(index,1);
-
-
                     }
                 }
             }
             else{
                 $scope.allTags.push({tagname:item,isselected:true});
-
             }
             $scope.editedItem.Tag='';
-
             // $scope.tagsArray.push(item);
-
         }
-
-
         //Add tags while adding new item
         $scope.AddNewTag=function(newitem,index,flag){
             if(!flag){
@@ -1782,50 +1515,34 @@ angular.module('ebs.controller')
                     if (index === i && $scope.allTags[i].isselected==false) {
                         $scope.allTags[i].isselected = true;
                         // $scope.tagsNewArray.push($scope.allTags[i].tagname);
-
                     }
                     else if(index === i && $scope.allTags[i].isselected==true){
                         $scope.allTags[i].isselected = false;
                         // $scope.tagsNewArray.splice(index,1);
-
-
                     }
                 }
             }
             else{
                 $scope.allTags.push({tagname:newitem,isselected:true});
-
-
             }
-
-
             $scope.newItem.Tag='';
-
-
             console.log($scope.tagsNewArray)
         }
-
         /*.......
          Delete item from items collection
         ..... */
         $scope.deleteItem = function(item){
-
             Settings.confirmPopup("CONFIRM","Are you sure ? ",function (res) {
                 if(res){
-
                     jQuery.noConflict();
                     $('.refresh').css("display", "inline");
-
                     $http.delete("/dash/item/delete/"+item.itemCode)
                         .success(function(res){
-
                             if(res){
                                 $scope.clearFilter(2);
-
                                 setTimeout(function(){
                                     $('.refresh').css("display", "none");
                                 }, 500);
-
                                 Settings.successPopup('Success','Successfully deleted '+item.Product+'.');
                                 $scope.itemEditPage = false ;
                             }
@@ -1847,12 +1564,10 @@ angular.module('ebs.controller')
                 }
             })
         };
-
         $scope.getAllCategories(false,'category');
         $scope.getAllSubCategories(false,'subCategory');
         $scope.getAllSubSubCategories(false,'subSubCategory');
         $scope.getAllTags(false,'tags');
-
         $scope.itemFilterBy = function(type){
             if(type == 'category'){
                 $scope.filterBy = type;
@@ -1882,13 +1597,11 @@ angular.module('ebs.controller')
                 $scope.subSubCategoryFilterFlag = false ;
             }
         }
-
         $scope.filterItemsByCriteria = function(type, all ,filter){
             //Parameter 'all' is used when user clicks SELECT ALL
             jQuery.noConflict();
             $('.refresh').css("display", "inline");
             $scope.items = [];
-
             if (type == 'category') {
                 $scope.itemFilterCategories.map(function (item) {
                     if(item.category_selected && filter){
@@ -1898,7 +1611,6 @@ angular.module('ebs.controller')
                     }
                     return item;
                 })
-
                 $scope.itemFilterSubCategories = [];
                 $scope.itemFilterSubSubCategories = [];
                 $http.post("/dash/items/filter/" + 'subCategory', itemSearchObj)
@@ -1910,7 +1622,6 @@ angular.module('ebs.controller')
                             // });
                             // console.log(subCategory)
                             $scope.itemFilterSubCategories = subCategory;
-
                         }
                     }).error(function(error, status){
                     console.log(error, status);
@@ -1924,14 +1635,11 @@ angular.module('ebs.controller')
                 $scope.item.subCategory_selected = '';
                 $scope.item.subSubCategory_selected = '';
                 $scope.subCategoryFilterFlag = true ;
-
                 var newArray = [];
                 itemSearchObj.searchCategory = [];
-
                 if(filter){
                     itemSearchObj.searchCategory.push(filter);
                 }
-
                 if(itemSearchObj.searchCategory && itemSearchObj.searchCategory.length){
                     for (var i = 0; i < itemSearchObj.searchCategory.length; i++) {
                         //... Push all other cities...
@@ -1943,14 +1651,11 @@ angular.module('ebs.controller')
                     itemSearchObj.searchCategory = newArray;
                     itemSearchObj.searchBySubCategory = [];
                     itemSearchObj.searchBySubSubCategory = [];
-
                 }else if(!$scope.itemFilterCategories.length){
                     $scope.itemFilterSubCategories = [];
                 }
-
                 $http.post("/dash/items", itemSearchObj)
                     .success(function (response) {
-
                         $scope.renderItems(response, 'Manufacturer');
                         $http.post("/dash/item/count", itemSearchObj)
                             .success(function (res) {
@@ -1964,13 +1669,8 @@ angular.module('ebs.controller')
                             else
                                 $window.location.href = '/404';
                         });
-
-
                     });
-
-
             } else if(type == 'subCategory'){
-
                 $scope.itemFilterSubCategories.map(function (item) {
                     if(item.subCategory_selected){
                         item.subCategory_selected = filter;
@@ -1978,11 +1678,9 @@ angular.module('ebs.controller')
                         item.subCategory_selected = null;
                     }
                 })
-
                 $scope.itemFilterSubSubCategories = [];
                 $http.post("/dash/items/filter/" + 'subSubCategory', itemSearchObj)
                     .success(function (subSubCategory) {
-
                         if(subSubCategory.length){
                             $scope.itemFilterSubSubCategories = [];
                             for(var i=0; i< subSubCategory.length ; i++){
@@ -2002,22 +1700,17 @@ angular.module('ebs.controller')
                 });
                 $scope.item.subSubCategory_selected = '';
                 $scope.subSubCategoryFilterFlag = true ;
-
                 if(filter){
                     var newArray = [];
-
                     if(filter)
                         newArray.push(filter);
                     itemSearchObj.searchBySubCategory = [];
                     itemSearchObj.searchBySubCategory = newArray; //... Replace the array..
                     itemSearchObj.searchBySubSubCategory = [];
-
                     if (itemSearchObj.searchBySubCategory.length) {
                         $http.post("/dash/items", itemSearchObj)
                             .success(function (response) {
-
                                 $scope.renderItems(response, 'subCategory');
-
                                 $http.post("/dash/item/count", itemSearchObj)
                                     .success(function (res) {
                                         $scope.transactionCount(res, 2);
@@ -2033,9 +1726,7 @@ angular.module('ebs.controller')
                             });
                     }
                 }
-
             } else if(type == 'subSubCategory'){
-
                 $scope.itemFilterSubSubCategories.map(function (item) {
                     if(item.subSubCategory_selected || item.subSubCategory_selected == ''){
                         item.subSubCategory_selected = filter;
@@ -2043,22 +1734,15 @@ angular.module('ebs.controller')
                         item.subSubCategory_selected = null;
                     }
                 })
-
                 if(filter){
                     var newArray = [];
-
                     if(filter)
                         newArray.push(filter);
-
                     itemSearchObj.searchBySubSubCategory = newArray; //... Replace the array..
-
-
                     if (itemSearchObj.searchBySubSubCategory.length) {
                         $http.post("/dash/items", itemSearchObj)
                             .success(function (response) {
-
                                 $scope.renderItems(response, 'subSubCategory');
-
                                 $http.post("/dash/item/count", itemSearchObj)
                                     .success(function (res) {
                                         $scope.transactionCount(res, 2);
@@ -2083,20 +1767,15 @@ angular.module('ebs.controller')
                     }
                 }
             }else if(type == 'clear'){
-
                 $scope.item.category_selected = '';
                 $scope.item.subCategory_selected = '';
                 $scope.item.subSubCategory_selected = '';
-
                 if(all){
                     // itemSearchObj = {};
-
                     $scope.getAllCategories(false,'category');
                     $scope.getAllSubCategories(false,'subCategory');
                     $scope.getAllSubSubCategories(false,'subSubCategory');
                     $scope.getAllTags(false,'tags');
-
-
                     itemSearchObj.searchCategory = [];
                     itemSearchObj.searchSubCategory = [];
                     itemSearchObj.searchSubSubCategory = [];
@@ -2106,7 +1785,6 @@ angular.module('ebs.controller')
                     itemSearchObj.filterByTags=[]
                     $http.post("/dash/items", itemSearchObj)
                         .success(function (response) {
-
                             $scope.renderItems(response, 'Manufacturer');
                             $http.post("/dash/item/count", itemSearchObj)
                                 .success(function (res) {
@@ -2135,12 +1813,10 @@ angular.module('ebs.controller')
                 $scope.itemFilterSubCategories = [];
                 $scope.itemFilterSubSubCategories = [];
             }
-
             setTimeout(function(){
                 $('.refresh').css("display", "none");
             }, 1000);
         }
-
         $scope.addCategoryTempFunc = function(newItem,category,type) {
             if(category != '' && category != undefined && category != null){
                 var temp = [];
@@ -2148,7 +1824,6 @@ angular.module('ebs.controller')
                 for (var i = 0; i < uniquieCategory.length ;i++){
                     temp.push(uniquieCategory[i]._id)
                 }
-
                 if(temp.indexOf(category) == -1){
                     $scope.itemCategories.push(newItem);
                     $scope.newItem.Manufacturer = category;
@@ -2156,25 +1831,17 @@ angular.module('ebs.controller')
                     $scope.newItem.subCategory = 'DEFAULT' ;
                     $scope.editedItem.subCategory = 'DEFAULT';
                     temp.push(category)
-
                     $scope.fetchOnlySubCatDropDown(newItem,'edit');
-
                     $scope.filterBasedOnCategory(category,'edit');
-
-
                     if(type == 'item'){
                         console.log("zrozro")
                         $scope.newItem.newManufacturer = '';
-
                         document.getElementById("newCategory").style.display = "none";
                         //hide the modal
-
                         $('body').removeClass('modal-open');
                         //modal-open class is added on body so it has to be removed
-
                         $('.modal-backdrop').remove();
                         //need to remove div with modal-backdrop class
-
                         // $(function () {
                         //     $('#newCategory').modal('toggle');
                         //     $('#newCategory').on('hidden.bs.modal', function (e) {
@@ -2195,18 +1862,13 @@ angular.module('ebs.controller')
                         $scope.newItem.newManufacturer = '';
                         document.getElementById("editCategory").style.display = "none";
                         //hide the modal
-
                         $('body').removeClass('modal-open');
                         //modal-open class is added on body so it has to be removed
-
                         $('.modal-backdrop').remove();
                         //need to remove div with modal-backdrop class
-
                         // $(function () {
                         //     $('#editCategory').modal('toggle');
                         // });
-
-
                     }
                 }
                 else {
@@ -2217,7 +1879,6 @@ angular.module('ebs.controller')
                 Settings.failurePopup("Error",'Enter a Category');
             }
         };
-
         $scope.addSubCategoryTempFunc = function(newItem,subCategory,type) {
             if(subCategory != '' && subCategory != undefined && subCategory != null) {
                 if($scope.newItem.Manufacturer != 'DEFAULT' && $scope.editedItem.Manufacturer != 'DEFAULT'){
@@ -2235,16 +1896,13 @@ angular.module('ebs.controller')
                         // if($scope.itemsDisp){
                         //     $scope.subCategoriesDropDown.push(newItem);
                         // }
-
                         if(type == 'item'){
                             console.log("hell1ooo")
                             $scope.newItem.newSubCategory = '';
                             document.getElementById("newSubCategory").style.display = "none";
                             //hide the modal
-
                             $('body').removeClass('modal-open');
                             //modal-open class is added on body so it has to be removed
-
                             $('.modal-backdrop').remove();
                             //need to remove div with modal-backdrop class
                             // $(function () {
@@ -2262,19 +1920,14 @@ angular.module('ebs.controller')
                             $scope.newItem.newSubCategory = '';
                             document.getElementById("editSubCategory").style.display = "none";
                             //hide the modal
-
                             $('body').removeClass('modal-open');
                             //modal-open class is added on body so it has to be removed
-
                             $('.modal-backdrop').remove();
                             //need to remove div with modal-backdrop class
-
                             // $(function () {
                             //     $('#editSubCategory').modal('toggle');
                             // });
-
                         }
-
                     }
                     else{
                         Settings.failurePopup("Error",'SubCategory already exist');
@@ -2306,7 +1959,6 @@ angular.module('ebs.controller')
                 // });
             }
         };
-
         $scope.addSubSubCategoryTempFunc = function(newItem,subSubCategory,type) {
             if(subSubCategory != '' && subSubCategory != undefined && subSubCategory != null) {
                 if(($scope.newItem.Manufacturer != 'DEFAULT' && $scope.newItem.subCategory != 'DEFAULT') || ($scope.editedItem.Manufacturer != 'DEFAULT' && $scope.editedItem.subCategory != 'DEFAULT')){
@@ -2322,18 +1974,14 @@ angular.module('ebs.controller')
                         // if($scope.itemsDisp){
                         //     $scope.subSubCategoriesDropDown.push(newItem);
                         // }
-
                         if(type == 'item'){
                             $scope.newItem.newSubSubCategory = '';
                             document.getElementById("newSubSubCategory").style.display = "none";
                             //hide the modal
-
                             $('body').removeClass('modal-open');
                             //modal-open class is added on body so it has to be removed
-
                             $('.modal-backdrop').remove();
                             //need to remove div with modal-backdrop class
-
                             // $(function () {
                             //     $('#newSubSubCategory').modal('toggle');
                             // });
@@ -2349,17 +1997,13 @@ angular.module('ebs.controller')
                             $scope.newItem.newSubSubCategory = '';
                             document.getElementById("editSubSubCategory").style.display = "none";
                             //hide the modal
-
                             $('body').removeClass('modal-open');
                             //modal-open class is added on body so it has to be removed
-
                             $('.modal-backdrop').remove();
                             //need to remove div with modal-backdrop class
-
                             // $(function () {
                             //     $('#editSubSubCategory').modal('toggle');
                             // });
-
                         }
                     }
                     else{
@@ -2392,14 +2036,12 @@ angular.module('ebs.controller')
                 // });
             }
         };
-
         $scope.clearFormvalues = function(){
             console.log("hello")
             $scope.newItem.newManufacturer = '';
             $scope.newItem.newSubCategory = '';
             $scope.newItem.newSubSubCategory = '';
         };
-
         $scope.editItem = function (){
             newimage = [];
             removeImageindex= [];
@@ -2434,20 +2076,10 @@ angular.module('ebs.controller')
             //             $window.location.href = '/404';
             //     });
             // }
-
-
-
-
-
-
-
         };
-
         setTimeout(function(){
             $('.refresh').css("display", "none");
         }, 2000);
-
-
         //.... Enable/disable to superjini items...
         $scope.superJiniItems = function (enable,itemCode) {
             console.log("Super Jini items enable function");
@@ -2473,7 +2105,6 @@ angular.module('ebs.controller')
                                 else if(enable == false){
                                     console.log("SuperJini Store enabled --> " + response.length);
                                     Settings.info_toast('Success','Successfully removed item from SuperJini Store!')
-
                                 }
                             }
                         }).error(function(error, status){
@@ -2491,9 +2122,7 @@ angular.module('ebs.controller')
                     Settings.warning_toast('Error','Please add the store to SuperJini!');
                 }
             })
-
         }
-
         $scope.priceListFilter = function(data){
             if(data == 'master'){
                 $scope.priceListView.filter = data ;
@@ -2506,11 +2135,9 @@ angular.module('ebs.controller')
                 $scope.showItemFilter = true ;
             }
         }
-
         $scope.priceListClear =  function(){
             $scope.price.name = '';
         }
-
         $scope.addPricelistName = function(name){
             if(name){
                 if(name.toUpperCase() != 'MASTER'){
@@ -2532,12 +2159,10 @@ angular.module('ebs.controller')
                     else{
                         postlist();
                     }
-
                     function postlist(){
                         var temp = $scope.masterPriceList ;
                         temp[temp.length] = name ;
                         console.log(temp)
-
                         $http.put("/dash/settings/pricelist/name", temp)
                             .success(function(res){
                                 // console.log(res);
@@ -2552,11 +2177,9 @@ angular.module('ebs.controller')
                 else{
                     Settings.failurePopup('ERROR',"Pricelist cannot be named as MASTER!");
                 }
-
             } else{
                 Settings.failurePopup('ERROR',"Please enter text!");
             }
-
         }
         $scope.getShopifyCatalog = function(){
             jQuery.noConflict();
@@ -2572,10 +2195,8 @@ angular.module('ebs.controller')
                         Settings.success_toast('SUCCESS', "Shopify Products will be synced in the background!")
                     }
                     else{
-
                         Settings.failurePopup('ERROR', "Products importing failed, Check the credentials and try again");
                     }
-
                     // $http.post("/dash/items", itemSearchObj)
                     //     .success($scope.renderItems);
                 })
@@ -2584,19 +2205,13 @@ angular.module('ebs.controller')
                         $('.refresh').css("display", "none");
                     }, 2000);
                     console.log(error)
-
                     Settings.failurePopup('ERROR',"Products importing failed");
                 })
         }
-
-
         $scope.removeItemImage = function(index){
             $scope.editedItem.presentImages.splice(index,1);
         }
-
         $scope.backToBrowserHistory = function() {
             $window.history.back();
         };
-
-
     });

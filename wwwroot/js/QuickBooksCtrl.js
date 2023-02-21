@@ -1,35 +1,27 @@
 /**
  * Created by shreyasgombi on 05/07/22.
  */
-
  angular.module('ebs.controller')
-
  .controller("QuickBooksCtrl", function($scope, $routeParams, $http, $window, Settings){
      console.log("Hello From QuickBooks Settings Controller .... !!!!");
-
      $scope.quickbooks = {};
      $scope.quickbooksArray = [];
-
      //... Save the timer in a variable... We can clear it at a later stage...
      let qbInterval = '';
-
      const startLoader = () => {
         jQuery.noConflict();
         $('.refresh').css("display", "inline");
     }
-
     const stopLoader = () => {
         jQuery.noConflict();
         $('.refresh').css("display", "none");
     }
-
      const requestToken = () => {
         $http.get("/dash/quickbooks/request/token")
             .then(function (response) {
                 if (response.data) {
                     stopLoader();
                     Settings.success_toast('Success', "QuickBooks Connected");
-
                     console.log("---- QB Session Available ----");
                 } else {
                     console.log("---- QB : Connect Again ----");
@@ -53,7 +45,6 @@
                     $window.location.href = '/404';
             });
      }
-
      const startTimer = () => {
         let startTime = new Date().getTime();
         qbInterval = setInterval(function(){
@@ -64,8 +55,6 @@
             $scope.checkStatus();
         }, 5000);
      };
-
-
     const refreshQuickBooksSettings = () => {
         $http.get("/dash/quickbooks/settings")
             .then(response => {
@@ -93,7 +82,6 @@
     $scope.launchPopup = function(path) {
         startTimer();
         startLoader();
-
         $http.get("/dash/quickbooks/creds/fetch")
             .then((credentials) => {
                 //..... Validate if token already exists....
@@ -103,10 +91,8 @@
                 else{
                     $scope.showLoader = false;
                     console.log("QuickBooks : Launch Pop-up ----");
-
                     var parameters = "location=1,width=800,height=650";
                     parameters += ",left=" + (screen.width - 800) / 2 + ",top=" + (screen.height - 650) / 2;
-
                     // Launch Popup
                     window.open(path, 'connectPopup', parameters);
                 }
@@ -128,7 +114,6 @@
                     $window.location.href = '/404';
             });
     }
-
      $scope.checkStatus = () => {
         $http.get("/dash/quickbooks/flag/check")
             .then((response) => {
@@ -158,7 +143,6 @@
                     $window.location.href = '/404';
             });
     }
-
      $scope.quickBooksInit = () => {
         $http.get("/dash/quickbooks/creds/fetch")
             .then((creds) => {
@@ -166,7 +150,6 @@
                 if(creds && creds.data && creds.data.quickbooks_token){
                     $scope.quickbooks.token = creds.data.quickbooks_token;
                     //.... Verify if the token is still active....
-                    
                     $http.get("/dash/quickbooks/token/check")
                         .then((result) => {
                             if(result && result.data && result.data.QueryResponse){
@@ -174,14 +157,11 @@
                                     $scope.qbConnectTime = creds.data.lastConnectedTime;
                                     $scope.quickbooks.last_connected = creds.data.lastConnectedTime;
                                 }
-
                                 if(creds.data.qbCompany){
                                     $scope.quickbooks.company = creds.data.qbCompany;
                                 }
-
                                 Settings.success_toast('Success', "QuickBooks is Connected & Active");
                             }
-
                             $http.get("/dash/quickbooks/request/token")
                                 .then((response) => {
                                     console.log(response.data);
@@ -244,7 +224,6 @@
             });
     }
     $scope.quickBooksInit();
-
     $scope.deleteQuickbooksTokens = () => {
         Settings.confirmPopup("Confirm","Are you sure you want to disconnect?", (result) => {
             if (result) {
@@ -267,11 +246,8 @@
             }
         })
     };
-
     $scope.schedularUpdate = (boolean, index) => {
-
         $scope.quickbooksArray[index]['sync'] = boolean;
-
         $http.put("/dash/quickbooks/update/properties", $scope.quickbooksArray)
             .then(response => {
                 if(response.data){

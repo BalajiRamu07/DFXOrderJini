@@ -22,7 +22,6 @@
     transform: none;
     -webkit-transform: translate3d(0, 0px, 0);
     transform: translate3d(0, 0px, 0); } }
-
 .dropdownAnimation, .nav .nav-item.dropdown .navbar-dropdown,
 .navbar-nav .nav-item.dropdown .navbar-dropdown {
   -webkit-animation-name: dropdownAnimation;
@@ -31,23 +30,19 @@
   animation-duration: 0.25s;
   -webkit-animation-fill-mode: both;
   animation-fill-mode: both; }
-
 @-webkit-keyframes fadeOut {
   from {
     opacity: 1; }
   to {
     opacity: 0; } }
-
 @keyframes fadeOut {
   from {
     opacity: 1; }
   to {
     opacity: 0; } }
-
 .fadeOut {
   -webkit-animation-name: fadeOut;
   animation-name: fadeOut; }
-
 .infinite-spin {
   -webkit-animation-name: spin;
   animation-name: spin;
@@ -57,7 +52,6 @@
   animation-iteration-count: infinite;
   -webkit-animation-timing-function: linear;
   animation-timing-function: linear; }
-
 @-webkit-keyframes spin {
   from {
     -webkit-transform: rotate(0deg);
@@ -65,7 +59,6 @@
   to {
     -webkit-transform: rotate(360deg);
     transform: rotate(360deg); } }
-
 @keyframes spin {
   from {
     -webkit-transform: rotate(0deg);
@@ -73,7 +66,6 @@
   to {
     -webkit-transform: rotate(360deg);
     transform: rotate(360deg); } }
-
 @-webkit-keyframes fadeInUp {
   from {
     opacity: 0;
@@ -83,7 +75,6 @@
     opacity: 1;
     -webkit-transform: none;
     transform: none; } }
-
 @keyframes fadeInUp {
   from {
     opacity: 0;
@@ -93,11 +84,9 @@
     opacity: 1;
     -webkit-transform: none;
     transform: none; } }
-
 .fadeInUp {
   -webkit-animation-name: fadeInUp;
   animation-name: fadeInUp; }
-
 @-webkit-keyframes menufadeInLeft {
   from {
     opacity: 0;
@@ -107,7 +96,6 @@
     opacity: 1;
     -webkit-transform: translate3d(0, 0, 0);
     transform: translate3d(0, 0, 0); } }
-
 @keyframes menufadeInLeft {
   from {
     opacity: 0;
@@ -117,11 +105,9 @@
     opacity: 1;
     -webkit-transform: translate3d(0, 0, 0);
     transform: translate3d(0, 0, 0); } }
-
 .menufadeInLeft {
   -webkit-animation-name: menufadeInLeft;
   animation-name: menufadeInLeft; }
-
 .nav .nav-item,
 .navbar-nav .nav-item {
   line-height: 1; }
@@ -252,7 +238,6 @@
     .nav .nav-item.dropdown .navbar-dropdown .dropdown-divider,
     .navbar-nav .nav-item.dropdown .navbar-dropdown .dropdown-divider {
       margin: 0; }
-
 /* Navbar */
 .navbar.default-layout {
   font-family: "roboto", sans-serif;
@@ -381,7 +366,6 @@
           .rtl .navbar.default-layout .navbar-menu-wrapper .navbar-nav.navbar-nav-right {
             margin-left: 0;
             margin-right: auto; } }
-
 @media (max-width: 991px) {
   .navbar.default-layout {
     -webkit-box-orient: horizontal;
@@ -399,7 +383,6 @@
     display: -ms-flexbox;
     display: flex;
     margin-top: 0.5rem; } }
-
 /* Sidebar */
 .sidebar {
   min-height: calc(100vh - 63px);
@@ -407,7 +390,7 @@
   background: linear-gradient(to top, #c9c2c2, #a63737);
   font-family: "roboto", sans-serif;
   padding: 0;
-  width: 270px;
+  width: 200px;
   z-index: 11;
   transition: width 0.25s ease, background 0.25s ease;
   -webkit-transition: width 0.25s ease, background 0.25s ease;
@@ -611,7 +594,6 @@
         color: #fff; }
       .sidebar > .nav:not(.sub-menu) > .nav-item:hover:not(.nav-profile):not(.hover-open) > .nav-link:not([aria-expanded="true"]) .menu-arrow:before {
         color: #bfccda; }
-
 /* style for off-canvas menu*/
 @media screen and (max-width: 991px) {
   .sidebar-offcanvas {
@@ -625,7 +607,6 @@
     transition: all 0.25s ease-out; }
     .sidebar-offcanvas.active {
       right: 0; } }
-
 /* Footer */
 .footer {
   background: #dbdbdb;
@@ -643,10 +624,8 @@
     .footer {
       margin-left: 0;
       width: 100%; } }
-
 .navbar.fixed-top + .page-body-wrapper {
   padding-top: 63px; }
-
 @media (min-width: 992px) {
   .sidebar-mini .navbar .navbar-brand-wrapper {
     width: 185px; }
@@ -723,7 +702,6 @@
       .sidebar-mini:not(.sidebar-icon-only) .sidebar .nav .nav-item .collapsing .sub-menu .nav-item .nav-link:before,
       .sidebar-mini:not(.sidebar-icon-only) .sidebar .nav .nav-item .collapse.show .sub-menu .nav-item .nav-link:before {
         display: none; } }
-
 @media (min-width: 992px) {
   .sidebar-icon-only .navbar .navbar-brand-wrapper {
     width: 70px; }
@@ -827,7 +805,6 @@
           text-align: right; }
   .sidebar-icon-only .main-panel {
     width: calc(100% - 70px); } }
-
 @media (min-width: 992px) {
   .sidebar-hidden .sidebar {
     transition: width 0.25s ease;
@@ -837,7 +814,6 @@
     width: 0; }
   .sidebar-hidden .main-panel {
     width: 100%; } }
-
 @media (min-width: 992px) {
   .sidebar-absolute .page-body-wrapper {
     position: relative; }
@@ -853,7 +829,6 @@
     width: 100%;
     -webkit-transition: none;
     transition: none; } }
-
 @media (min-width: 992px) {
   .sidebar-fixed .sidebar {
     position: fixed;
@@ -868,7 +843,6 @@
     margin-left: 270px; }
   .sidebar-fixed.sidebar-icon-only .main-panel {
     margin-left: 70px; } }
-
 @media (min-width: 992px) {
   .boxed-layout {
     background: #f3f4f5; }
@@ -882,7 +856,6 @@
       max-width: 1200px;
       margin-left: auto;
       margin-right: auto; } }
-
 .rtl {
   direction: rtl;
   text-align: right; }
@@ -916,7 +889,6 @@
   .rtl ul.chats::-webkit-scrollbar-thumb {
     background-color: darkgrey;
     outline: 1px solid slategrey; }
-
 .card {
   -webkit-box-shadow: 0 0 0 0 rgba(90, 113, 208, 0.11), 0 4px 16px 0 rgba(167, 175, 183, 0.33);
   box-shadow: 0 0 0 0 rgba(90, 113, 208, 0.11), 0 4px 16px 0 rgba(167, 175, 183, 0.33);
@@ -926,7 +898,6 @@
     color: #212529; }
   .card .card-header {
     background: #fff; }
-
 .page-body-wrapper {
   min-height: calc(100vh - 63px);
   display: -webkit-box;
@@ -941,7 +912,6 @@
   .page-body-wrapper.full-page-wrapper {
     width: 100%;
     min-height: 100vh; }
-
 .main-panel {
   -webkit-transition: width 0.25s ease, margin 0.25s ease;
   transition: width 0.25s ease, margin 0.25s ease;
@@ -958,7 +928,6 @@
     .main-panel {
       margin-left: 0;
       width: 100%; } }
-
 .content-wrapper {
   background: #F3F3F3;
   padding: 1.5rem 1.7rem;
@@ -966,10 +935,8 @@
   -webkit-box-flex: 1;
   -ms-flex-positive: 1;
   flex-grow: 1; }
-
 .container-scroller {
   overflow: hidden; }
-
 .page-header {
   display: -webkit-box;
   display: -ms-flexbox;
@@ -981,14 +948,12 @@
   @media (max-width: 992px) {
     .page-header {
       display: inline-block; } }
-
 .page-title {
   margin-top: 0;
   margin-bottom: 2px; }
   @media (max-width: 992px) {
     .page-title {
       margin-botttom: 15px; } }
-
 .quick-links {
   list-style: none;
   margin-bottom: 0;
@@ -1017,10 +982,8 @@
       border-right: none; }
       .quick-links li:last-child a {
         padding-right: 0; }
-
 .page-title-header {
   margin-bottom: 20px; }
-
 .page-header-toolbar {
   display: -webkit-box;
   display: -ms-flexbox;
@@ -1043,7 +1006,6 @@
     .page-header-toolbar .btn-group.dropdown-toggle:after,
     .page-header-toolbar .btn.dropdown-toggle:after {
       color: #2196f3; }
-
 .filter-wrapper {
   display: -webkit-box;
   display: -ms-flexbox;
@@ -1052,7 +1014,6 @@
   @media (max-width: 992px) {
     .filter-wrapper {
       margin-left: 0; } }
-
 .sort-wrapper {
   display: -webkit-box;
   display: -ms-flexbox;
@@ -1061,7 +1022,6 @@
   @media (max-width: 992px) {
     .sort-wrapper {
       width: 100%; } }
-
 .advanced-link {
   display: -webkit-box;
   display: -ms-flexbox;
@@ -1072,7 +1032,6 @@
   margin-left: 30px;
   margin-right: 20px;
   white-space: nowrap; }
-
 #sales-statistics-legend .chartjs-legend {
   margin-top: 20px;
   margin-right: 20px; }
@@ -1082,17 +1041,13 @@
       width: 20px;
       height: 3px;
       border-radius: 0px; }
-
 #net-profit-legend .chartjs-legend li {
   font-weight: 500;
   color: #212529; }
-
 .average-price-card .card {
   background: #030aac; }
-
 .average-price-card h3 {
   margin-bottom: 0; }
-
 .average-price-card .icon-holder {
   border-radius: 5px;
   border: 1px solid #4e55c5;
@@ -1112,17 +1067,14 @@
   font-size: 20px; }
   .average-price-card .icon-holder i {
     line-height: 1; }
-
 #dashboard-vmap {
   height: 161px;
   width: 100%; }
   #dashboard-vmap .jvectormap-zoomin,
   #dashboard-vmap .jvectormap-zoomout {
     display: none; }
-
 .modal .modal-dialog {
   margin-top: calc(63px + 30px); }
-
 /* Full Calendar */
 #calendar .fc-header-toolbar {
   background: #dde4eb;
@@ -1192,7 +1144,6 @@
     font-size: 1.125rem;
     font-weight: 600;
     text-transform: uppercase; }
-
 #calendar .fc-view-container .fc-view {
   background: #F3F3F3; }
   #calendar .fc-view-container .fc-view table thead.fc-head {
@@ -1234,5 +1185,4 @@
           font-weight: 600;
           color: #252C46;
           padding: 0 7px; }
-
 /*# sourceMappingURL=style.css.map */

@@ -1,33 +1,25 @@
 /**
  * Created by shreyasgombi on 15/09/22.
  */
-
  angular.module('ebs.controller')
-
-
  .controller("NewEnquiryCtrl",function ($scope, $http, $window, Settings, $routeParams, $location) {
      console.log("Hello From New Enquiry Controller .... !!!!");
-
      //.... Capture new ticket details...
     $scope.enquiry = {
         "call" : "Hot",
         "address" : {}
     };
-
     //.... Customer Code from the params if available...
     //... This will prefix the customer details...
     const customer_code =  $routeParams.code;
-
     const startLoader = () => {
         jQuery.noConflict();
         $('.refresh').css("display", "inline");
     }
-
     const stopLoader = () => {
         jQuery.noConflict();
         $('.refresh').css("display", "none");
     }
-
     $scope.lead_sources = [
         {
             "type" : "Walk-In",
@@ -66,7 +58,6 @@
             "name" : "Radio"
         }
     ]
-
     $scope.lead_types = [
         {
             "type" : "Existing Customer",
@@ -85,7 +76,6 @@
             "name" : "Fake Call"
         }
     ];
-
     $scope.occupations = [
         {
             "type" : "Central Govt",
@@ -108,7 +98,6 @@
             "name" : "Self Employed"
         }
     ];
-
     $scope.annual_incomes = [
         {
             "range" : "< 3,00,000"
@@ -129,7 +118,6 @@
             "range" : "> 20,00,000"
         }
     ];
-
     $scope.budget_range = [
         {
             "range" : "< 30 Lakhs"
@@ -147,7 +135,6 @@
             "range" : "> 91 Lakhs"
         }
     ]
-
     $scope.age_range = [
         {
             "range" : "20-30"
@@ -165,7 +152,6 @@
             "range" : "> 60"
         },
     ]
-
     const getCustomerDetails = code => {
         $http.get("/dash/store/" + code)
         .then(store_details => {
@@ -174,7 +160,6 @@
                 $scope.enquiry.existing_customer = true;
                 $scope.enquiry.customer_code = store_details.data[0].Dealercode[0];
                 $scope.enquiry.customer_name = store_details.data[0].DealerName[0];
-
                 if(store_details.data[0].email && store_details.data[0].email[0]) $scope.enquiry.customer_email = store_details.data[0].email[0];
                 if(store_details.data[0].Phone && store_details.data[0].Phone[0]) $scope.enquiry.customer_phone = store_details.data[0].Phone[0];
                 if(store_details.data[0].Addess && store_details.data[0].Addess[0]) $scope.enquiry.address.address = store_details.data[0].Addess[0];
@@ -186,7 +171,6 @@
             }
         });
     }
-
     const loadEnquiryTypes = () => {
         startLoader();
         $http.get("/dash/settings/enquiry/lead/types")
@@ -205,7 +189,6 @@
                     $window.location.href = '/404';
             });
     }
-
     const loadLeadSources = () => {
         $http.get("/dash/settings/enquiry/lead/sources")
             .then(sources => {
@@ -216,7 +199,6 @@
     }
     loadEnquiryTypes();
     loadLeadSources();
-
     const validateEnquiryData = data => {
         if(!data.subject){
             Settings.fail_toast("Error", "Enquiry subject not available");
@@ -235,7 +217,6 @@
             return false;
         }else return true;
     };
-
     $scope.submitEnquiry = () => {
         console.log($scope.enquiry);
         if(validateEnquiryData($scope.enquiry)){
@@ -263,7 +244,6 @@
             })
         }
     }
-
     //.... Function to get all users...
     const getUsers = () => {
         $http.post("/dash/users/list", {})
@@ -282,10 +262,7 @@
                     $window.location.href = '/404';
             });
     }
-
     getUsers();
-
     if(customer_code && customer_code != 'undefined') getCustomerDetails(customer_code);
-
     $scope.goBack = () => $window.history.back();
  })

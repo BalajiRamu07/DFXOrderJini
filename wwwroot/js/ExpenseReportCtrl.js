@@ -1,46 +1,35 @@
 angular.module('ebs.controller')
-
     .controller("ExpenseReportCtrl", function ($scope, $http, Settings, $window) {
         console.log("Hello From Expense Report Controller .... !!!!");
-
         //.... User details....
         $scope.user = {};
-
         //..... Pagination.....
         $scope.viewLength = 0;
         $scope.newViewBy = 10;
-
         //.... Other View Values....
         $scope.newViewBy1 = {};
         $scope.newViewBy1.view = 10;
-
         $scope.reportTabName = "Expense";
-
         $scope.reportTabId = 7;
         $scope.tab = 8;
         $scope.showReports = true;
         $scope.expense_count = 0;
-
         let localViewBy = $scope.newViewBy;
         let initialViewBy = 60;
         let instanceDetails =  Settings.getInstance();
         const api_timeout = 600000;
-
         $scope.expensereport = [];
         $scope.expreport = {};
         $scope.roleSalesrep = [];
-
         //.... Reports Filter.....
         $scope.expenseReportSearch = {};
         $scope.expenseReportSearch.filter = '';
-
         /*$scope.expense_types = [
             {"category" : "Food"},
             {"category" : "Fare"},
             {"category" : "Mileage"},
             {"category" : "Daily allowance	"},
             {"category" : "Toll"}];*/
-
         //.... Set Filter Dates to last 7 days....
         $scope.expreport.startDate = new Date();
         $scope.expreport.startDate.setDate($scope.expreport.startDate.getDate() - 7);
@@ -48,38 +37,31 @@ angular.module('ebs.controller')
         $scope.expreport.endDate = new Date();
         $scope.expreport.endDate.setHours(23, 59, 59, 59);
         //$scope.expreport.category = {};
-
         let expenseSearchObj = {};
         let expenseSearchBy= ['sellername'];
-
         $scope.expenseDuration = Settings.daysDifference($scope.expreport.startDate , $scope.expreport.endDate);
         $scope.parseData = (viewLength, newViewBy) => parseInt(viewLength) + parseInt(newViewBy);
         $scope.DateTimeFormat = (date, when) => Settings.dateFilterFormat(date, when);
-
         $scope.openFilterClear = () => {
             $scope.expreport.startDate = '';
             $scope.expreport.endDate = '';
             $scope.expreport.category = '';
             $scope.expreport.branchCode = '';
             $scope.expreport.seller = '';
-
             $scope.expreport.startDate = new Date();
             $scope.expreport.startDate.setDate($scope.expreport.startDate.getDate() - 7);
             $scope.expreport.startDate.setHours(0, 0, 0, 0);
             $scope.expreport.endDate = new Date();
             $scope.expreport.endDate.setHours(23, 59, 59, 59);
         }
-
         const startLoader = () => {
             jQuery.noConflict();
             $('.refresh').css("display", "inline");
         }
-
         const stopLoader = () => {
             jQuery.noConflict();
             $('.refresh').css("display", "none");
         }
-
         const loadReport = (expenseSearchObj) => {
             $http.post("/dash/reports/expense", expenseSearchObj)
                 .success(function(response){
@@ -97,7 +79,6 @@ angular.module('ebs.controller')
                         $window.location.href = '/404';
                 });
         }
-
         const loadReportCount = (expenseSearchObj) =>{
             $http.post("/dash/reports/expense/count", expenseSearchObj)
                 .success($scope.reportsTransactionCount)
@@ -111,39 +92,29 @@ angular.module('ebs.controller')
                         $window.location.href = '/404';
                 });
         };
-        
         $scope.clearFilter = () => {
-
             //.... Expense Report
             expenseSearchObj.viewLength = 0;
             expenseSearchObj.viewBy = initialViewBy;
-
             $scope.newViewBy1.view = 10;
             $scope.viewLength = 0;
             $scope.newViewBy = localViewBy;
-
             if($scope.expenseReportSearch.filter){
                 expenseSearchObj.searchFor = $scope.expenseReportSearch.filter;
                 expenseSearchObj.searchBy = expenseSearchBy;
             }
-
             $scope.expensereport = [];
-
             $scope.showExpenseFilter = true;
-
             if($scope.expenseReportSearch.filter == '')
                 $scope.showExpenseFilter = false;
-                
             $scope.changeReportView();
         }
-
         $scope.navPage = (direction, newViewBy) => {
             $scope.newViewBy = parseInt(newViewBy);
             var viewLength = $scope.viewLength;
             var viewBy = $scope.newViewBy;
             if(direction){
                 // console.log("NEXT");
-
                 if(viewLength + viewBy >= $scope.expensereport.length){
                     if(viewLength + viewBy < $scope.expense_count){
                         viewLength += viewBy;
@@ -159,7 +130,6 @@ angular.module('ebs.controller')
                         expenseSearchObj.searchFor = $scope.expenseReportSearch.filter;
                         expenseSearchObj.searchBy = expenseSearchBy;
                         expenseSearchObj.filter = $scope.expenseFilterStatus;
-
                         startLoader();
                         loadReport(expenseSearchObj);
                         if(viewLength + viewBy > $scope.expense_count){
@@ -181,7 +151,6 @@ angular.module('ebs.controller')
                 else{
                     // console.log("Minus viewby")
                     viewLength += viewBy;
-
                     if(viewLength + viewBy > $scope.expense_count){
                         a = viewLength + viewBy - $scope.expense_count;
                         viewBy -= a;
@@ -193,7 +162,6 @@ angular.module('ebs.controller')
                             expenseSearchObj.searchFor = $scope.expenseReportSearch.filter;
                             expenseSearchObj.searchBy = expenseSearchBy;
                             expenseSearchObj.filter = $scope.expenseFilterStatus;
-
                             startLoader();
                             loadReport(expenseSearchObj);
                         }
@@ -206,7 +174,6 @@ angular.module('ebs.controller')
                             expenseSearchObj.searchFor = $scope.expenseReportSearch.filter;
                             expenseSearchObj.searchBy = expenseSearchBy;
                             expenseSearchObj.filter = $scope.expenseFilterStatus;
-
                             startLoader();
                             loadReport(expenseSearchObj);
                         }
@@ -225,36 +192,27 @@ angular.module('ebs.controller')
                         viewBy += a;
                         a = 0;
                     }
-
                     viewLength -= viewBy;
-
                     $scope.viewLength = viewLength;
                     $scope.newViewBy = viewBy;
                 }
             }
         }
-
         $scope.changeReportView = (newViewBy) => {
             console.log("Calling Change Report View ---->", newViewBy);
-
             $scope.newViewBy1.view = newViewBy || 10;
             $scope.newViewBy = parseInt(newViewBy || 10);
-
             if($scope.expreport.startDate && $scope.expreport.endDate){
                 if (($scope.expreport.startDate - $scope.expreport.endDate) > 0){
                     Settings.alertPopup("WARNING", "Start date cannot be greater than End date.");
-
                     $scope.expreport.startDate = new Date();
                     $scope.expreport.startDate.setDate($scope.expreport.startDate.getDate() - 7);
                     $scope.expreport.startDate.setHours(0, 0, 0, 0);
                     $scope.expreport.endDate = new Date();
                     $scope.expreport.endDate.setHours(23, 59, 59, 59);
-
                 }
             }
-
             expenseSearchObj.viewLength = 0;
-
             if($scope.newViewBy > initialViewBy ){
                 expenseSearchObj.viewBy = $scope.newViewBy;
             }else{
@@ -265,45 +223,37 @@ angular.module('ebs.controller')
             expenseSearchObj.searchFor = $scope.expenseReportSearch.filter;
             expenseSearchObj.searchBy = expenseSearchBy;
             expenseSearchObj.filter = $scope.expenseFilterStatus;
-            
             if(expenseSearchObj.eDate){
                 expenseSearchObj.eDate = new Date(expenseSearchObj.eDate);
             }
             if(expenseSearchObj.sDate){
                 expenseSearchObj.sDate = new Date(expenseSearchObj.sDate);
             }
-
             expenseSearchObj.branch = '';
             expenseSearchObj.expenseType = '';
             expenseSearchObj.seller = '';
             if($scope.expreport.branchCode)
                 expenseSearchObj.branch = $scope.expreport.branchCode ;
-
             if($scope.expreport.category)
                 expenseSearchObj.expenseType = $scope.expreport.category;
             if($scope.expreport.seller)
                 expenseSearchObj.seller = $scope.expreport.seller ;
-
             $scope.viewLength = 0;
             $scope.expensereport = [];
             if(!newViewBy){
                 $scope.newViewBy = parseInt(localViewBy);
             }
-
             //previously this condition was used
             //var expenses = [];
             //if(response[i].type == 'expense')
             //    expenses.push(response[i])
-
             startLoader();
             loadReport(expenseSearchObj);
             loadReportCount(expenseSearchObj);
         }
-
         $scope.changeReportDuration = (startDate, endDate, reset) => {
             if (endDate)
                 endDate.setHours(23, 59, 59, 59);
-
             if (!reset) {
                 if (startDate || endDate) {
                     if (startDate && endDate) {
@@ -321,7 +271,6 @@ angular.module('ebs.controller')
                 }
             }
         }
-
        $scope.reportsTransactionCount = (response) => {
             if(response){
                 if(response > $scope.newViewBy){
@@ -330,7 +279,6 @@ angular.module('ebs.controller')
                 else if(response <= $scope.newViewBy){
                     $scope.expense_count = response;
                     $scope.newViewBy = response;
-
                 }
                 else{
                     $scope.expensereport = [];
@@ -346,7 +294,6 @@ angular.module('ebs.controller')
                 $scope.viewLength = -1;
             }
        }
-
         $scope.showImage = function(order, type){
             if(type == 'expense'){
                 $scope.showExpenseImage = order.cloudinaryURL;
@@ -383,11 +330,9 @@ angular.module('ebs.controller')
                 }
             })
         }*/
-
         $scope.updateExpenseStatus =  function(order){
             var payment = {};
             payment = order;
-
             $http.put("/dash/expense/update/status", payment)
                 .success(function(res){
                     if(res){
@@ -407,7 +352,6 @@ angular.module('ebs.controller')
                         $window.location.href = '/404';
                 });
         }
-
         const loadCategory = () => {
             $http.get("/dash/reports/expense/category")
                 .success(function(response){
@@ -424,7 +368,6 @@ angular.module('ebs.controller')
                         $window.location.href = '/404';
                 });
         }
-
         const refreshSellerNames = () => {
             if(typeof $scope.roleSalesrep == 'object'){
                 console.log('Rolesalesperson', $scope.roleSalesrep);
@@ -434,7 +377,6 @@ angular.module('ebs.controller')
                 }
             }
         }
-
         const loadSalespersons = () => {
             $http.get("/dash/role/sellers/Salesperson")
                 .then(list => {
@@ -444,7 +386,6 @@ angular.module('ebs.controller')
                     if(salesperson[i] && salesperson[i].userStatus == 'Active')
                     $scope.roleSalesrep.push({sellername : salesperson[i].sellername, sellerphone : salesperson[i].sellerphone});
                 }
-
                 refreshSellerNames();
             }
         })
@@ -458,7 +399,6 @@ angular.module('ebs.controller')
                 $window.location.href = '/404';
         });
         };
-
         $scope.downloadCSV = function(){
             startLoader();
             var request_object = {
@@ -467,7 +407,6 @@ angular.module('ebs.controller')
                 timeout : api_timeout,
                 data : expenseSearchObj
             };
-
             $http(request_object)
                 .then((count) => {
                 console.log(count);
@@ -486,18 +425,15 @@ angular.module('ebs.controller')
                 stopLoader();
             }
             else {
-
                 console.log(expenseSearchObj);
                 expenseSearchObj.viewLength = 0;
                 expenseSearchObj.viewBy = count.data;
-
                 var request_object = {
                     url : "/dash/reports/expense",  // Storejini payments report needs to be written
                     method : "POST",
                     timeout : api_timeout,
                     data : expenseSearchObj
                 };
-
                 $http(request_object)
                     .then((result) => {
                     let _data = result.data;
@@ -508,11 +444,8 @@ angular.module('ebs.controller')
                     if(_data[i].type == 'expense'){
                         output += i + 1;
                         output += ',';
-
                         output += _data[i].expenseID;
                         output += ',';
-
-
                         if (_data[i].date_added){
                             function formatdate(date) {
                                 if (date == undefined || date == '')
@@ -526,19 +459,13 @@ angular.module('ebs.controller')
                                 var dateOut = dt + "-" + monthNames[d.getMonth()] + "-" + (d.getFullYear())
                                 return dateOut;
                             }
-
-
                             var dateformat = formatdate(_data[i].date_added);
                             output += dateformat;
                             output += ',';
                         }
-
-
-
                         if (_data[i].seller)
                             output += _data[i].seller;
                         output += ',';
-
                         try {
                             if (_data[i].sellername) {
                                 if ((_data[i].sellername).toString().indexOf(',') != -1) {
@@ -549,13 +476,9 @@ angular.module('ebs.controller')
                             output += _data[i].sellername;
                         } catch (e) {}
                         output += ',';
-
-
                         if (_data[i].category)
                             output += _data[i].category;
                         output += ',';
-
-
                         try {
                             if(_data[i].tripName){
                                 if ((_data[i].tripName).toString().indexOf(',') != -1) {
@@ -566,40 +489,30 @@ angular.module('ebs.controller')
                             }
                         } catch (e) {}
                         output += ',';
-
                         if (_data[i].billAmt)
                             output += _data[i].billAmt;
                         output += ',';
-
                         if (_data[i].status)
                             output += _data[i].status;
                         output += ',';
-
                         if (_data[i].cloudinaryURL)
                             output += _data[i].cloudinaryURL;
                         //output += ',';
-
                         output += '\n';
                     }
-
-
                 }
-
                 var blob = new Blob([output], {type : "text/csv;charset=UTF-8"});
                 console.log(blob);
                 window.URL = window.webkitURL || window.URL;
                 var url = window.URL.createObjectURL(blob);
-
                 var d = new Date();
                 var anchor = angular.element('<a/>');
-
                 anchor.attr({
                     href: url,
                     target: '_blank',
                     download: 'Mbj_' + instanceDetails.api_key + '_Expense_' +d.getDate()+'/'+(d.getMonth()+1)+'/'+d.getFullYear()+'.csv'
                     //download: 'Mbj_' + '_Expense_' +d.getDate()+'/'+(d.getMonth()+1)+'/'+d.getFullYear()+'.csv'
                 })[0].click();
-
                 stopLoader();
             })
             .catch((error, status) => {
@@ -623,9 +536,7 @@ angular.module('ebs.controller')
                 $window.location.href = '/404';
         });
         };
-
         loadCategory();
-
         $scope.changeReportView(localViewBy);
         loadSalespersons();
     })

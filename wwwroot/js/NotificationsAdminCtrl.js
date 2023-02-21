@@ -1,32 +1,23 @@
 /**
  * Created by shreyasgombi on 31/07/22.
  */
-
-
  angular.module('ebs.controller')
-
  .controller("NotificationsAdminCtrl", function($scope, $routeParams, $location, $http, $window, Settings){
      console.log("Hello From Admin Settings Notifications Controller .... !!!!");
-
      $scope.tab = 'sms';
-
      //.... Tabs ....
      if($routeParams.tab) $scope.tab = $routeParams.tab;
-
      $scope.text_local = {};
      $scope.email_setup = {};
      $scope.push_notification = {};
-
      const startLoader = () => {
         jQuery.noConflict();
         $('.refresh').css("display", "inline");
     };
-
     const stopLoader = () => {
         jQuery.noConflict();
         $('.refresh').css("display", "none");
     }
-
      const fetchTextLocalCredentials = () => {
         startLoader();
         $http.get("/dash/settings/sms/configuration")
@@ -52,7 +43,6 @@
                     $window.location.href = '/404';
             });
      }
-
      const fetchPushNotification = () => {
         startLoader();
         $http.get("/dash/settings/details/notification")
@@ -78,7 +68,6 @@
                     $window.location.href = '/404';
             });
      }
-
      const fetchEmailSetup = () => {
         startLoader();
             $http.get("/dash/settings/details/email_notification")
@@ -105,7 +94,6 @@
                         $window.location.href = '/404';
                 });
      }
-
      $scope.smsSetup = () => {
         if($scope.text_local.api_key && $scope.text_local.sender_id){
             $http.put("/dash/settings/update/sms/credentials", $scope.text_local)
@@ -121,7 +109,6 @@
             Settings.fail_toast("ERROR", "Enter API Key and Sender ID");
         }
     };
-
     $scope.dropSMS = () => {
         Settings.confirmPopup("CONFIRM", "Are you sure? This will switch to default Orderjini's SMS Configuration.", result => {
             if(result){
@@ -138,12 +125,9 @@
             }
         })
     }
-
-
     /*....
         Email Notifications Setup
     ...*/
-
     $scope.saveEmailConfig = () => {
         Settings.confirmPopup("Confirm", "Save Email Configuration?", result => {
             if (result) {
@@ -165,7 +149,6 @@
             }
         });
     }
-
     $scope.dropEmailConfig = () => {
         Settings.confirmPopup("Confirm", "Are you sure?", result => {
             if (result) {
@@ -188,14 +171,11 @@
             }
         });
     }
-
-
         /*.........
             Turn ON/OFF a notification
         .........*/
         $scope.toggleNotification = (user, platform, type, flag) => {
             $scope.notificationConfig[user][platform == 'email' ? 0 : 1]['status'][type] = flag;
-
             $http.put("/dash/settings/update/push/notification", $scope.notificationConfig)
                 .then(response => {
                     if(response.data && response.data.status == "success"){
@@ -207,12 +187,8 @@
                     }
                 })
         };
-
-
         $scope.toggleSendSms = (type, flag) => {
-
             $scope.sendSms[type] = flag;
-
             $http.put("/dash/settings/update/sms/notification", $scope.sendSms)
                 .then(response => {
                     if(response.data && response.data.status == "success"){
@@ -224,7 +200,6 @@
                     }
                 })
         }
-
     fetchTextLocalCredentials();
     fetchEmailSetup();
     fetchPushNotification();

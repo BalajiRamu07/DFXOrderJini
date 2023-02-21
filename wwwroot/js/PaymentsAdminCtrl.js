@@ -1,27 +1,19 @@
 /**
  * Created by shreyasgombi on 30/07/22.
  */
-
-
  angular.module('ebs.controller')
-
  .controller("PaymentsAdminCtrl", function($scope, $location, $http, $window, Settings){
      console.log("Hello From Admin Settings Payments Controller .... !!!!");
-
      $scope.payment_modes = [];
-
      $scope.razorpay = {};
-
      const startLoader = () => {
         jQuery.noConflict();
         $('.refresh').css("display", "inline");
     };
-
     const stopLoader = () => {
         jQuery.noConflict();
         $('.refresh').css("display", "none");
     };
-
      const fetchPaymentModes = () => {
         startLoader();
         $http.get("/dash/settings/details/paymentMode")
@@ -30,7 +22,6 @@
                 if(response.data && response.data.obj) {
                     console.log(response.data.obj);
                     $scope.payment_modes = response.data.obj;
-
                     for(let i = 0; i < $scope.payment_modes.length; i++){
                         switch($scope.payment_modes[i].name){
                             case "Razorpay" : {
@@ -62,7 +53,6 @@
                     $window.location.href = '/404';
             });
      }
-
      $scope.togglePaymentModeSelect = data => {
         if(data){
             if(data.name == 'Razorpay' && data.active && !data.id && !data.key){
@@ -71,7 +61,6 @@
                 for(let i = 0; i < $scope.payment_modes.length; i++){
                     if(data.name == $scope.payment_modes[i].name){
                         $scope.payment_modes[i] = data;
-
                         $http.put("/dash/settings/update/payment/mode", $scope.payment_modes)
                             .then(response => {
                                 if(response.data){
@@ -85,7 +74,6 @@
             }
         }
     };
-
     $scope.dropRazorpay = () => {
         Settings.confirmPopup("Confirm", "Are you sure? Razorpay Payment Integration will be disabled",
             result => {
@@ -100,7 +88,6 @@
                             };
                         }
                     };
-
                     $http.put("/dash/settings/update/payment/mode", $scope.payment_modes)
                             .then(response => {
                                 if(response.data){
@@ -112,7 +99,6 @@
                 }
             })
     }
-
     $scope.getLogo = mode => {
         switch(mode.name){
             case "Razorpay" : {
@@ -123,6 +109,5 @@
             }
         }
     };
-
     fetchPaymentModes();
  });

@@ -1,56 +1,41 @@
 /**
  * Created by shreyasgombi on 05/03/20.
  */
-
-
 angular.module('ebs.controller')
-
     .controller("NewUserCtrl",function ($scope, $location, $http, Settings, $window) {
         console.log("Hello From New Users Controller .... !!!!");
-
         //.... List View.... (Deprecated)
         $scope.userListPage = false;
-
         //..... Add Page View .... (Deprecated)
         $scope.userAddPage = true;
-
         //.... Edit Page View .... (Deprecated)
         $scope.userEditPage = false;
-
         //.... User Object....
         $scope.user = {};
         $scope.user.role = '';
         $scope.user.status = '';
-
         $scope.userRole = [];
-
         //.... Current Sellers... ?
         $scope.sellers = [];
         $scope.sellersMasterList = [];
-
         //.... Devices.....
         $scope.devices = null;
         $scope.deviceStatus = false;
         $scope.viewLength = 0;
         $scope.newViewBy = 10;
         $scope.allUserLength = 0;
-       
         //..... New User Details....
         $scope.seller = {};
-
         //.... Search Object.... (Deprecated)
         $scope.userSearch = {};
         $scope.userSearch.filter = '';
         $scope.userSearch.filterBy = '';
         $scope.userSearch.rolefilter = 'allUsers';
-
-
         $scope.userRoles = {};
         $scope.userRoles.Roles = true;
         $scope.userSelectedRole = true;
         $scope.disableFlag = false;
         $scope.edit = {};
-        
         $scope.editSeller = {};
         $scope.sellerNames = [];
         $scope.roleSalesrep = [];
@@ -64,36 +49,27 @@ angular.module('ebs.controller')
         $scope.filter = {};
         $scope.userBranch='';
         $scope.branchIds = [];
-
         var viewBy = {};
         viewBy.sellers = 12;
-    
-        
         $scope.appTabs = [];
         $scope.appTabs = ["New Order","Order History","Catalog","Leave Management","Chat","Inventory","Task Management","New Payment","New Meeting","Payment History","Meeting History","Visit History","Expense History"];
-        
-        
         Settings.getNav(false, nav => {
             console.log(nav);
             $scope.newNav = nav;
             $scope.nav = nav;
             $scope.userRole = $scope.nav[4].roles;
         });
-
         const promise = new Promise((resolve, reject) => {
             $http.get("/dash/settings/type/" + 'customer_setup')
                 .then(types => {
                 resolve(types);
             })
         });
-
         let userAsCustomer = false;
         promise.then(values => {
             if(values.data)
             userAsCustomer = values.data ? values.data.customer_user_to_master : false;
         });
-
-
         $scope.user = [];
         $http.get("/dash/user/role/access")
             .success(function(res) {
@@ -109,20 +85,15 @@ angular.module('ebs.controller')
             else
                 $window.location.href = '/404';
         });
-
-        
         $scope.warehouseLocation = Settings.getInstanceDetails('inventoryLocation');
         var instanceDetails =  Settings.getInstance();
         $scope.applicationType=instanceDetails.applicationType;
         $scope.coID = instanceDetails.coID;
         $scope.default_CountryCode = instanceDetails.countryCode;
         $scope.dealerAsUserFlag = instanceDetails.dealerAsUserFlag || false;
-
-       
         $scope.userPicture = '';
         $scope.setCountryCode = '';
         $scope.setCountry = '';
-
         //.... Plant Codes....
         $scope.getPlantCode = function () {
             $http.post("/dash/suppliers/plantcodes")
@@ -131,11 +102,9 @@ angular.module('ebs.controller')
                 console.log("plantcodes",res.data)
                 $scope.plant_codes = res.data
             }
-
         })
         };
         $scope.getPlantCode();
-
         // $scope.plant_codes = [
         //     {
         //         "code" : "P001",
@@ -158,21 +127,16 @@ angular.module('ebs.controller')
         //         "days" : 3
         //     }
         // ]
-
         //... Start a loader....
         const startLoader = () => {
             jQuery.noConflict();
             $('.refresh').css("display", "inline");
         }
-        
         const stopLoader = () => {
             jQuery.noConflict();
             $('.refresh').css("display", "none");
         }
-
-
         $('html, body').animate({scrollTop: '0px'}, 0);
-
         $scope.countryCodeGet = function () {
             $http.get("/country/countryCode")
                 .then(res => {
@@ -188,11 +152,7 @@ angular.module('ebs.controller')
                     $scope.seller.countryCode = "+91";
                 })
         };
-
         $scope.countryCodeGet();
-
-
-
         /*---check the phone no is valid or not---*/
         $scope.isPhoneNo = function (data) {
             var x = Number.parseInt(data);
@@ -207,7 +167,6 @@ angular.module('ebs.controller')
             }
             return false;
         };
-
         $scope.refreshSellerNames = function(){
             if(typeof $scope.roleSalesrep == 'object'){
                 for(var j = 0; j < $scope.roleSalesrep.length; j++){
@@ -222,7 +181,6 @@ angular.module('ebs.controller')
                 }
             }
         }
-
         $http.get("/dash/role/sellers/Salesperson")
             .success(function (salesperson) {
                 if(salesperson && salesperson.length){
@@ -230,7 +188,6 @@ angular.module('ebs.controller')
                     for(var i = 0; i < salesperson.length; i++){
                         $scope.roleSalesrep.push({sellername : salesperson[i].sellername, sellerphone : salesperson[i].sellerphone});
                     }
-
                     $scope.salespersonLength = $scope.roleSalesrep.length;
                 }
                 $http.get("/dash/userManagers")
@@ -250,8 +207,6 @@ angular.module('ebs.controller')
                 else
                     $window.location.href = '/404';
             })
-
-        
         $scope.getImageUrl = function(obj){
             if(obj){
                 if(obj.cloudinaryURL){
@@ -270,7 +225,6 @@ angular.module('ebs.controller')
                 }
             }
         };
-
         $scope.getRoleName = function(role){
             // console.log(role)
             var temp = '';
@@ -286,7 +240,6 @@ angular.module('ebs.controller')
             }
             return temp ;
         };
-
         $scope.changeUserButton = function (flag) {
             if (flag == 0) {
                 $scope.userListPage = true ;
@@ -308,13 +261,9 @@ angular.module('ebs.controller')
                 $('#edit-user-picture').val('');
                 $('#editUserPreview').attr('src', '');
             }
-
             $window.history.back();
         };
-
-
         var specialChars = "<>@!#$%^&*()_+[]{}?:;|'\"\\,./~`-=";
-
         var checkForSpecialChar = function(string){
             for(i = 0; i < specialChars.length;i++){
                 if(string.indexOf(specialChars[i]) > -1){
@@ -323,9 +272,6 @@ angular.module('ebs.controller')
             }
             return false;
         }
-
-
-
         $scope.getSellerName = function(sellerNo,tag){
             if(sellerNo){
                 if(Object.keys($scope.sellerNames).length==0){
@@ -340,42 +286,32 @@ angular.module('ebs.controller')
                 }
             }else return sellerNo;
         };
-
-     
-
         $scope.lastFunc = function (id) {
             if(id == "add-user") {
                 // document.getElementById("addUpdateButton").innerHTML = "Add";
                 $scope.createSeller();
                 // $('#myModalAddUser').modal({'show':false});
                 // alert("entry");
-
             }
             else if(id == "update-user") {
                 // document.getElementById("addUpdateButton").innerHTML = "Update";
                 $scope.updateSeller();
             }
         };
-
         $scope.createSeller = function() {
             $scope.disableFlag = true;
-
             if($scope.coID == 'GATE'){
                 $scope.seller.enableReceive = $scope.seller.enableReceive ? $scope.seller.enableReceive : false ;
             }
-
             //.... Default the new user as "active";
             $scope.seller.userStatus = "Active";
             $scope.seller.location = $scope.seller.location || '';
-            
             console.log($scope.warehouseLocation, $scope.seller.inventoryLocation);
             //.... Selected Branches.....
             if($scope.branchIds.length){
                 $scope.seller.branchCode = $scope.branchIds;
             }
-
             console.log($scope.seller.role);
-            
             if(!$scope.seller.managerName && $scope.applicationType == 'OrderJini'){
                 if($scope.roleManager.length){
                     for(var i=0 ; i< $scope.roleManager.length;i++){
@@ -385,44 +321,33 @@ angular.module('ebs.controller')
                     }
                 }
             }
-
             if($scope.applicationType == 'Atmosphere') $scope.seller.managerid = Number($scope.seller.managerid);
-            
             $scope.seller.date_added = Settings.newDate();
-
             switch ($scope.seller.role){
                 case "Admin" :
                     $scope.seller.admin = true;
                     break;
-
                 case "Salesperson" :
                     $scope.seller.salesrep = true;
                     break;
-
                 case "Stockist" :
                     $scope.seller.stockist = true;
                     break;
-
                 case "Fulfiller" :
                     $scope.seller.fulfiller = true;
                     break;
-
                 case "Manager" :
                     $scope.seller.manager = true;
                     break;
-                    
                 case "Dealer" :
                     $scope.seller.dealer = true;
                     break;
-
                 case "BranchManager" :
                     $scope.seller.branchManager = true;
                     break;
-
                 case "Portal" :
                     $scope.seller.portal_role = true;
                     break;
-
                 /*
                     Changes for atmosphere ; Author : Aditi!
                 */
@@ -430,14 +355,12 @@ angular.module('ebs.controller')
                     for(let i = 0; i < $scope.userRole.length; i++){
                         if($scope.seller.role == $scope.userRole[i].name){
                             $scope.seller.user_role = $scope.userRole[i].role;
-
                             if($scope.seller.user_role == 'Manager'){
                                 $scope.seller.manager = true;
                             }
                         }
                     }
             }
-         
             if(!$scope.seller.sellername) {
                 $scope.disableFlag = false;
                 document.getElementById('submitbutton').disabled = false;
@@ -461,7 +384,6 @@ angular.module('ebs.controller')
                 Settings.alertPopup('Error',"Please enter a mail id");
                 return false;
             }
-
             else if (!$scope.seller.role) {
                 $scope.disableFlag = false;
                 document.getElementById('submitbutton').disabled = false;
@@ -516,15 +438,12 @@ angular.module('ebs.controller')
                         "consumed" : 0
                     }
                 ];
-
                 //.... Based on the country code selected, we append the country code if not 
                 if(!$scope.seller.countryCode)
                     $scope.seller.countryCode = "+91";
                 else if($scope.seller.countryCode != '+91')
                     $scope.seller.sellerphone = $scope.seller.countryCode + $scope.seller.sellerphone;
-            
                 $scope.seller.email =  $scope.seller.email.toLowerCase();
-
                 $http.get("/dash/user/details/" + $scope.seller.sellerphone + "/"  + $scope.seller.email)
                     .then(user => {
                         if(user.data && user.data.sellerphone){
@@ -552,9 +471,7 @@ angular.module('ebs.controller')
                             }
                         }else{
                             $scope.seller.sellerid = $scope.seller.sellerphone;
-                            
                             startLoader();
-
                             console.log($scope.seller);
                             $http.post("/dash/users/create", $scope.seller)
                                 .then(async response => {
@@ -570,10 +487,8 @@ angular.module('ebs.controller')
                                             if(userAsCustomer && $scope.seller.role == 'Dealer')
                                                 dealerRes = await addUserAsDealer($scope.seller);
                                             // console.log('dealerRes==->> ',dealerRes);
-
                                             Settings.successPopup('Success','User '+ $scope.seller.sellername +' added successfully as '+ $scope.getRoleName($scope.seller.role));
                                             console.log($scope.userPicture);
-        
                                             var image = $scope.userPicture;
                                             if (image.length) {
                                                 if ((image[0].size / 1024) <= 200) {
@@ -598,7 +513,6 @@ angular.module('ebs.controller')
                                                                     $('.refresh').css("display", "none");
                                                                 }
                                                             })
-        
                                                     }
                                                     reader.readAsDataURL(image[0]);
                                                 }else{
@@ -617,14 +531,12 @@ angular.module('ebs.controller')
                     });
             }
         };
-
         const addUserAsDealer = (user) => {
             console.log("$scope.user.sellerphone", $scope.user.sellerphone);
             let dealer = {};
             dealer.DealerName = user.sellername;
             dealer.Phone = Number(user.sellerphone);
             dealer.email = user.email;
-
             if(dealer.DealerName && dealer.Phone){
                 $http.get("/dash/get/recentID/dealer")
                     .success(function(res){
@@ -637,7 +549,6 @@ angular.module('ebs.controller')
                             dealer.Dealercode = 1001;
                             dealer.countryCode = $scope.default_CountryCode;
                         }
-
                         dealer.DealerName = dealer.DealerName.substr(0,1).toUpperCase() + dealer.DealerName.substr(1);
                         dealer.Seller = '' ;
                         dealer.SellerName = '' ;
@@ -649,7 +560,6 @@ angular.module('ebs.controller')
                         dealer.doccloudinaryURL = [];
                         dealer.customerType = "Lead";
                         dealer.createdDate = Settings.newDate();
-
                         $http.get("/dash/stores/search/"+dealer.Phone)
                             .success(function(dealerDetails){
                                 if(dealerDetails.length){
@@ -664,18 +574,15 @@ angular.module('ebs.controller')
                                 }else {
                                     $http.get("/dash/get/recentID/"+dealer.Dealercode).success(function(result){
                                         $scope.dealercodeUnique = (result != '') ? '' : 'unique';
-
                                         if($scope.dealercodeUnique == "unique"){
                                             if(dealer.countryCode && user.countryCode != '+91')
                                                 dealer.Phone = Number(user.countryCode + dealer.Phone);
-
                                             var dealercodes = dealer.Dealercode;
                                             if (isNaN(dealercodes)) {
                                                 console.log(dealercodes);
                                             } else {
                                                 dealer.Dealercode = parseInt(dealer.Dealercode);
                                             }
-
                                             $http.post("/dash/stores/add/new", dealer)
                                                 .success(function (res) {
                                                     console.log('dealer added resp ', res);
@@ -697,10 +604,8 @@ angular.module('ebs.controller')
                                             $window.location.href = '/404';
                                     });
                                 }
-
                             })
                     })
-
             }
             else if (dealer.Phone == undefined) {
                 Settings.failurePopup('Error','Please enter a valid phone number');
@@ -708,14 +613,11 @@ angular.module('ebs.controller')
                 Settings.failurePopup('Error','Please enter all mandatory details');
             }
         }
-
         $scope.updatePicture  = function(image){
             console.log(image)
             $scope.userPicture = image;
         }
-
         $scope.enableUsers = function () {
-
             $scope.seller.salesrep = false;
             $scope.seller.admin = false;
             $scope.seller.stockist = false;
@@ -726,12 +628,9 @@ angular.module('ebs.controller')
             $scope.seller.portal_role = false;
             $scope.seller.userStatus = "Active";
             $scope.seller.showOperations = true;
-
             var date1 = new Date();
             $scope.seller.last_updated = [date1.getFullYear(),(date1.getMonth()+1).padLeft(), date1.getDate().padLeft() ].join('-') + ' '
                 + [date1.getHours().padLeft(), date1.getMinutes().padLeft(), date1.getSeconds().padLeft()].join (':');
-
-
             if ($scope.seller.role == "Salesperson") {
                 $scope.seller.salesrep = true;
             }
@@ -767,9 +666,7 @@ angular.module('ebs.controller')
                         }
                     }
                 }
-
             }
-
             Settings.confirmPopup('Confirm',"The user was deleted. Do you want to re-enable?",function (result) {
                 if(result){
                     jQuery.noConflict();
@@ -784,7 +681,6 @@ angular.module('ebs.controller')
                             setTimeout(function(){
                                 $('.refresh').css("display", "none");
                             }, 1000);
-
                             // $scope.all();
                             $scope.refreshSellerNames();
                             // jQuery.noConflict();
@@ -797,12 +693,9 @@ angular.module('ebs.controller')
                 }
             });
         };
-
         $scope.assignValues = function (id) {
-
             $scope.managerSelectedList = [];
             $scope.editSeller = {};
-
             $http.get("/dash/seller/details/"+id)
                 .success( function(response) {
                     if(response){
@@ -816,17 +709,14 @@ angular.module('ebs.controller')
                                     response.sellerphone = phoneNo.join("");
                                     // console.log(response);
                                 }
-
                             }else if(response.countryCode == '91'){
                                 if(sellerphoneNo.length > 10){
                                     // var sellerphoneNo = (""+response.sellerphone).split("");
                                     var phoneNo = sellerphoneNo.splice(response.countryCode.length);
                                     response.sellerphone = phoneNo.join("");
-
                                     console.log(response);
                                 }
                                 response.countryCode = '+'+response.countryCode;
-
                             }else{
                                 presentNumber = response.sellerphone;
                                 // var sellerphoneNo = (""+response.sellerphone).split("");
@@ -839,7 +729,6 @@ angular.module('ebs.controller')
                                     response.countryCode = '+'+response.countryCode;
                                 }
                             }
-
                         }else{
                             presentNumber = response.sellerphone;
                             response.countryCode = $scope.default_CountryCode;
@@ -849,7 +738,6 @@ angular.module('ebs.controller')
                         }
                         $scope.managerSelectedList = response.managerid;
                         $scope.seller = response;
-
                         // console.log(presentNumber)
                         $scope.editSeller = response;
                         $scope.edit.user = true ;
@@ -862,18 +750,12 @@ angular.module('ebs.controller')
                         if($scope.seller.Supervisor_Name){
                             $scope.ATMSmanagers.tempManager2 = $scope.seller.Supervisor_Name;
                         }
-
-
-
                     }
                 });
         };
-
         $scope.seller.plantCode = [];
-
         $scope.addPlantCodeTagged = function() {
             let elements = document.getElementsByClassName('plantcode');
-
             for (var i = 0; i < elements.length; i++) {
                 var element = elements[i];
                 var strSel = element.options[element.selectedIndex].text;
@@ -886,12 +768,9 @@ angular.module('ebs.controller')
             });
             $scope.seller.plantCode = allplantCode;
         }
-
-
         $scope.removeSelectedTag = function(tab,index){
             console.log("remove tab",tab,index)
             if(tab == 'plantcode')
                 $scope.seller.plantCode.splice(index,1);
-
         }
     });
