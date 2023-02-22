@@ -57,7 +57,7 @@
                         <div class="col-md-9"></div>
                         <!-- ngIf: nav[24].activated --><div class="col-md-3 ng-scope" ng-if="nav[24].activated">
                             <label style="color: grey;margin: 0px" for="plant_code">Cust Ref No </label>
-                            <input type="text" id="Cus_refId" class="form-control ng-pristine ng-untouched ng-valid" id="cust_ref_number" ng-model="customer.cust_order_reference_number" placeholder="Reference Number" tabindex="0" aria-invalid="false">
+                            <input type="text" id="Cus_refId" maxlength="30" class="form-control ng-pristine ng-untouched ng-valid" id="cust_ref_number" ng-model="customer.cust_order_reference_number" placeholder="Reference Number" tabindex="0" aria-invalid="false">
                         </div><!-- end ngIf: nav[24].activated -->
                     </div>
                     <br><button class="btn btn-md btn-primary" onclick="Homeurl()"
@@ -160,12 +160,12 @@
                     <div class="row">
                         <div class="col-md-6">
                             <h6>Enter Comments</h6>
-                            <textarea id="CommentsId" class="form-control ng-pristine ng-untouched ng-valid" placeholder="Enter some comments (Optional)" ng-model="custOrder.comment" aria-multiline="true" tabindex="0" aria-invalid="false"></textarea>
+                            <textarea id="CommentsId" maxlength="200" class="form-control ng-pristine ng-untouched ng-valid" placeholder="Enter some comments (Optional)" ng-model="custOrder.comment" aria-multiline="true" tabindex="0" aria-invalid="false"></textarea>
                         </div>
                         <div class="col col-md-3">
                             <div class="form-group">
                                 <label class="col-form-label">Customer Requested Date (CRD)</label>
-                                <input type="text" id="CRDDate" class="form-control ng-pristine ng-untouched ng-valid ng-isolate-scope ng-valid-date" id="crd_date" ng-model="custOrder.customer_req_date" placeholder="dd-mm-yyyy" ng-init="calender[1] = false" ng-click="calender[1] = true;" uib-datepicker-popup="" datepicker-options="config" date-disabled="disabled(date, mode)" is-open="calender[1]" show-button-bar="false" todayhighlight="true" tabindex="0" aria-invalid="false"><!-- ngIf: isOpen -->
+                                <input type="text" maxlength="10" id="CRDDate" class="form-control ng-pristine ng-untouched ng-valid ng-isolate-scope ng-valid-date"  ng-model="custOrder.customer_req_date" placeholder="dd/mm/yyyy" ng-init="calender[1] = false" ng-click="calender[1] = true;" uib-datepicker-popup="" datepicker-options="config" date-disabled="disabled(date, mode)" is-open="calender[1]" show-button-bar="false" todayhighlight="true" tabindex="0" aria-invalid="false"><!-- ngIf: isOpen -->
                             
 
 
@@ -220,17 +220,59 @@
    
     $(function () {
        
+        //$("#CRDDate").datepicker({
+          
+        //         dateFormat: 'dd/mm/yyyy', //check change
+        //    changeMonth: true,
+        //    changeYear: true
+        //});
+
+
+   
+
+
+    //WIRA DATE PICKER
+    // var dd = new Date().getDate();
+    // var mm = new Date().getMonth();
+    var yyyy = new Date().getFullYear();
+    // var tommorrow = new Date().getDate() + 1;
+    var holiday = [
+        new Date(yyyy, 0, 1).getTime(), /* Tahun Baru Masehi*/
+        new Date(yyyy, 1, 16).getTime(), /* Imlek */
+        new Date(yyyy, 2, 17).getTime(), /* Nyepi */
+        new Date(yyyy, 2, 30).getTime(), /* Wafat Yesus */
+        new Date(yyyy, 3, 1).getTime(), /* Isra Mi'raj */
+        new Date(yyyy, 4, 1).getTime(), /* Hari Buruh */
+        new Date(yyyy, 4, 10).getTime(), /* Kenaikan Yesus */
+        new Date(yyyy, 4, 29).getTime(), /* Waisak */
+        new Date(yyyy, 5, 1).getTime(), /* Kelahiran Pancasila */
+        new Date(yyyy, 5, 15).getTime(), /* Idul Fitri */
+        new Date(yyyy, 5, 16).getTime(), /* Idul Fitri */
+        new Date(yyyy, 7, 17).getTime(), /* Kemerdekaan RI */
+        new Date(yyyy, 7, 22).getTime(), /* Idul Adha */
+        new Date(yyyy, 9, 11).getTime(), /* Tahun Baru Islam */
+        new Date(yyyy, 10, 20).getTime(), /* Maulid Nabi Muhammad */
+        new Date(yyyy, 11, 25).getTime() /* Natal */
+    ];
+
         $("#CRDDate").datepicker({
-            dateFormat: 'dd-mm-yy'
-        });
-
-
+        // dateFormat: "yy-mm-dd",
+        // maxDate: new Date(2018, 10, 30),
+          
+        beforeShowDay: function (date) {
+            var showDay = true;
+            if (date.getDay() == 0 || date.getDay() == 6) {
+                showDay = false;
+            }
+            // menggunakan fungsi jquery inArray
+            if ($.inArray(date.getTime(), holiday) > -1) {
+                showDay = false;
+            }
+            return [showDay];
+        }
     });
 
-
-    
-
-    
+    });
     </script>
     <style class="ng-scope">
 

@@ -112,59 +112,59 @@ namespace DFXOrderJini.Controllers
         }
         [Route("api/Orders/GetProductItems")]
         [HttpPost]
-        public IEnumerable<OrderCreationModel> GetProductMaster_Items()
+        public IEnumerable<OrderCreationModel> GetProductMaster_Items(string DealerCode)
         {
             OrdersDataLayer order = new OrdersDataLayer();
-            return order.GetProductItems();
+            return order.GetProductItems(DealerCode.Trim().ToString());
         }
         [Route("api/Orders/GetProductGrade")]
         [HttpPost]
-        public IEnumerable<OrderCreationModel> GetProductGrade(string Item)
+        public IEnumerable<OrderCreationModel> GetProductGrade(string Item, string DealerCode)
         {
             OrdersDataLayer order = new OrdersDataLayer();
-            return order.GetProductGrade("SelectGrade", "grade", Item, "", "","");
+            return order.GetProductGrade("SelectGrade", "grade", Item, "", "","", DealerCode.Trim().ToString());
         }
         [Route("api/Orders/GetProductDensity")]
         [HttpPost]
-        public IEnumerable<OrderCreationModel> GetProductDensity(string Item, string Item1)
+        public IEnumerable<OrderCreationModel> GetProductDensity(string Item, string Item1, string DealerCode)
         {
             OrdersDataLayer order = new OrdersDataLayer();
-            return order.GetProductGrade("SelectDensity", "Density", Item, Item1, "","");
+            return order.GetProductGrade("SelectDensity", "Density", Item, Item1, "","", DealerCode.Trim().ToString());
         }
         [Route("api/Orders/GetProductPrimaryUOM")]
         [HttpPost]
         public IEnumerable<OrderCreationModel> GetProductPrimaryUOB(string Item, string Item1)
         {
             OrdersDataLayer order = new OrdersDataLayer();
-            return order.GetProductGrade("SelectDisplayUOM", "UOM", Item, Item1, "","");
+            return order.GetProductGrade("SelectDisplayUOM", "UOM", Item, Item1, "","","");
         }
         [Route("api/Orders/GetProductLenth")]
         [HttpPost]
         public IEnumerable<OrderCreationModel> GetProductLenth(string Item, string Item1)
         {
             OrdersDataLayer order = new OrdersDataLayer();
-            return order.GetProductGrade("SelectLength", "Lmax", Item, Item1, "","");
+            return order.GetProductGrade("SelectLength", "Lmax", Item, Item1, "","","");
         }
         [Route("api/Orders/GetProductWidth")]
         [HttpPost]
         public IEnumerable<OrderCreationModel> GetProductWidth(string Item, string Item1)
         {
             OrdersDataLayer order = new OrdersDataLayer();
-            return order.GetProductGrade("SelectWidth", "WMax", Item, Item1, "","");
+            return order.GetProductGrade("SelectWidth", "WMax", Item, Item1, "","","");
         }
         [Route("api/Orders/GetProductThickness")]
         [HttpPost]
         public IEnumerable<OrderCreationModel> GetProductThickness(string Item, string Item1, string Item2)
         {
             OrdersDataLayer order = new OrdersDataLayer();
-            return order.GetProductGrade("SelectThickness", "Thickness", Item, Item1, Item2,"");
+            return order.GetProductGrade("SelectThickness", "Thickness", Item, Item1, Item2,"","");
         }
         [Route("api/Orders/GetBundleCalculatepieces")]
         [HttpPost]
         public IEnumerable<OrderCreationModel> GetBundleCalculatepieces(string Item, string Item1, string Item2, string Item3)
         {
             OrdersDataLayer order = new OrdersDataLayer();
-            return order.GetProductGrade("SelectTotalpieces", "Total_pieces", Item, Item1, Item2, Item3);
+            return order.GetProductGrade("SelectTotalpieces", "Total_pieces", Item, Item1, Item2, Item3,"");
         }
     }
 }

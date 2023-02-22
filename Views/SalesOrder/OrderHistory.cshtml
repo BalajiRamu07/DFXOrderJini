@@ -203,14 +203,14 @@
                         <div class="card-body">
                             <!-- ngIf: orders.length -->
                             <div class="table-responsive ng-scope" style="" ng-show="IsVisible" ng-init="GetAllData()">
-                                <table class="table">
+                                <table class="table" id="OrdrHistoryTbl">
                                     <thead>
                                         <tr>
                                             <th>ORDER ID</th>
                                             <th>ORDER DATE</th>
                                             <th>ORDER STATUS</th>
                                             <th>DELIVERY DATE</th>
-                                            <th>FULFILLER NAME</th>
+                                           
                                             <th>CUST ID</th>
                                             <!-- ngIf: nav[24].activated -->
                                             <th ng-if="nav[24].activated" class="ng-scope">CUST REF NO</th><!-- end ngIf: nav[24].activated -->
@@ -222,26 +222,25 @@
                                             <!-- ngIf: nav[24].activated -->
                                             <th ng-if="nav[24].activated" class="ng-scope">CREATED BY</th><!-- end ngIf: nav[24].activated -->
                                             <th>ITEMS</th>
-                                            <th>TOTAL AMOUNT</th>
-                                            <th>TOTAL PAID AMOUNT</th>
+                                           
                                             <th>CUSTOMER REQUEST DATE</th>
                                             <!-- ngIf: nav[24].activated -->
                                             <th ng-if="nav[24].activated" class="ng-scope">STANDARD ORDER</th><!-- end ngIf: nav[24].activated -->
-                                            <th ng-show="hideAndshowkitchen" aria-hidden="true" class="ng-hide">KITCHEN</th>
-                                            <th ng-show="!hideAndshowkitchen" aria-hidden="false" class="">WAREHOUSE</th>
-                                            <th>PAYMENT</th>
-                                            <th>FULFILLMENT</th>
+                                           
+                                           
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <tr ng-repeat="emps in OrderDetails" class="ng-scope">
                                             <td>
-                                                <input type="checkbox" id="id_chk1" class="checkRow ng-pristine ng-untouched ng-valid" value="1"
+                                                @Html.Hidden("RedirectToOrderDetails", Url.Action("OrderDetails", "SalesOrder"))
+                                               
+                                               @* <input type="checkbox" id="id_chk1" class="checkRow ng-pristine ng-untouched ng-valid" value="1"
                                                        tabindex="0"
-                                                       aria-checked="false" aria-invalid="false">&nbsp;&nbsp;
-                                                <a style="text-decoration: none" ng-click="multipleSelect(order)"
-                                                   href="dashboard#/order-details/2023000004"
-                                                   class="ng-binding" tabindex="0">{{emps.orderID}}</a>
+                                                       aria-checked="false" aria-invalid="false">&nbsp;&nbsp;*@
+                                                <a style="text-decoration: none" ng-click="LoadOrder_History(emps.orderID)"
+                                                  
+                                                   class="ng-binding OrderId" tabindex="0">{{emps.orderID}}</a>
                                             </td>
                                             <td class="ng-binding">24 - Jan - 2023</td>
                                             <td style="margin:10px">
@@ -251,8 +250,8 @@
                                                 <!-- ngIf: order.status && order.status != 'closed' && order.status != 'packed' && order.status != 'delivered' && order.status != 'approved' && order.status != 'new' && order.status != 'open' -->
                                             </td>
                                             <td class="ng-binding">N/A</td>
-                                            <td class="ng-binding">N/A</td>
-                                            <td class="ng-binding">104793</td>
+                                           
+                                            <td class="ng-binding">{{emps.dealerCode}}</td>
                                             <!-- ngIf: nav[24].activated -->
                                             <td ng-if="nav[24].activated" class="ng-binding ng-scope">3675436578</td><!-- end ngIf: nav[24].activated -->
                                             <!-- ngIf: nav[24].activated -->
@@ -263,22 +262,13 @@
                                             <!-- ngIf: nav[24].activated -->
                                             <td ng-if="nav[24].activated" class="ng-binding ng-scope">Jyoti</td><!-- end ngIf: nav[24].activated -->
                                             <td class="ng-binding">1</td>
-                                            <td class="ng-binding"> ₹0.00</td>
-                                            <td class="ng-binding"> ₹0.00</td>
+                                           
+                                            <td class="ng-binding">
+                                                {{emps.crD_Date}}
+                                            </td>
                                             <td class="ng-binding"> N/A</td>
-                                            <!-- ngIf: nav[24].activated -->
-                                            <td ng-if="nav[24].activated" class="ng-binding ng-scope">S</td><!-- end ngIf: nav[24].activated -->
-                                            <td class="ng-binding">N/A</td>
-                                            <td style="margin:10px">
-                                                <!-- ngIf: order.paymentStatus && order.paymentStatus == 'paid' -->
-                                                <!-- ngIf: order.paymentStatus && order.paymentStatus == 'partially paid' -->
-                                                <!-- ngIf: order.paymentStatus && order.paymentStatus != 'paid' && order.paymentStatus != 'partially paid' --><span ng-if="order.paymentStatus &amp;&amp; order.paymentStatus != &#39;paid&#39; &amp;&amp; order.paymentStatus != &#39;partially paid&#39;" class="badge badge-danger badge-pill unpaid ng-binding ng-scope">Unpaid</span><!-- end ngIf: order.paymentStatus && order.paymentStatus != 'paid' && order.paymentStatus != 'partially paid' -->
-                                            </td>
-                                            <td style="margin:10px">
-                                                <!-- ngIf: order.fulfillmentStatus && order.fulfillmentStatus == 'fulfilled' -->
-                                                <!-- ngIf: order.fulfillmentStatus && order.fulfillmentStatus == 'partially fulfilled' -->
-                                                <!-- ngIf: order.fulfillmentStatus && order.fulfillmentStatus != 'fulfilled' && order.fulfillmentStatus != 'partially fulfilled' --><span ng-if="order.fulfillmentStatus &amp;&amp; order.fulfillmentStatus != &#39;fulfilled&#39; &amp;&amp; order.fulfillmentStatus != &#39;partially fulfilled&#39;" class="badge badge-danger badge-pill unpaid ng-binding ng-scope">Unfulfilled</span><!-- end ngIf: order.fulfillmentStatus && order.fulfillmentStatus != 'fulfilled' && order.fulfillmentStatus != 'partially fulfilled' -->
-                                            </td>
+                                          
+                                           
                                         </tr>
                                     </tbody>
                                 </table>

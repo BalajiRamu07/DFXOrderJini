@@ -249,6 +249,7 @@ namespace DFXOrderJini.Repository
                                    OrderID = dr["OrderID"].ToString(),
                                    Cust_Ref = dr["Cust_Ref"].ToString(),
                                    SalesPerson = dr["SalesPerson"].ToString()
+
                                }).ToList();
             }
             catch
@@ -279,8 +280,10 @@ namespace DFXOrderJini.Repository
                                    ID = Convert.ToInt32(dr["ID"]),
                                    OrderID = dr["OrderID"].ToString(),
                                    Cust_Ref = dr["Cust_Ref"].ToString(),
-                                   Cust_Comments = dr["Cust_Comments"].ToString(),
-                                   CRD_Date = Convert.ToDateTime(dr["CRDDate"].ToString())
+                                   SalesPerson = dr["SalesPerson"].ToString(),
+                                   DealerCode = dr["DealerCode"].ToString(),
+                                   OrderDate = dr["Order_Date"].ToString(),
+                                   CRD_Date = Convert.ToDateTime(Dtcheck(dr["CRDDate"].ToString()))
                                }).ToList();
             }
             catch
@@ -288,6 +291,15 @@ namespace DFXOrderJini.Repository
                 throw;
             }
             return lstemployee;
+        }
+        public string Dtcheck(string dt)
+        {
+            if (dt == null || dt == "" || string.IsNullOrWhiteSpace(dt))
+            {
+                dt = "01/01/1900";
+            }
+            return dt;
+
         }
         public IList<OrderCreationModel> GetItems(string DealerCode)
         {
@@ -371,12 +383,12 @@ namespace DFXOrderJini.Repository
         }
         #endregion
         #region Get All Master Details
-        public IList<OrderCreationModel> GetProductItems()
+        public IList<OrderCreationModel> GetProductItems(string Dealercode)
         {
             List<OrderCreationModel> ListData = new List<OrderCreationModel>();
             try
             {
-                ListData = (from DataRow dr in ProductItems("SelectItem", string.Empty, string.Empty, string.Empty, string.Empty).Tables[0].Rows
+                ListData = (from DataRow dr in ProductItems("SelectItem", string.Empty, string.Empty, string.Empty, string.Empty, Dealercode).Tables[0].Rows
                             select new OrderCreationModel()
                             {
                                 ProductItems = dr["L5"].ToString(),
@@ -389,12 +401,12 @@ namespace DFXOrderJini.Repository
             }
             return ListData;
         }
-        public IList<OrderCreationModel> GetProductGrade(string Item)
+        public IList<OrderCreationModel> GetProductGrade(string Item, string Dealercode)
         {
             List<OrderCreationModel> ListData = new List<OrderCreationModel>();
             try
             {
-                ListData = (from DataRow dr in ProductItems("SelectGrade", Item, string.Empty, string.Empty, string.Empty).Tables[0].Rows
+                ListData = (from DataRow dr in ProductItems("SelectGrade", Item, string.Empty, string.Empty, string.Empty, Dealercode).Tables[0].Rows
                             select new OrderCreationModel()
                             {
                                 ProductItems = dr["grade"].ToString(),
@@ -406,14 +418,14 @@ namespace DFXOrderJini.Repository
             }
             return ListData;
         }
-        public IList<OrderCreationModel> GetProductGrade(string Flag, string Coloumn, string Search1, string Search2, string Search3, string Search4)
+        public IList<OrderCreationModel> GetProductGrade(string Flag, string Coloumn, string Search1, string Search2, string Search3, string Search4, string Dealercode)
         {
             List<OrderCreationModel> ListData = new List<OrderCreationModel>();
             try
             {
                 if (Flag == "SelectThickness")
                 {
-                    ListData = (from DataRow dr in ProductItems(Flag, Search1, Search2, Search3, Search4).Tables[0].Rows
+                    ListData = (from DataRow dr in ProductItems(Flag, Search1, Search2, Search3, Search4, Dealercode).Tables[0].Rows
                                 select new OrderCreationModel()
                                 {
                                     ProductItems = dr[Coloumn].ToString(),
@@ -422,7 +434,7 @@ namespace DFXOrderJini.Repository
                 }
                 else
                 {
-                    ListData = (from DataRow dr in ProductItems(Flag, Search1, Search2, Search3, Search4).Tables[0].Rows
+                    ListData = (from DataRow dr in ProductItems(Flag, Search1, Search2, Search3, Search4,  Dealercode).Tables[0].Rows
                                 select new OrderCreationModel()
                                 {
                                     ProductItems = dr[Coloumn].ToString(),
@@ -435,7 +447,7 @@ namespace DFXOrderJini.Repository
             }
             return ListData;
         }
-        public DataSet ProductItems(string names, string NSearch, string DealerName, string SearchName1, string @SearchName2)
+        public DataSet ProductItems(string names, string NSearch, string DealerName, string SearchName1, string @SearchName2, string Dealercode)
         {
             try
             {
@@ -449,6 +461,7 @@ namespace DFXOrderJini.Repository
                 param[4].Direction = ParameterDirection.Output;
                 param[5] = new SqlParameter("@SearchName1", SearchName1);
                 param[6] = new SqlParameter("@SearchName2", SearchName2);
+                param[7] = new SqlParameter("@DealerCode", Dealercode);
                 ds = SqlHelper.ExecuteDataset(CS, CommandType.StoredProcedure, "GetAllMasterSearch", param);
                 //result = Convert.ToInt32(param[3].Value.ToString());
                 if (ds.Tables.Count > 0)

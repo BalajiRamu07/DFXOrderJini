@@ -13,7 +13,7 @@ namespace DFXOrderJini.Interface
         IList<OrderCreationModel> GetOrders();
         IList<CustomerModel> GetCustomers();
         IList<CustomerModel> GetDealersDetails(string DealerCode);
-        IList<OrderCreationModel> GetProductItems();
-        IList<OrderCreationModel> GetProductGrade(string Flag, string Coloumn, string Search1, string Search2, string Search3, string Search4);
+        IList<OrderCreationModel> GetProductItems(string DealerCode);
+        IList<OrderCreationModel> GetProductGrade(string Flag, string Coloumn, string Search1, string Search2, string Search3, string Search4, string DealerCode);
     }
 }

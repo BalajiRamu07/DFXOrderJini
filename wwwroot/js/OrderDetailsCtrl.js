@@ -19,6 +19,7 @@
                 headers: { "Content-Type": "application/json" }
             });
             post.success(function (response, status) {
+                var fcustomer = '{OrderID: "' + $scope.Prefix + '" }';
                 $scope.OrderDetails = response;
                 $scope.IsVisible = true;
             });
@@ -93,10 +94,11 @@
         //--------------------------------Load Category Items---------------------------------------------------------//
 
         $scope.SelectItems = [];
+        
         var items = $http(
             {
                 method: 'POST',
-                url: '/api/Orders/GetProductItems',  /*You URL to post*/
+                url: '/api/Orders/GetProductItems' + "?DealerCode=" + localStorage['DealerCode'],  /*You URL to post*/
                 dataType: 'json',
                 headers: {
                     "Content-Type": "application/json"
@@ -120,11 +122,11 @@
         $scope.GetGrades = function (item) {
 
             $scope.SelectGrade = "";
-            var postData = "?Item=" + item;
+            var postData = "?Item=" + item + "&DealerCode=" + localStorage['DealerCode'];
             var Grade = $http(
                 {
                     method: 'POST',
-                    url: '/api/Orders/GetProductGrade' + postData,  /*You URL to post*/
+                    url: '/api/Orders/GetProductGrade' + postData ,  /*You URL to post*/
                     dataType: 'json',
                     headers: {
                         "Content-Type": "application/json"
@@ -157,7 +159,7 @@
             var Grade = $http(
                 {
                     method: 'POST',
-                    url: '/api/Orders/GetProductDensity' + postData,  /*You URL to post*/
+                    url: '/api/Orders/GetProductDensity' + postData + "&DealerCode=" + localStorage['DealerCode'],  /*You URL to post*/
                     dataType: 'json',
                     headers: {
                         "Content-Type": "application/json"
@@ -765,7 +767,9 @@
                         $("#CommentsId").val($scope.GetOrdersId[i].cust_Comments);
                         
                         var format3 = moment($scope.GetOrdersId[i].crD_Date).format('DD/MM/YYYY');
-                        $("#CRDDate").val(format3);
+
+                        $("#CRDDate").val(format3.replace("01/01/1900", ""));
+                        
                     }
                 }
             });
@@ -1215,6 +1219,12 @@
 
         });
 
+        $scope.LoadOrder_History = function (id) {
+           
+            var url = $("#RedirectToOrderDetails").val();
+            location.href = url;
+
+        }
     });
 
 //-------------------------------------------JQUERY FUNCTIONS---------------------------------------------------//
@@ -1252,6 +1262,7 @@ $(document).ready(function () {
 
         localStorage['DealerCode'] = text;
     });
+   
 
     //jQuery('#library tr').click(function (e) {
     //    e.stopPropagation();

@@ -26,6 +26,10 @@ namespace DFXOrderJini.Controllers
         {
             return View();
         }
+        public ActionResult OrderDetails()
+        {
+            return View();
+        }
         public IActionResult OrderCreation()
         {
            
