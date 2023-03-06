@@ -1156,7 +1156,7 @@
           text-transform: uppercase;
           padding: 0.4375rem 0;
           border-color: #cdd6dc;
-          font-size: 0.875rem; }
+          font-size: 0.7rem; }
     #calendar .fc-view-container .fc-view table thead.fc-head tr td.fc-head-container {
       border-color: #cdd6dc;
       border-bottom: none;
@@ -1171,7 +1171,7 @@
           border-color: #cdd6dc; }
         #calendar .fc-view-container .fc-view table tbody.fc-body tr td.fc-widget-content .fc-day-grid-container .fc-day-grid .fc-row .fc-content-skeleton table thead tr td.fc-day-top {
           padding: 8px;
-          font-size: 0.875rem;
+          font-size: 0.7rem;
           font-weight: 600; }
         #calendar .fc-view-container .fc-view table tbody.fc-body tr td.fc-widget-content .fc-day-grid-container .fc-day-grid .fc-row .fc-content-skeleton table tbody tr td.fc-event-container .fc-h-event {
           background: #19d895;

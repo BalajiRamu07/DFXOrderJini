@@ -1,8 +1,8 @@
 /**
  * Created by shreyasgombi on 03/04/20.
  */
-angular.module('MyApp2')
-    .controller("MyController2",function ($scope, Settings, $http, $location, toastr, $window) {
+angular.module('ebs.controller')
+    .controller("SideMenuCtrl",function ($scope, Settings, $http, $location, toastr, $window) {
     console.log("Hello From Side Menu Controller .... !!!!");
     $scope.trustSrc = function(src) {
         return $sce.trustAsResourceUrl(src);

@@ -5,7 +5,7 @@ using System.Linq;
 using System.Web;
 namespace DFXOrderJini.Models
 {
-    public class CustomerModel
+    public partial class CustomerModel
     {
         public string? Dealercode { get; set; }
         public string? countryCode { get; set; }
@@ -38,7 +38,8 @@ namespace DFXOrderJini.Models
         public string? BillingAddress { get; set; }
         
         public string? ShippingAddress { get; set; }
+        public string? ResultErrorMsg { get; set; }
 
-      
+
     }
 }

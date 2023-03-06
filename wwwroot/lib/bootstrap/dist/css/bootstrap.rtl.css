@@ -1792,7 +1792,7 @@ progress {
 .col-form-label-sm {
   padding-top: calc(0.25rem + 1px);
   padding-bottom: calc(0.25rem + 1px);
-  font-size: 0.875rem;
+  font-size: 0.7rem;
 }
 .form-text {
   margin-top: 0.25rem;
@@ -1915,7 +1915,7 @@ progress {
 .form-control-sm {
   min-height: calc(1.5em + 0.5rem + 2px);
   padding: 0.25rem 0.5rem;
-  font-size: 0.875rem;
+  font-size: 0.7rem;
   border-radius: 0.2rem;
 }
 .form-control-sm::file-selector-button {
@@ -2019,7 +2019,7 @@ textarea.form-control-lg {
   padding-top: 0.25rem;
   padding-bottom: 0.25rem;
   padding-right: 0.5rem;
-  font-size: 0.875rem;
+  font-size: 0.7rem;
 }
 .form-select-lg {
   padding-top: 0.5rem;
@@ -2331,7 +2331,7 @@ textarea.form-control-lg {
 .input-group-sm > .input-group-text,
 .input-group-sm > .btn {
   padding: 0.25rem 0.5rem;
-  font-size: 0.875rem;
+  font-size: 0.7rem;
   border-radius: 0.2rem;
 }
 .input-group-lg > .form-select,
@@ -2368,7 +2368,7 @@ textarea.form-control-lg {
   max-width: 100%;
   padding: 0.25rem 0.5rem;
   margin-top: 0.0.8rem;
-  font-size: 0.875rem;
+  font-size: 0.7rem;
   color: #fff;
   background-color: rgba(25, 135, 84, 0.9);
   border-radius: 0.25rem;
@@ -2448,7 +2448,7 @@ textarea.form-control-lg {
   max-width: 100%;
   padding: 0.25rem 0.5rem;
   margin-top: 0.0.8rem;
-  font-size: 0.875rem;
+  font-size: 0.7rem;
   color: #fff;
   background-color: rgba(220, 53, 69, 0.9);
   border-radius: 0.25rem;
@@ -2990,7 +2990,7 @@ textarea.form-control-lg {
 }
 .btn-sm, .btn-group-sm > .btn {
   padding: 0.25rem 0.5rem;
-  font-size: 0.875rem;
+  font-size: 0.7rem;
   border-radius: 0.2rem;
 }
 .fade {
@@ -3277,7 +3277,7 @@ textarea.form-control-lg {
   display: block;
   padding: 0.5rem 0.8rem;
   margin-bottom: 0;
-  font-size: 0.875rem;
+  font-size: 0.7rem;
   color: #6c757d;
   white-space: nowrap;
 }
@@ -4299,7 +4299,7 @@ textarea.form-control-lg {
 }
 .pagination-sm .page-link {
   padding: 0.25rem 0.5rem;
-  font-size: 0.875rem;
+  font-size: 0.7rem;
 }
 .pagination-sm .page-item:first-child .page-link {
   border-top-right-radius: 0.2rem;
@@ -4817,7 +4817,7 @@ textarea.form-control-lg {
 .toast {
   width: 350px;
   max-width: 100%;
-  font-size: 0.875rem;
+  font-size: 0.7rem;
   pointer-events: auto;
   background-color: rgba(255, 255, 255, 0.85);
   background-clip: padding-box;
@@ -5147,7 +5147,7 @@ textarea.form-control-lg {
   word-spacing: normal;
   white-space: normal;
   line-break: auto;
-  font-size: 0.875rem;
+  font-size: 0.7rem;
   word-wrap: break-word;
   opacity: 0;
 }
@@ -5243,7 +5243,7 @@ textarea.form-control-lg {
   word-spacing: normal;
   white-space: normal;
   line-break: auto;
-  font-size: 0.875rem;
+  font-size: 0.7rem;
   word-wrap: break-word;
   background-color: #fff;
   background-clip: padding-box;

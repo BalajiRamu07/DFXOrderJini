@@ -6,7 +6,7 @@ using System.Linq;
 using System.Web;
 namespace DFXOrderJini.Models
 {
-    public class OrderCreationModel
+    public partial class OrderCreationModel
     {
         ///<summary>
         /// Gets or sets Name.
@@ -49,7 +49,18 @@ namespace DFXOrderJini.Models
         public string? VehiTypedesc { get; set; }
         public string? Flag { get; set; }
         public string? VEHICLE_CODE { get; set; }
-        
+
+        public string? Address { get; set; }
+        public string? AddressName { get; set; }
+
+        public string? DeliveryLocation { get; set; }
+       
+        public string? ShipToCode { get; set; }
+        public string? Weight { get; set; }
+        public string? ItemCount { get; set; }
+        public string? DealerName { get; set; }
+        public string? resultErrorMsg { get; set; }
+        public string? bundleheight { get; set; }
 
 
 

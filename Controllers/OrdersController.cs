@@ -16,17 +16,26 @@ namespace DFXOrderJini.Controllers
     [Produces("application/json")]
 
     [ApiController]
-    public class OrdersController : ControllerBase
+    public partial class OrdersController : ControllerBase
     {
-       
-        [Route("api/Orders/GetCustomers")]
+        [Route("api/Orders/GetCRD_Date_HolidayList")]
         [HttpPost]
-        public IEnumerable<CustomerModel> GetCustomers()
+        public IEnumerable<CustomerModel> GetCRD_Date_HolidayList(string Orderdate, string plant)
         {
             OrdersDataLayer order = new OrdersDataLayer();
 
 
-            return order.GetCustomers();
+            return order.GetCRD_Date_HolidayList(Orderdate, plant);
+        }
+
+        [Route("api/Orders/GetCustomers")]
+        [HttpPost]
+        public IEnumerable<CustomerModel> GetCustomers(string DealerName, string SearchName)
+        {
+            OrdersDataLayer order = new OrdersDataLayer();
+
+
+            return order.GetCustomers(DealerName.Trim().ToString(), SearchName);
         }
         [Route("api/Orders/GetPlantDetails")]
         [HttpPost]
@@ -55,13 +64,22 @@ namespace DFXOrderJini.Controllers
 
             return order.GetDealersDetails(DealerCode.Trim().ToString());
         }
-        
-        [Route("api/Orders/GetOrders")]
+        [Route("api/Orders/Create_RepeatOrder")]
         [HttpPost]
-        public IEnumerable<OrderCreationModel> GetOrders()
+        public IEnumerable<CustomerModel> Create_RepeatOrder(string DealerName, string SearchName)
         {
             OrdersDataLayer order = new OrdersDataLayer();
-            List<OrderCreationModel> saleList = order.GetOrders().ToList<OrderCreationModel>();
+
+
+            return order.Create_RepeatOrder(DealerName, SearchName);
+        }
+        [Route("api/Orders/GetOrders")]
+        [HttpPost]
+        public IEnumerable<OrderCreationModel> GetOrders(string DealerCode,string SearchName)
+        {
+            OrdersDataLayer order = new OrdersDataLayer();
+           
+            List<OrderCreationModel> saleList = order.GetOrders(DealerCode.Trim().ToString(), SearchName).ToList<OrderCreationModel>();
             
             return saleList;
         }
@@ -76,10 +94,20 @@ namespace DFXOrderJini.Controllers
         }
         [Route("api/Orders/GetItems")]
         [HttpPost]
-        public IEnumerable<OrderCreationModel> GetItems(string DealerCode)
+        public IEnumerable<OrderCreationModel> GetItems(string DealerCode,string ProfileName)
         {
             OrdersDataLayer order = new OrdersDataLayer();
-            List<OrderCreationModel> saleList = order.GetItems(DealerCode.Trim().ToString()).ToList<OrderCreationModel>();
+            List<OrderCreationModel> saleList = order.GetItems(DealerCode.Trim().ToString(), ProfileName).ToList<OrderCreationModel>();
+
+            return saleList;
+        }
+
+        [Route("api/Orders/GetOrderHistory_Items")]
+        [HttpPost]
+        public IEnumerable<OrderCreationModel> GetOrderHistory_Items(string OrderId, string ProfileName)
+        {
+            OrdersDataLayer order = new OrdersDataLayer();
+            List<OrderCreationModel> saleList = order.GetOrderHistory_Items(OrderId.Trim().ToString(), ProfileName).ToList<OrderCreationModel>();
 
             return saleList;
         }
@@ -165,6 +193,20 @@ namespace DFXOrderJini.Controllers
         {
             OrdersDataLayer order = new OrdersDataLayer();
             return order.GetProductGrade("SelectTotalpieces", "Total_pieces", Item, Item1, Item2, Item3,"");
+        }
+        [Route("api/Orders/LoadShippingAddress")]
+        [HttpPost]
+        public IEnumerable<OrderCreationModel> LoadShippingAddress(string DealerCode)
+        {
+            OrdersDataLayer order = new OrdersDataLayer();
+            return order.LoadShippingAddress(DealerCode.Trim().ToString());
+        }
+        [Route("api/Orders/ChangeShippingAddress")]
+        [HttpPost]
+        public IEnumerable<OrderCreationModel> ChangeShippingAddress(string Item1, string Item, string DealerCode)
+        {
+            OrdersDataLayer order = new OrdersDataLayer();
+            return order.ChangeShippingAddress( Item, Item1, DealerCode.Trim().ToString());
         }
     }
 }

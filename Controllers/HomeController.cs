@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 namespace DFXOrderJini.Controllers
 {
-    public class HomeController : Controller
+    public partial class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
         public HomeController(ILogger<HomeController> logger)
@@ -12,6 +12,10 @@ namespace DFXOrderJini.Controllers
             _logger = logger;
         }
         public IActionResult Index()
+        {
+            return View();
+        }
+        public IActionResult UserLogin(string UserId, string ProfileName)
         {
             return View();
         }

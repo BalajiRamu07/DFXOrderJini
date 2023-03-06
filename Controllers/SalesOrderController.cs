@@ -2,9 +2,11 @@
 using DFXOrderJini.Repository;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Specialized;
+
 namespace DFXOrderJini.Controllers
 {
-    public class SalesOrderController : Controller
+    public partial class SalesOrderController : Controller
     {
         // GET: SalesOrderController
         public ActionResult Index()
@@ -37,9 +39,9 @@ namespace DFXOrderJini.Controllers
             return View();
         }
         [Route("api/SalesOrder/OrderCreate")]
-        [HttpPost]
-        public int OrderCreate(string ItemName, string Grade, string Density, string PrimaryUOM, string Lmax, string Wmax,string Tmax,
-            string QTY, string Pieces, string LDPE, string DealerCode,string Volume)
+        [HttpGet]
+        public  string OrderCreate(string ItemName, string Grade, string Density, string PrimaryUOM, string Lmax, string Wmax,string Tmax,
+            string QTY, string Pieces, string LDPE, string DealerCode,string Volume,string Weight,string STANDARD_ORDER, string OrderPlacedby)
         {
             
             OrderCreationModel Order = new OrderCreationModel();
@@ -54,18 +56,22 @@ namespace DFXOrderJini.Controllers
             Order.Pieces= Pieces;
             Order.LDPE= LDPE;
             Order.Volume= Volume;
+            Order.OrderPlacedBy= OrderPlacedby;
             Order.CRD_Date= Convert.ToDateTime("01/01/1900"); 
             Order.DealerCode= DealerCode.Trim().ToString();
             Order.Flag = "S";
+            Order.Weight = Weight;
+            Order.StandardOrder = STANDARD_ORDER;
             OrdersDataLayer order = new OrdersDataLayer();
             
-            int b = 0;
-            return b=order.Foam_OrderCreation(Order);
+            string msg = "";
+
+            return msg=order.Foam_OrderCreation(Order);
         }
         [Route("api/SalesOrder/OrderItemUpdate")]
         [HttpPost]
-        public int OrderItemUpdate(string Cust_Ref, string Comments, string VehicleCode, string PlantCode, string CRD_Date, string Wmax, string Tmax,
-            string QTY, string Pieces, string LDPE, string DealerCode, string OrderID, string Volume)
+        public string OrderItemUpdate(string Cust_Ref, string Comments, string VehicleCode, string PlantCode, string CRD_Date, string Wmax, string Tmax,
+            string QTY, string Pieces, string LDPE, string DealerCode, string OrderID, string Volume, string Weight)
         {
 
             OrderCreationModel Order = new OrderCreationModel();
@@ -80,6 +86,8 @@ namespace DFXOrderJini.Controllers
                 Order.VEHICLE_CODE = VehicleCode;
                 Order.Flag = "U";
                 Order.Status = "Confirm";
+                Order.Weight = Weight;
+
             }
             else if (Tmax == "ItemSave")
             {
@@ -90,6 +98,8 @@ namespace DFXOrderJini.Controllers
                 Order.CRD_Date = Convert.ToDateTime(CRD_Date);
                 Order.VEHICLE_CODE = VehicleCode;
                 Order.Flag = "SaveItem";
+                Order.Weight = Weight;
+
             }
             // Order.Lmax = Lmax;
             //Order.Wmax = Wmax;
@@ -102,6 +112,8 @@ namespace DFXOrderJini.Controllers
                 Order.Volume = Volume;
                 Order.ID = Convert.ToInt32(Wmax);
                 Order.Flag = "UpdateItem";
+                Order.Weight = Weight;
+
             }
             //else if (Tmax == "ItemSave")
             //{
@@ -119,11 +131,11 @@ namespace DFXOrderJini.Controllers
             Order.DealerCode = DealerCode.Trim().ToString();
 
             OrdersDataLayer orderlay = new OrdersDataLayer();
-            
-            int b = 0;
-            return b = orderlay.Foam_OrderCreation(Order);
+
+            string msg = "";
+            return msg = orderlay.Foam_OrderCreation(Order);
         }
-        public IActionResult OrderItems()
+        public IActionResult OrderItems(string OrderItems)
         {
             return View();
         }

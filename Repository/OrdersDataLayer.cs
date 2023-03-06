@@ -21,7 +21,7 @@ using DFXOrderJini.Interface;
 
 namespace DFXOrderJini.Repository
 {
-    public class OrdersDataLayer : IOrders
+    public partial class OrdersDataLayer : IOrders
     {
         #region private Attributes
         private string _DealerName;
@@ -41,9 +41,40 @@ namespace DFXOrderJini.Repository
         public string Flag { get { return _Flag; } set { _Flag = value; } }
         IFormatProvider provider = new System.Globalization.CultureInfo("en-CA", true);
         #endregion
+        #region UserLogin
+        public IList<CustomerModel> LoginCheck(string Name, string DealerName)
+        {
+            List<CustomerModel> lstemployee = new List<CustomerModel>();
+            try
+            {
+                
+                SqlParameter[] param = new SqlParameter[5];
+                param[0] = new SqlParameter("@DealerName", DealerName);
+                param[1] = new SqlParameter("@name", Name);
+                param[2] = new SqlParameter("@NSearch", NSearch);
+                param[3] = new SqlParameter("@MStatus", SqlDbType.Int, 1);
+                param[3].Direction = ParameterDirection.Output;
+                param[4] = new SqlParameter("@ErrorMsg", SqlDbType.NVarChar, 1000);
+                param[4].Direction = ParameterDirection.Output;
+                ds = SqlHelper.ExecuteDataset(CS, CommandType.StoredProcedure, "ProfileLogin_Check", param);
+                //result = Convert.ToInt32(param[3].Value.ToString());
+                
+                lstemployee = (from DataRow dr in ds.Tables[0].Rows
+                               select new CustomerModel()
+                               {
+                                   ResultErrorMsg = dr["ResultErrorMsg"].ToString(),
+                               }).ToList();
+            }
+            catch
+            {
+                throw;
+            }
+            return lstemployee;
+        }
+        #endregion
         #region Insert & Update & Get
         //To View all employees details
-        public IList<CustomerModel> GetCustomers()
+        public IList<CustomerModel> GetCustomers(string DealerName,string SearchName)
         {
             List<CustomerModel> lstemployee = new List<CustomerModel>();
             try
@@ -51,7 +82,7 @@ namespace DFXOrderJini.Repository
                 name = "AllCustomer";
                 SqlParameter[] param = new SqlParameter[5];
                 param[0] = new SqlParameter("@DealerName", DealerName);
-                param[1] = new SqlParameter("@name", name);
+                param[1] = new SqlParameter("@name", SearchName);
                 param[2] = new SqlParameter("@NSearch", NSearch);
                 param[3] = new SqlParameter("@MStatus", SqlDbType.Int, 1);
                 param[3].Direction = ParameterDirection.Output;
@@ -226,29 +257,39 @@ namespace DFXOrderJini.Repository
             }
             return lstemployee;
         }
-        public IList<OrderCreationModel> GetOrders()
+        public IList<OrderCreationModel> GetOrders(string DealerCode, string SearchName)
         {
             List<OrderCreationModel> lstemployee = new List<OrderCreationModel>();
             try
             {
-                name = "Orders";
+                
                 SqlParameter[] param = new SqlParameter[5];
-                param[0] = new SqlParameter("@DealerName", DealerName);
-                param[1] = new SqlParameter("@name", name);
+                param[0] = new SqlParameter("@DealerName", DealerCode);
+                param[1] = new SqlParameter("@name", SearchName);
                 param[2] = new SqlParameter("@NSearch", NSearch);
                 param[3] = new SqlParameter("@MStatus", SqlDbType.Int, 1);
                 param[3].Direction = ParameterDirection.Output;
                 param[4] = new SqlParameter("@ErrorMsg", SqlDbType.NVarChar, 1000);
                 param[4].Direction = ParameterDirection.Output;
                 ds = SqlHelper.ExecuteDataset(CS, CommandType.StoredProcedure, "GetOrderDetails", param);
-                result = Convert.ToInt32(param[3].Value.ToString());
+                //result = Convert.ToInt32(param[3].Value.ToString());
+                string d = param[4].Value.ToString();
                 lstemployee = (from DataRow dr in ds.Tables[0].Rows
                                select new OrderCreationModel()
                                {
                                    ID = Convert.ToInt32(dr["ID"]),
                                    OrderID = dr["OrderID"].ToString(),
                                    Cust_Ref = dr["Cust_Ref"].ToString(),
-                                   SalesPerson = dr["SalesPerson"].ToString()
+                                   SalesPerson = dr["SellerName"].ToString(),
+                                   DealerCode = dr["DealerCode"].ToString(),
+                                   OrderDate = dr["Order_Date"].ToString(),
+                                   Status =  dr["Status"].ToString(),
+                                   OrderPlacedBy = dr["OrderPlacedBy"].ToString(),
+                                   StandardOrder = dr["StandardOrder"].ToString().Replace("Yes","SA").Replace("No", "NSA"),
+                                   CRD_Date = Convert.ToDateTime(Dtcheck(dr["CRDDate"].ToString())),
+                                   ItemCount = dr["itemcountsds"].ToString(),
+                                   DealerName = dr["DealerName"].ToString(),
+
 
                                }).ToList();
             }
@@ -274,16 +315,77 @@ namespace DFXOrderJini.Repository
                 param[4].Direction = ParameterDirection.Output;
                 ds = SqlHelper.ExecuteDataset(CS, CommandType.StoredProcedure, "GetOrderDetails", param);
                 result = Convert.ToInt32(param[3].Value.ToString());
+                string fdfs = param[4].Value.ToString();
                 lstemployee = (from DataRow dr in ds.Tables[0].Rows
                                select new OrderCreationModel()
                                {
                                    ID = Convert.ToInt32(dr["ID"]),
                                    OrderID = dr["OrderID"].ToString(),
                                    Cust_Ref = dr["Cust_Ref"].ToString(),
+                                   Cust_Comments = dr["Cust_Comments"].ToString(),
                                    SalesPerson = dr["SalesPerson"].ToString(),
                                    DealerCode = dr["DealerCode"].ToString(),
                                    OrderDate = dr["Order_Date"].ToString(),
+                                   Status = dr["Status"].ToString().Trim(),
                                    CRD_Date = Convert.ToDateTime(Dtcheck(dr["CRDDate"].ToString()))
+                               }).ToList();
+            }
+            catch
+            {
+                throw;
+            }
+            return lstemployee;
+        }
+        public IList<CustomerModel> Create_RepeatOrder(string DealerName, string SearchName)
+        {
+            List<CustomerModel> lstemployee = new List<CustomerModel>();
+            try
+            {
+                name = "RepeatOrder";
+                SqlParameter[] param = new SqlParameter[5];
+                param[0] = new SqlParameter("@DealerName", DealerName);
+                param[1] = new SqlParameter("@name", name);
+                param[2] = new SqlParameter("@NSearch", SearchName);
+                param[3] = new SqlParameter("@MStatus", SqlDbType.Int, 1);
+                param[3].Direction = ParameterDirection.Output;
+                param[4] = new SqlParameter("@ErrorMsg", SqlDbType.NVarChar, 1000);
+                param[4].Direction = ParameterDirection.Output;
+                ds = SqlHelper.ExecuteDataset(CS, CommandType.StoredProcedure, "GetOrderDetails", param);
+                //result = Convert.ToInt32(param[3].Value.ToString());
+                string resgfult = param[4].Value.ToString();
+
+                lstemployee = (from DataRow dr in ds.Tables[0].Rows
+                               select new CustomerModel()
+                               {
+                                   ResultErrorMsg = dr["ResultErrorMsg"].ToString(),
+                               }).ToList();
+            }
+            catch
+            {
+                throw;
+            }
+            return lstemployee;
+        }
+        public IList<CustomerModel> GetCRD_Date_HolidayList(string Orderdate, string plant)
+        {
+            List<CustomerModel> lstemployee = new List<CustomerModel>();
+            try
+            {
+                //name = "RepeatOrder";
+                SqlParameter[] param = new SqlParameter[5];
+                param[0] = new SqlParameter("@orddt",Convert.ToDateTime("01/01/1900"));
+                param[1] = new SqlParameter("@plant", plant);
+              // param[2] = new SqlParameter("@NSearch", SearchName);
+                //param[3] = new SqlParameter("@MStatus", SqlDbType.Int, 1);
+                //param[3].Direction = ParameterDirection.Output;
+                //param[4] = new SqlParameter("@ErrorMsg", SqlDbType.NVarChar, 1000);
+                //param[4].Direction = ParameterDirection.Output;
+                ds = SqlHelper.ExecuteDataset(CS, CommandType.StoredProcedure, "p_CrdDate", param);
+                //result = Convert.ToInt32(param[3].Value.ToString());
+                lstemployee = (from DataRow dr in ds.Tables[0].Rows
+                               select new CustomerModel()
+                               {
+                                   ResultErrorMsg = dr["pdate"].ToString(),
                                }).ToList();
             }
             catch
@@ -301,14 +403,71 @@ namespace DFXOrderJini.Repository
             return dt;
 
         }
-        public IList<OrderCreationModel> GetItems(string DealerCode)
+        public IList<OrderCreationModel> GetItems(string DealerCode, string ProfileName)
         {
             List<OrderCreationModel> lstemployee = new List<OrderCreationModel>();
             try
             {
-                name = "Items";
+               // name = "Items";
                 SqlParameter[] param = new SqlParameter[5];
                 param[0] = new SqlParameter("@DealerName", DealerCode);
+                param[1] = new SqlParameter("@name", ProfileName);
+                param[2] = new SqlParameter("@NSearch", NSearch);
+                param[3] = new SqlParameter("@MStatus", SqlDbType.Int, 1);
+                param[3].Direction = ParameterDirection.Output;
+                param[4] = new SqlParameter("@ErrorMsg", SqlDbType.NVarChar, 1000);
+                param[4].Direction = ParameterDirection.Output;
+                ds = SqlHelper.ExecuteDataset(CS, CommandType.StoredProcedure, "GetOrderDetails", param);
+                // result = Convert.ToInt32(param[3].Value.ToString());
+                string fd = param[4].Value.ToString();
+                
+                    lstemployee = (from DataRow dr in CheckRecord(ds).Tables[0].Rows
+                                   select new OrderCreationModel()
+                                   {
+
+                                       ID = Convert.ToInt32(dr["ID"].ToString()),
+                                       OrderID = dr["OrderID"].ToString(),
+                                       DealerCode = dr["DealerCode"].ToString(),
+                                       ItemName = dr["ItemName"].ToString(),
+                                       MaterialID = dr["MaterialId"].ToString(),
+                                       Lmax = dr["Lmax"].ToString(),
+                                       Wmax = dr["Wmax"].ToString(),
+                                       Tmax = dr["Tmax"].ToString(),
+                                       QTY = dr["Qty"].ToString(),
+                                       LDPE = dr["Ldpe"].ToString(),
+                                       Pieces = dr["pieces"].ToString(),
+                                       PrimaryUOM = dr["PrimaryUOM"].ToString(),
+                                       Volume = dr["Volume"].ToString(),
+                                       Item_Name = dr["Item_Name"].ToString(),
+
+
+
+                                       OrderDate = dr["Order_Date"].ToString(),
+                                       OrderPlacedBy = dr["OrderPlacedBy"].ToString(),
+                                       SalesPerson = dr["SalesPerson"].ToString(),
+                                       PlantCode = dr["PlantCode"].ToString(),
+
+
+
+
+                                   }).ToList();
+               
+            }
+            catch
+            {
+                throw;
+            }
+            return lstemployee;
+        }
+
+        public IList<OrderCreationModel> GetOrderHistory_Items(string OrderId, string ProfileName)
+        {
+            List<OrderCreationModel> lstemployee = new List<OrderCreationModel>();
+            try
+            {
+                 name = "Item_Orderid";
+                SqlParameter[] param = new SqlParameter[5];
+                param[0] = new SqlParameter("@DealerName", OrderId);
                 param[1] = new SqlParameter("@name", name);
                 param[2] = new SqlParameter("@NSearch", NSearch);
                 param[3] = new SqlParameter("@MStatus", SqlDbType.Int, 1);
@@ -317,7 +476,9 @@ namespace DFXOrderJini.Repository
                 param[4].Direction = ParameterDirection.Output;
                 ds = SqlHelper.ExecuteDataset(CS, CommandType.StoredProcedure, "GetOrderDetails", param);
                 // result = Convert.ToInt32(param[3].Value.ToString());
-                lstemployee = (from DataRow dr in ds.Tables[0].Rows
+                string fd = param[4].Value.ToString();
+
+                lstemployee = (from DataRow dr in CheckRecord(ds).Tables[0].Rows
                                select new OrderCreationModel()
                                {
 
@@ -334,14 +495,21 @@ namespace DFXOrderJini.Repository
                                    Pieces = dr["pieces"].ToString(),
                                    PrimaryUOM = dr["PrimaryUOM"].ToString(),
                                    Volume = dr["Volume"].ToString(),
-                                   Item_Name = dr["Item_Name"].ToString()
+                                   Item_Name = dr["Item_Name"].ToString(),
 
 
+
+                                   OrderDate = dr["Order_Date"].ToString(),
+                                   OrderPlacedBy = dr["OrderPlacedBy"].ToString(),
+                                   SalesPerson = dr["SalesPerson"].ToString(),
+                                   PlantCode = dr["PlantCode"].ToString(),
+                                   Status = dr["Status"].ToString(),
 
 
 
 
                                }).ToList();
+
             }
             catch
             {
@@ -438,6 +606,7 @@ namespace DFXOrderJini.Repository
                                 select new OrderCreationModel()
                                 {
                                     ProductItems = dr[Coloumn].ToString(),
+                                    //bundleheight = dr["bundleheight"].ToString()
                                 }).ToList();
                 }
             }
@@ -481,22 +650,81 @@ namespace DFXOrderJini.Repository
             }
             return ds;
         }
-        public int OrderCreation(OrderCreationModel Order)
+        public DataSet CheckRecord(DataSet ds)
         {
-            int result = 0;
+            if (ds.Tables.Count > 0)
+            {
+                if (ds.Tables[0].Rows.Count > 0)
+                {
+                }
+                else
+                    ds.Tables.Add(dt);
+            }
+            else
+                ds.Tables.Add(dt);
+            return ds;
+        }
+        public IList<OrderCreationModel> LoadShippingAddress(string Dealercode)
+        {
+            List<OrderCreationModel> ListData = new List<OrderCreationModel>();
             try
             {
-                Flag = "S";
-                result = Foam_OrderCreation(Order);
+                ListData = (from DataRow dr in ProductItems("Load_ShippingAddress", string.Empty, string.Empty, string.Empty, string.Empty, Dealercode).Tables[0].Rows
+                            select new OrderCreationModel()
+                            {
+                                Address = dr["Address"].ToString(),
+                                AddressName = dr["AddressName"].ToString(),
+                                DeliveryLocation = dr["DeliveryLocation"].ToString(),
+                                DealerCode = dr["Dealercode"].ToString(),
+                                ShipToCode = dr["ShipToCode"].ToString(),
+
+                            }).ToList();
             }
             catch
             {
                 throw;
             }
-            return result;
+            return ListData;
         }
-        public int Foam_OrderCreation(OrderCreationModel Order)
+        public IList<OrderCreationModel> ChangeShippingAddress(string Item, string Item1, string DealerCode)
         {
+            List<OrderCreationModel> ListData = new List<OrderCreationModel>();
+            try
+            {
+                
+                ListData = (from DataRow dr in ProductItems("ChangeShippingAddress", Item, Item1, string.Empty, string.Empty, DealerCode).Tables[0].Rows
+                            select new OrderCreationModel()
+                            {
+                                Address = dr["ShippingAddress"].ToString()
+                                
+
+                            }).ToList();
+            }
+            catch
+            {
+                throw;
+            }
+            return ListData;
+        }
+        #endregion
+        #region Order Details
+        public string OrderCreation(OrderCreationModel Order)
+        {
+            int result = 0;
+            try
+            {
+                Flag = "S";
+                Order.resultErrorMsg = Foam_OrderCreation(Order);
+            }
+            catch
+            {
+                throw;
+            }
+            return Order.resultErrorMsg;
+        }
+        public string Foam_OrderCreation(OrderCreationModel Order)
+        {
+            string msg = "";
             List<OrderCreationModel> lstemployee = new List<OrderCreationModel>();
             try
             {
@@ -540,18 +768,20 @@ namespace DFXOrderJini.Repository
                 param[31] = new SqlParameter("@Grade", Order.Grade);
                 param[32] = new SqlParameter("@Density", Order.Density);
                 param[33] = new SqlParameter("@ITEMTYPE", Order.ITEMTYPE);
-                param[34] = new SqlParameter("@Volume", Order.Volume); 
+                param[34] = new SqlParameter("@Volume", Order.Volume);
+                param[36] = new SqlParameter("@Weight", Order.Weight);
+
                 param[35] = new SqlParameter("@VEHICLE_CODE", Order.VEHICLE_CODE == null ? (object)DBNull.Value : Order.VEHICLE_CODE.Substring(0, 4));
                 ds = SqlHelper.ExecuteDataset(CS, CommandType.StoredProcedure, "FOAMORDER_INSERT_UPDATE", param);
                 //  result = Convert.ToInt32(param[20].Value.ToString());
-                string re = param[21].Value.ToString();
+                Order.resultErrorMsg = param[21].Value.ToString();
                 result = 1;
             }
             catch
             {
                 throw;
             }
-            return result;
+            return Order.resultErrorMsg;
         }
 
       

@@ -3,7 +3,9 @@
 *@
 @{
 }
-<div ng-view="" class="ng-scope" style=""><div class="wrapper ng-scope">
+<div ng-view="" class="ng-scope" style="" ng-app="MyApp2" ng-controller="MyController2" ng-init="AdminProfileEnable()"></div>
+
+<div ng-view="" class="ng-scope" style="" ><div class="wrapper ng-scope" >
     <!-- Page Dashboard-->
     <h4 class="ng-binding">👋 Hi Bharat Mobijini</h4>
     <p>Quick glance at your transactions</p>
@@ -623,10 +625,7 @@
    
             </div>
         </div>
-    </div>
-
-</div>
-
+    
 <!-- content-wrapper ends -->
 <!-- partial:partials/_footer.html -->
 
@@ -642,4 +641,4 @@
         }
         reader.readAsDataURL(event.target.files[0]);
     }
-</script></div>
+</script>

@@ -46,7 +46,7 @@
                                                     <div class="tab-content">
                                                         @Html.Hidden("RedirectTo", Url.Action("OrderCreation", "SalesOrder"))
                                                     <div class="tab-pane container active p-4" id="customer"  >
-                                                            <div class="table-responsive" ng-show="IsVisible" ng-init="GetAllCustomers()">
+                                                            <div class="table-responsive" ng-show="IsVisible" ng-init="GetAllCustomers();AdminProfileEnable();">
                                                                 <table class="table table-hover" id="myTable">
                                                         <thead>
                                                         <tr>
